@@ -1,8 +1,10 @@
 import { event } from "@/config/event";
 
 const BRAND_RED = "#C8262D";
-const BRAND_RED_DARK = "#A51E24";
+const BRAND_RED_DARK = "#9A1B22";
 const BRAND_GREEN = "#25B34B";
+const TEXT_MAIN = "#0F172A";
+const TEXT_MUTED = "#64748B";
 
 /** Escapes user-supplied text before it is interpolated into email HTML. */
 export function escapeHtml(value: string): string {
@@ -23,57 +25,69 @@ function baseLayout(bodyHtml: string): string {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>${escapeHtml(event.name)}</title>
   </head>
-  <body style="margin:0;padding:0;background-color:#F2F5F8;font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;color:#1E293B;-webkit-font-smoothing:antialiased;">
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#F2F5F8;padding:40px 16px;">
+  <body style="margin:0;padding:0;background-color:#F8FAFC;font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;color:${TEXT_MAIN};-webkit-font-smoothing:antialiased;">
+    
+    <!-- Outer Background Table -->
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#F8FAFC;padding:60px 16px;">
       <tr>
         <td align="center">
-          <table role="presentation" width="100%" style="max-width:600px;background-color:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 10px 25px -5px rgba(0,0,0,0.05), 0 8px 10px -6px rgba(0,0,0,0.01);border:1px solid #E2E8F0;">
+          
+          <!-- Main Email Container -->
+          <table role="presentation" width="100%" style="max-width:640px;background-color:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 20px 40px -15px rgba(0,0,0,0.05), 0 0 1px rgba(0,0,0,0.1);border:1px solid #E2E8F0;">
 
-            <!-- Header Section -->
+            <!-- Premium Dark Header -->
             <tr>
-              <td style="background:#0B1720;padding:32px 40px;">
+              <td style="background-color:#070E14;padding:40px 48px;text-align:center;">
                 <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
                   <tr>
-                    <td>
-                      <span style="color:${BRAND_RED};font-weight:900;font-size:22px;letter-spacing:-0.5px;">${escapeHtml(event.venue.country)}</span>
-                      <span style="color:#ffffff;font-weight:900;font-size:22px;letter-spacing:-0.5px;"> ${escapeHtml(event.brandWord)}</span>
-                      <div style="color:#94A3B8;font-size:11px;margin-top:6px;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;">
-                        ${escapeHtml(event.editionLabel)} &middot; International Expo ${escapeHtml(event.edition)}
+                    <td align="center">
+                      <div style="font-size:28px;line-height:1.2;letter-spacing:-0.5px;">
+                        <span style="color:${BRAND_RED};font-weight:900;">${escapeHtml(event.venue.country)}</span>
+                        <span style="color:#ffffff;font-weight:900;"> ${escapeHtml(event.brandWord)}</span>
+                      </div>
+                      <div style="color:#94A3B8;font-size:12px;margin-top:10px;letter-spacing:0.15em;text-transform:uppercase;font-weight:600;">
+                        ${escapeHtml(event.editionLabel)} &bull; International Expo ${escapeHtml(event.edition)}
                       </div>
                     </td>
                   </tr>
                 </table>
               </td>
             </tr>
-            <!-- Kenyan flag stripe (table cells render in every client, unlike CSS gradients) -->
+
+            <!-- Sleek Kenyan Flag Accent Bar -->
             <tr>
               <td style="padding:0;">
                 <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
                   <tr>
-                    <td height="4" style="background:${BRAND_RED};font-size:0;line-height:0;">&nbsp;</td>
-                    <td height="4" style="background:#ffffff;font-size:0;line-height:0;">&nbsp;</td>
-                    <td height="4" style="background:${BRAND_GREEN};font-size:0;line-height:0;">&nbsp;</td>
+                    <td width="33.33%" height="4" style="background-color:${BRAND_RED};font-size:0;line-height:0;">&nbsp;</td>
+                    <td width="33.33%" height="4" style="background-color:#ffffff;font-size:0;line-height:0;">&nbsp;</td>
+                    <td width="33.33%" height="4" style="background-color:${BRAND_GREEN};font-size:0;line-height:0;">&nbsp;</td>
                   </tr>
                 </table>
               </td>
             </tr>
 
-            <!-- Main Content Area -->
+            <!-- Content Area -->
             <tr>
-              <td style="padding:40px;">
+              <td style="padding:48px;">
                 ${bodyHtml}
               </td>
             </tr>
 
-            <!-- Footer Section -->
+            <!-- Sophisticated Footer -->
             <tr>
-              <td style="background-color:#F8FAFC;padding:28px 40px;border-top:1px solid #F1F5F9;font-size:12px;line-height:1.6;color:#64748B;">
+              <td style="background-color:#F1F5F9;padding:32px 48px;border-top:1px solid #E2E8F0;text-align:center;">
                 <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
                   <tr>
-                    <td>
-                      <strong style="color:#334155;">${escapeHtml(event.name)}</strong><br />
-                      ${escapeHtml(event.dates.display)} &nbsp;&bull;&nbsp; ${escapeHtml(event.dates.openingHours)} &nbsp;&bull;&nbsp; ${escapeHtml(event.venue.fullLocation)}<br />
-                      <a href="${event.website}" style="color:${BRAND_RED_DARK};text-decoration:none;font-weight:600;" target="_blank">${escapeHtml(event.websiteDisplay)}</a>
+                    <td align="center">
+                      <div style="color:#334155;font-weight:700;font-size:14px;margin-bottom:8px;">${escapeHtml(event.name)}</div>
+                      <div style="color:${TEXT_MUTED};font-size:13px;line-height:1.6;margin-bottom:16px;">
+                        ${escapeHtml(event.dates.display)} <br/>
+                        ${escapeHtml(event.dates.openingHours)} &bull; ${escapeHtml(event.venue.fullLocation)}
+                      </div>
+                      <a href="${event.website}" style="display:inline-block;color:${BRAND_RED};text-decoration:none;font-weight:700;font-size:13px;letter-spacing:0.05em;text-transform:uppercase;border-bottom:2px solid #FBCFE8;padding-bottom:2px;" target="_blank">
+                        ${escapeHtml(event.websiteDisplay)}
+                      </a>
                     </td>
                   </tr>
                 </table>
@@ -81,6 +95,16 @@ function baseLayout(bodyHtml: string): string {
             </tr>
 
           </table>
+          
+          <!-- Bottom Copyright/Muted Text -->
+          <table role="presentation" width="100%" style="max-width:640px;">
+            <tr>
+              <td style="padding:24px 0;text-align:center;color:#94A3B8;font-size:12px;">
+                This is an automated notification from ${escapeHtml(event.brandWord)} system.
+              </td>
+            </tr>
+          </table>
+
         </td>
       </tr>
     </table>
@@ -92,25 +116,33 @@ function detailRow(label: string, value?: string | null): string {
   if (!value) return "";
   return `
   <tr>
-    <td style="padding:10px 0;font-size:13px;color:#64748B;width:160px;vertical-align:top;border-bottom:1px solid #F1F5F9;font-weight:500;">${escapeHtml(label)}</td>
-    <td style="padding:10px 0;font-size:13px;color:#0F172A;font-weight:600;border-bottom:1px solid #F1F5F9;white-space:pre-line;">${escapeHtml(value)}</td>
+    <td style="padding:16px 20px;background-color:#F8FAFC;font-size:12px;color:${TEXT_MUTED};width:140px;vertical-align:top;border-bottom:1px solid #E2E8F0;text-transform:uppercase;letter-spacing:0.05em;font-weight:700;">
+      ${escapeHtml(label)}
+    </td>
+    <td style="padding:16px 20px;background-color:#ffffff;font-size:15px;color:${TEXT_MAIN};font-weight:600;border-bottom:1px solid #E2E8F0;white-space:pre-line;line-height:1.5;">
+      ${escapeHtml(value)}
+    </td>
   </tr>`;
 }
 
+// FIX: Removed `referenceId` from params completely
 export function organiserNotificationEmail(params: {
   heading: string;
-  referenceId: string;
   rows: Array<{ label: string; value?: string | null }>;
 }): string {
   const body = `
-    <div style="display:inline-block;padding:4px 12px;background:#FDECEC;color:${BRAND_RED_DARK};border-radius:20px;font-size:12px;font-weight:700;margin-bottom:12px;letter-spacing:0.02em;">
-      ADMIN NOTIFICATION
+    <!-- Premium Badge -->
+    <div style="display:inline-block;padding:6px 14px;background-color:#FEF2F2;color:${BRAND_RED_DARK};border:1px solid #FECACA;border-radius:24px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:20px;">
+      &bull; Lead Notification
     </div>
-    <h1 style="font-size:22px;font-weight:800;color:#0F172A;margin:0 0 6px;letter-spacing:-0.5px;">${escapeHtml(params.heading)}</h1>
-    <p style="font-size:13px;color:#64748B;margin:0 0 24px;">Reference ID: <strong style="color:${BRAND_RED_DARK};">${escapeHtml(params.referenceId)}</strong></p>
+    
+    <h1 style="font-size:24px;font-weight:800;color:${TEXT_MAIN};margin:0 0 32px;letter-spacing:-0.5px;line-height:1.3;">
+      ${escapeHtml(params.heading)}
+    </h1>
 
-    <div style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:12px;padding:8px 20px;margin-bottom:10px;">
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+    <!-- Sleek Data Table -->
+    <div style="border:1px solid #E2E8F0;border-radius:12px;overflow:hidden;box-shadow:0 2px 4px rgba(0,0,0,0.02);">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
         ${params.rows.map((r) => detailRow(r.label, r.value)).join("")}
       </table>
     </div>
@@ -118,40 +150,51 @@ export function organiserNotificationEmail(params: {
   return baseLayout(body);
 }
 
+// FIX: Removed `referenceId` from params completely
 export function userAcknowledgementEmail(params: {
   greetingName: string;
   heading: string;
   bodyText: string;
-  referenceId: string;
 }): string {
   const body = `
-    <h1 style="font-size:22px;font-weight:800;color:#0F172A;margin:0 0 16px;letter-spacing:-0.5px;">${escapeHtml(params.heading)}</h1>
-    <p style="font-size:15px;line-height:1.6;color:#334155;margin:0 0 12px;">Dear <strong>${escapeHtml(params.greetingName)}</strong>,</p>
-    <p style="font-size:15px;line-height:1.6;color:#334155;margin:0 0 28px;">${escapeHtml(params.bodyText)}</p>
+    <h1 style="font-size:26px;font-weight:800;color:${TEXT_MAIN};margin:0 0 20px;letter-spacing:-0.5px;line-height:1.3;">
+      ${escapeHtml(params.heading)}
+    </h1>
+    
+    <p style="font-size:16px;line-height:1.7;color:#334155;margin:0 0 16px;">
+      Dear <strong style="color:${TEXT_MAIN};">${escapeHtml(params.greetingName)}</strong>,
+    </p>
+    
+    <p style="font-size:16px;line-height:1.7;color:#334155;margin:0 0 36px;">
+      ${escapeHtml(params.bodyText)}
+    </p>
 
-    <!-- Reference Card -->
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FEF6F6;border:1px solid #F8C9CB;border-radius:12px;margin:0 0 28px;">
+    <!-- Premium Status Card -->
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:linear-gradient(145deg, #F8FAFC, #F1F5F9);border:1px solid #E2E8F0;border-radius:12px;margin:0 0 36px;">
       <tr>
-        <td style="padding:20px;text-align:center;">
-          <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.1em;color:${BRAND_RED_DARK};font-weight:700;margin-bottom:4px;">Your Official Reference ID</div>
-          <div style="font-size:26px;font-weight:900;color:${BRAND_RED};letter-spacing:1px;">${escapeHtml(params.referenceId)}</div>
+        <td style="padding:28px 20px;text-align:center;">
+          <div style="width:48px;height:48px;background-color:#DCFCE7;color:${BRAND_GREEN};border-radius:50%;display:inline-block;line-height:48px;font-size:24px;margin-bottom:12px;">
+            ✓
+          </div>
+          <div style="font-size:18px;font-weight:800;color:${TEXT_MAIN};margin-bottom:6px;">Status: Confirmed</div>
+          <div style="font-size:14px;color:${TEXT_MUTED};font-weight:500;">Your details have been securely recorded.</div>
         </td>
       </tr>
     </table>
 
-    <!-- CTA Button -->
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;">
+    <!-- Premium CTA Button -->
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:36px;">
       <tr>
         <td align="center">
-          <a href="${event.website}" target="_blank" style="display:inline-block;background-color:${BRAND_RED};color:#ffffff;font-size:14px;font-weight:700;padding:14px 28px;border-radius:8px;text-decoration:none;">
-            Visit Event Website
+          <a href="${event.website}" target="_blank" style="display:inline-block;background-color:${BRAND_RED};color:#ffffff;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;padding:16px 36px;border-radius:8px;text-decoration:none;box-shadow:0 4px 12px rgba(200,38,45,0.25);">
+            Explore Exhibition
           </a>
         </td>
       </tr>
     </table>
 
-    <p style="font-size:13px;line-height:1.6;color:#64748B;margin:0;border-top:1px dashed #E2E8F0;padding-top:20px;">
-      This email confirms receipt of your submission. Our team will review your details and be in touch shortly regarding next steps.
+    <p style="font-size:14px;line-height:1.6;color:#94A3B8;margin:0;border-top:1px solid #E2E8F0;padding-top:24px;text-align:center;">
+      If you have any queries, simply reply to this email. We look forward to hosting you.
     </p>
   `;
   return baseLayout(body);
