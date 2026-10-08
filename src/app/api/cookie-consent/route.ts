@@ -5,7 +5,7 @@ import { generateReferenceId } from "@/lib/utils/referenceId";
 import { isRateLimited, getClientIp } from "@/lib/utils/rateLimit";
 import { appendLeadRow, isSheetsConfigured } from "@/lib/google/sheets";
 import { sendMail, getNotificationRecipients } from "@/lib/email/mailer";
-import { organiserNotificationEmail, userAcknowledgementEmail } from "@/lib/email/templates";
+import { organiserNotificationEmail } from "@/lib/email/templates"; // userAcknowledgementEmail removed
 import { isEmailConfigured } from "@/lib/email/mailer";
 import mongoose from "mongoose";
 import { event } from "@/config/event";
@@ -66,7 +66,7 @@ export async function POST(req: NextRequest) {
     if (!conn) throw new Error("Database unavailable");
 
     await CookieLeadModel.create({
-          referenceId,
+      referenceId,
       name: data.name,
       email: data.email,
       mobile: data.mobile,
@@ -82,7 +82,7 @@ export async function POST(req: NextRequest) {
   if (isSheetsConfigured()) {
     try {
       await appendLeadRow("Website Enquiries", {
-            referenceId,
+        referenceId,
         registerAs: "Cookie Consent & Trade Alerts",
         name: data.name,
         company: data.company || "Trade Visitor",
@@ -113,10 +113,10 @@ export async function POST(req: NextRequest) {
       if (recipients.length > 0) {
         await sendMail({
           to: recipients,
-          subject: `New Visitor Cookie Opt-in – ${data.name} – ${referenceId}`,
+          subject: `New Visitor Cookie Opt-in – ${data.name}`, // Removed referenceId from subject
           html: organiserNotificationEmail({
             heading: "New Trade Alert & Cookie Opt-In Lead",
-            referenceId,
+            
             rows: [
               { label: "Name", value: data.name },
               { label: "Email", value: data.email },
@@ -128,18 +128,7 @@ export async function POST(req: NextRequest) {
         });
       }
 
-      // User acknowledgement email
-      await sendMail({
-        to: data.email,
-        subject: `Preferences Confirmed – ${event.name}`,
-        html: userAcknowledgementEmail({
-          greetingName: data.name,
-          heading: "Preferences & Trade Alerts Confirmed",
-          bodyText:
-            "Thank you for confirming your site preferences. We have recorded your interest and will keep you updated on official Kenya Buildcon Expo announcements, visitor registration, and exhibitor highlights.",
-          referenceId,
-        }),
-      });
+      // USER ACKNOWLEDGEMENT MAIL CODE DELETED
 
       await CookieLeadModel.updateOne({ referenceId }, { emailStatus: "sent" });
     } catch (err) {
@@ -148,5 +137,6 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  return NextResponse.json({ success: true, referenceId });
+  // Frontend par bhi referenceId return nahi hoga
+  return NextResponse.json({ success: true });
 }
