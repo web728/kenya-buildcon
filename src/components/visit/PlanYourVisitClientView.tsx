@@ -295,27 +295,33 @@ export function PlanYourVisitClientView() {
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 shrink-0">
-              <a
-                href={`tel:${cleanPhone}`}
-                className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-5 py-3 text-xs font-semibold text-slate-700 transition-all hover:border-brand-red hover:text-brand-red hover:bg-white"
-              >
-                <svg className="h-4 w-4 text-brand-green" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                </svg>
-                {event.contact.general.phone}
-              </a>
+         <div className="flex flex-col items-stretch gap-3 shrink-0 w-full lg:w-auto">
+  {event.contactList.map((c) => {
+    const firstName = c.name.replace(/^Mr\.\s+/, "").split(" ")[0];
+    return (
+      <a
+        key={c.email}
+        href={`tel:${c.phone.replace(/[^0-9+]/g, "")}`}
+        className="inline-flex items-center justify-start gap-2 rounded-full border border-slate-200 bg-slate-50 px-5 py-3 text-xs font-semibold text-slate-700 transition-all hover:border-brand-red hover:text-brand-red hover:bg-white"
+      >
+        <svg className="h-4 w-4 text-brand-green shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+        </svg>
+        <span className="tabular-nums whitespace-nowrap">{firstName}: {c.phone}</span>
+      </a>
+    );
+  })}
 
-              <a
-                href={`mailto:${event.contact.general.email}`}
-                className="inline-flex items-center justify-center gap-2 rounded-full bg-brand-red px-6 py-3 text-xs font-semibold uppercase tracking-wider text-white shadow-md hover:bg-brand-red-dark transition-all"
-              >
-                <svg className="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
-                Email Helpdesk
-              </a>
-            </div>
+  <a
+    href={`mailto:${event.contactList[0].email}`}
+    className="inline-flex items-center justify-center gap-2 rounded-full bg-brand-red px-6 py-3 text-xs font-semibold uppercase tracking-wider text-white shadow-md hover:bg-brand-red-dark transition-all"
+  >
+    <svg className="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+    </svg>
+    Email Helpdesk
+  </a>
+</div>
           </div>
         </div>
 

@@ -255,11 +255,11 @@ export function OrganisersClientView() {
           })}
         </motion.div>
 
-    {/* ========================================================= */}
-{/* Unified Contact Hub (3 Identical Balanced Cards)          */}
+  {/* ========================================================= */}
+{/* Unified Contact Hub (3 Contacts + Reserve Stand)          */}
 {/* ========================================================= */}
 <div className="mt-14 sm:mt-18 rounded-3xl border border-slate-200/90 bg-white p-6 sm:p-9 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
-  
+
   {/* Hub Header */}
   <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between pb-6 border-b border-slate-100">
     <div>
@@ -275,48 +275,27 @@ export function OrganisersClientView() {
     </p>
   </div>
 
-  {/* 3 Identical Cards Grid */}
-  <div className="mt-7 grid grid-cols-1 gap-4 md:grid-cols-3 items-stretch">
-    
-    {/* Card 1 & 2: Contact Desks */}
-    {CONTACT_DESKS.map((desk) => {
+  {/* 4 Equal Cards Grid */}
+  <div className="mt-7 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 items-stretch">
+
+    {/* Cards 1-3: Contact Desks */}
+    {event.contactList.map((desk) => {
       const cleanPhone = desk.phone.replace(/[^0-9+]/g, "");
-      const isFuturex = desk.company === "Futurex Group";
 
       return (
         <div
-          key={desk.company}
-          className="group relative flex flex-col justify-between rounded-2xl border border-slate-200/80 bg-slate-50/50 p-5 transition-all duration-200 hover:border-brand-red/40 hover:bg-white hover:shadow-lg hover:shadow-slate-200/50"
+          key={desk.email}
+          className="group relative flex h-full flex-col justify-between rounded-2xl border border-slate-200/80 bg-slate-50/50 p-5 transition-all duration-200 hover:border-brand-red/40 hover:bg-white hover:shadow-lg hover:shadow-slate-200/50"
         >
           <div>
-            {/* Header: Badge + Location */}
-            <div className="flex items-center justify-between gap-2">
-              <span
-                className={`inline-block rounded-md px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider ${
-                  isFuturex
-                    ? "bg-brand-red/10 text-brand-red"
-                    : "bg-brand-green/10 text-brand-green"
-                }`}
-              >
-                {desk.company}
-              </span>
-              <span className="text-[11px] font-medium text-slate-400">
-                {desk.location}
-              </span>
+            <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+              Official Representative
             </div>
-
-            {/* Representative Name */}
-            <div className="mt-4">
-              <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                Official Representative
-              </div>
-              <h4 className="mt-0.5 text-base font-bold text-brand-dark group-hover:text-brand-red transition-colors">
-                {desk.name}
-              </h4>
-            </div>
+            <h4 className="mt-1 text-base font-bold text-brand-dark group-hover:text-brand-red transition-colors">
+              {desk.name}
+            </h4>
           </div>
 
-          {/* Contact Links */}
           <div className="mt-5 pt-3.5 border-t border-slate-200/70 flex flex-col gap-2 text-xs">
             <a
               href={`tel:${cleanPhone}`}
@@ -327,7 +306,7 @@ export function OrganisersClientView() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                 </svg>
               </span>
-              <span className="tabular-nums">{desk.phone}</span>
+              <span className="tabular-nums whitespace-nowrap">{desk.phone}</span>
             </a>
 
             <a
@@ -346,33 +325,20 @@ export function OrganisersClientView() {
       );
     })}
 
-    {/* Card 3: Reserve Stand (Exact Match in Size & Alignment) */}
-    <div className="relative flex flex-col justify-between overflow-hidden rounded-2xl bg-[#071118] p-5 text-white shadow-md transition-all hover:shadow-xl">
+    {/* Card 4: Reserve Stand (same structure & height as contact cards) */}
+    <div className="relative flex h-full flex-col justify-between overflow-hidden rounded-2xl bg-[#071118] p-5 text-white shadow-md transition-all hover:shadow-xl">
       {/* Subtle Glow */}
       <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-brand-red/20 blur-xl" />
 
       <div className="relative z-10">
-        <div className="flex items-center justify-between gap-2">
-          <span className="inline-flex items-center gap-1.5 rounded-md border border-white/10 bg-white/[0.06] px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-300">
-            <span className="h-1.5 w-1.5 rounded-full bg-brand-green animate-pulse" />
-            Active
-          </span>
-          <span className="text-[11px] font-medium text-slate-400">
-            Expo 2027
-          </span>
+        <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+          Booth Allocation
         </div>
-
-        <div className="mt-5">
-          <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-            Booth Allocation
-          </div>
-          <h4 className="mt-0.5 text-base font-bold text-white">
-            Reserve Your Prime Stand
-          </h4>
-        </div>
+        <h4 className="mt-1 text-base font-bold text-white">
+          Reserve Your Prime Stand
+        </h4>
       </div>
 
-      {/* Buttons matching contact pills layout height */}
       <div className="relative z-10 mt-5 pt-3.5 border-t border-white/10 flex flex-col gap-2 text-xs">
         <Link
           href={event.cta.bookStand}
@@ -393,7 +359,6 @@ export function OrganisersClientView() {
 
   </div>
 </div>
-
         {/* Bottom Booking Ribbon */}
         <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-3 rounded-2xl border border-brand-red/20 bg-gradient-to-r from-brand-red/[0.05] via-white to-brand-green/[0.05] p-4 sm:p-5 shadow-sm">
           <div className="flex items-center gap-3 text-xs text-slate-700">

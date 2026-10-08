@@ -116,54 +116,47 @@ export function Footer() {
             </div>
           </div>
 
-          {/* Clean Dual Organiser Contacts (Futurex & ETSIPL) */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 rounded-2xl border border-white/10 bg-white/[0.03] p-4 sm:p-5 backdrop-blur-xl lg:max-w-lg w-full shadow-2xl">
-            {FOOTER_CONTACTS.map((c) => {
-              const cleanPhone = c.phone.replace(/[^0-9+]/g, "");
+         {/* Organiser Contacts (Futurex x2 & ETSIPL) */}
+<div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 rounded-2xl border border-white/10 bg-white/[0.03] p-4 sm:p-5 backdrop-blur-xl lg:max-w-3xl w-full shadow-2xl">
+  {event.contactList.map((c) => {
+    const cleanPhone = c.phone.replace(/[^0-9+]/g, "");
+    const isFuturex = c.company === "Futurex Group";
 
-              return (
-                <div
-                  key={c.company}
-                  className="flex flex-col justify-between rounded-xl border border-white/[0.06] bg-white/[0.02] p-3.5 transition-colors hover:border-white/15"
-                >
-                  <div>
-                    <span
-                      className={`inline-block rounded-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
-                        c.isBlue
-                          ? "bg-brand-red/15 text-brand-red-light"
-                          : "bg-brand-green/15 text-brand-green"
-                      }`}
-                    >
-                      {c.company}
-                    </span>
-                    <p className="mt-2 text-sm font-bold text-white">{c.name}</p>
-                  </div>
+    return (
+      <div
+        key={c.email}
+        className="flex flex-col justify-between rounded-xl border border-white/[0.06] bg-white/[0.02] p-3.5 transition-colors hover:border-white/15"
+      >
+        <div>
+         
+          <p className="mt-2 text-sm font-bold text-white">{c.name}</p>
+        </div>
 
-                  <div className="mt-3 pt-2.5 border-t border-white/10 flex flex-col gap-1.5 text-xs">
-                    <a
-                      href={`tel:${cleanPhone}`}
-                      className="inline-flex items-center gap-2 font-medium text-slate-300 hover:text-brand-green transition-colors"
-                    >
-                      <svg className="h-3.5 w-3.5 text-brand-green shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                      </svg>
-                      <span className="tabular-nums">{c.phone}</span>
-                    </a>
+        <div className="mt-3 pt-2.5 border-t border-white/10 flex flex-col gap-1.5 text-xs">
+          <a
+            href={`tel:${cleanPhone}`}
+            className="inline-flex items-center gap-2 font-medium text-slate-300 hover:text-brand-green transition-colors"
+          >
+            <svg className="h-3.5 w-3.5 text-brand-green shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+            </svg>
+            <span className="tabular-nums">{c.phone}</span>
+          </a>
 
-                    <a
-                      href={`mailto:${c.email}`}
-                      className="inline-flex items-center gap-2 font-medium text-slate-300 hover:text-brand-red-light transition-colors truncate"
-                    >
-                      <svg className="h-3.5 w-3.5 text-brand-red-light shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                      </svg>
-                      <span className="truncate">{c.email}</span>
-                    </a>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+          <a
+            href={`mailto:${c.email}`}
+            className="inline-flex items-center gap-2 font-medium text-slate-300 hover:text-brand-red-light transition-colors truncate"
+          >
+            <svg className="h-3.5 w-3.5 text-brand-red-light shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+            <span className="truncate">{c.email}</span>
+          </a>
+        </div>
+      </div>
+    );
+  })}
+</div>
         </div>
 
         {/* Navigation Grid */}

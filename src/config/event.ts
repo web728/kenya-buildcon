@@ -104,6 +104,31 @@ export const event = {
     },
   },
 
+    contactList: [
+    {
+      company: "Futurex Group",
+      location: "New Delhi",
+      name: "Mr. Namit Gupta",
+      email: "namit@futurextrade.com",
+      phone: "(+91) 9810855697",
+    },
+  
+    {
+      company: "ETSIPL",
+      location: "Navi Mumbai",
+      name: "Mr. Vijayanka Brighuvanshi",
+      email: "vijayanka@etsipl.in",
+      phone: "(+91) 9324232529",
+    },
+      {
+      company: "Futurex Group",
+      location: "New Delhi",
+      name: "Mr. Vaibhav Srivastava",
+      email: "vaibhav@futurextrade.com",
+      phone: "(+91) 9807169880",
+    },
+  ],
+
   // Official Kenya Buildcon profiles (kenyabuildcon.com); env vars override per environment.
   social: {
     linkedin: process.env.NEXT_PUBLIC_SOCIAL_LINKEDIN || "https://www.linkedin.com/company/kenyabuildconexpo",

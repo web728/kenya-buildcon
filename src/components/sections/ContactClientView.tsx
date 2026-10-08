@@ -144,64 +144,52 @@ export function ContactClientView() {
             viewport={{ once: true, margin: "-40px" }}
             className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
           >
-            {CONTACT_PERSONS.map((item) => {
-              const cleanPhone = item.person.phone.replace(/[^0-9+]/g, "");
+           {event.contactList.map((item) => {
+  const cleanPhone = item.phone.replace(/[^0-9+]/g, "");
+  const isFuturex = item.company === "Futurex Group";
 
-              return (
-                <motion.div
-                  key={item.person.email}
-                  variants={itemVariants}
-                  className="group relative flex flex-col justify-between rounded-3xl border border-slate-200/90 bg-white p-7 shadow-[0_4px_20px_rgba(0,0,0,0.03)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-brand-red/40 hover:shadow-xl"
-                >
-                  <div>
-                    <div className="flex items-center justify-between pb-4 border-b border-slate-100">
-                      <span
-                        className={`rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wider ${
-                          item.isBlue
-                            ? "bg-brand-red/10 text-brand-red"
-                            : "bg-brand-green/10 text-brand-green"
-                        }`}
-                      >
-                        {item.company}
-                      </span>
-                      <span className="text-xs font-medium text-slate-400">
-                        {item.location}
-                      </span>
-                    </div>
+  return (
+    <motion.div
+      key={item.email}
+      variants={itemVariants}
+      className="group relative flex flex-col justify-between rounded-3xl border border-slate-200/90 bg-white p-7 shadow-[0_4px_20px_rgba(0,0,0,0.03)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-brand-red/40 hover:shadow-xl"
+    >
+      <div>
+     
 
-                    <h3 className="mt-5 text-xl font-bold tracking-tight text-brand-dark group-hover:text-brand-red transition-colors">
-                      {item.person.name}
-                    </h3>
-                  </div>
+        <h3 className="mt-5 text-xl font-bold tracking-tight text-brand-dark group-hover:text-brand-red transition-colors">
+          {item.name}
+        </h3>
+      </div>
 
-                  <div className="mt-6 pt-5 border-t border-slate-100 flex flex-col gap-2.5 text-xs">
-                    <a
-                      href={`tel:${cleanPhone}`}
-                      className="inline-flex items-center gap-3 rounded-xl border border-slate-200/80 bg-slate-50/60 px-4 py-2.5 font-semibold text-slate-700 transition-all hover:border-brand-green/50 hover:bg-white hover:text-brand-green hover:shadow-sm"
-                    >
-                      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-emerald-50 text-brand-green">
-                        <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                        </svg>
-                      </span>
-                      <span className="tabular-nums">{item.person.phone}</span>
-                    </a>
+      <div className="mt-6 pt-5 border-t border-slate-100 flex flex-col gap-2.5 text-xs">
+        <a
+          href={`tel:${cleanPhone}`}
+          className="inline-flex items-center gap-3 rounded-xl border border-slate-200/80 bg-slate-50/60 px-4 py-2.5 font-semibold text-slate-700 transition-all hover:border-brand-green/50 hover:bg-white hover:text-brand-green hover:shadow-sm"
+        >
+          <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-emerald-50 text-brand-green">
+            <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+            </svg>
+          </span>
+          <span className="tabular-nums">{item.phone}</span>
+        </a>
 
-                    <a
-                      href={`mailto:${item.person.email}`}
-                      className="inline-flex items-center gap-3 rounded-xl border border-slate-200/80 bg-slate-50/60 px-4 py-2.5 font-semibold text-slate-700 transition-all hover:border-brand-red/50 hover:bg-white hover:text-brand-red hover:shadow-sm"
-                    >
-                      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-red-50 text-brand-red">
-                        <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                        </svg>
-                      </span>
-                      <span className="truncate">{item.person.email}</span>
-                    </a>
-                  </div>
-                </motion.div>
-              );
-            })}
+        <a
+          href={`mailto:${item.email}`}
+          className="inline-flex items-center gap-3 rounded-xl border border-slate-200/80 bg-slate-50/60 px-4 py-2.5 font-semibold text-slate-700 transition-all hover:border-brand-red/50 hover:bg-white hover:text-brand-red hover:shadow-sm"
+        >
+          <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-red-50 text-brand-red">
+            <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+          </span>
+          <span className="truncate">{item.email}</span>
+        </a>
+      </div>
+    </motion.div>
+  );
+})}
           </motion.div>
         </div>
 

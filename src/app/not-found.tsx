@@ -91,50 +91,46 @@ export default function NotFound() {
             </Link>
           </div>
 
-          {/* Direct Organizer Assistance Desk Card */}
-          <div className="mt-10 rounded-3xl border border-white/10 bg-white/[0.04] p-6 text-left backdrop-blur-2xl shadow-2xl">
-            <div className="flex items-center justify-between pb-4 border-b border-white/10">
-              <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-brand-red">
-                Need Help Finding a Page?
-              </span>
-              <span className="text-[11px] font-semibold text-slate-400">
-                {event.name}
-              </span>
-            </div>
+        {/* Direct Organizer Assistance Desk Card */}
+<div className="mt-10 rounded-3xl border border-white/10 bg-white/[0.04] p-6 text-left backdrop-blur-2xl shadow-2xl">
+  <div className="flex items-center justify-between pb-4 border-b border-white/10">
+    <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-brand-red">
+      Need Help Finding a Page?
+    </span>
+    <span className="text-[11px] font-semibold text-slate-400">{event.name}</span>
+  </div>
 
-            <div className="mt-4 flex flex-col gap-1">
-              <p className="text-sm font-bold text-white">
-                {event.contact.general.name}
-              </p>
-              <p className="text-xs text-slate-400">
-                Head of International Trade Fair Operations &bull; Secretariat
-              </p>
-            </div>
+  <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-3">
+    {event.contactList.map((c) => (
+      <div
+        key={c.email}
+        className="flex flex-col gap-2 rounded-2xl border border-white/10 bg-white/[0.03] p-4 text-xs"
+      >
+        <p className="text-sm font-bold text-white">{c.name}</p>
 
-            <div className="mt-4 flex flex-wrap items-center gap-4 pt-4 border-t border-white/10 text-xs sm:text-sm">
-              <a
-                href={`tel:${cleanPhone}`}
-                className="inline-flex items-center gap-2 font-semibold text-slate-200 transition-colors hover:text-brand-green"
-              >
-                <svg className="h-4 w-4 text-brand-green shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                </svg>
-                {event.contact.general.phone}
-              </a>
+        <a
+          href={`tel:${c.phone.replace(/[^0-9+]/g, "")}`}
+          className="inline-flex items-center gap-2 font-semibold tabular-nums text-slate-200 transition-colors hover:text-brand-green"
+        >
+          <svg className="h-4 w-4 text-brand-green shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+          </svg>
+          {c.phone}
+        </a>
 
-              <span className="text-white/20">&bull;</span>
-
-              <a
-                href={`mailto:${event.contact.general.email}`}
-                className="inline-flex items-center gap-2 font-semibold text-slate-200 transition-colors hover:text-brand-red truncate"
-              >
-                <svg className="h-4 w-4 text-brand-red shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
-                {event.contact.general.email}
-              </a>
-            </div>
-          </div>
+        <a
+          href={`mailto:${c.email}`}
+          className="inline-flex items-center gap-2 font-semibold text-slate-200 transition-colors hover:text-brand-red truncate"
+        >
+          <svg className="h-4 w-4 text-brand-red shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+          </svg>
+          <span className="truncate">{c.email}</span>
+        </a>
+      </div>
+    ))}
+  </div>
+</div>
         </Container>
       </main>
 

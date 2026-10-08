@@ -224,34 +224,38 @@ export function ExhibitorServicesClientView() {
       </p>
     </div>
 
-    {/* Dual Helpline Actions (Futurex & ETSIPL) */}
-    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 shrink-0">
-      {/* Futurex Desk */}
-      <a
-        href={`tel:${event.contact.futurex.phone.replace(/[^0-9+]/g, "")}`}
-        className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-slate-50/80 px-4 py-3 text-xs font-semibold text-slate-700 transition-all hover:border-brand-red hover:text-brand-red hover:bg-white hover:shadow-sm"
-      >
-        <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-red-50 text-brand-red">
-          <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-          </svg>
-        </span>
-        <span>Futurex: {event.contact.futurex.phone}</span>
-      </a>
+  {/* Helpline Actions: 3 numbers, one per line */}
+<div className="flex flex-col items-stretch gap-3 shrink-0 w-full lg:w-auto">
+  {event.contactList.map((c) => {
+    const isFuturex = c.company === "Futurex Group";
+    const firstName = c.name.replace(/^Mr\.\s+/, "").split(" ")[0];
 
-      {/* ETSIPL Desk */}
+    return (
       <a
-        href={`tel:${event.contact.etsipl.phone.replace(/[^0-9+]/g, "")}`}
-        className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-slate-50/80 px-4 py-3 text-xs font-semibold text-slate-700 transition-all hover:border-brand-green hover:text-brand-green hover:bg-white hover:shadow-sm"
+        key={c.email}
+        href={`tel:${c.phone.replace(/[^0-9+]/g, "")}`}
+        className={`inline-flex items-center justify-start gap-3 rounded-2xl border border-slate-200 bg-slate-50/80 px-4 py-3 text-xs font-semibold text-slate-700 transition-all hover:bg-white hover:shadow-sm ${
+          isFuturex
+            ? "hover:border-brand-red hover:text-brand-red"
+            : "hover:border-brand-green hover:text-brand-green"
+        }`}
       >
-        <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-emerald-50 text-brand-green">
+        <span
+          className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-md ${
+            isFuturex ? "bg-red-50 text-brand-red" : "bg-emerald-50 text-brand-green"
+          }`}
+        >
           <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
           </svg>
         </span>
-        <span>ETSIPL: {event.contact.etsipl.phone}</span>
+        <span className="tabular-nums whitespace-nowrap">
+          {firstName}: {c.phone}
+        </span>
       </a>
-    </div>
+    );
+  })}
+</div>
   </div>
 </div>
 

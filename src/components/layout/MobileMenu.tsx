@@ -187,15 +187,24 @@ export function MobileMenu({ open, onClose }: MobileMenuProps) {
                 Visitor Registration
               </Link>
 
-              <div className="mt-2 flex items-center justify-between px-1 text-[11px] text-slate-400">
-                <span className="truncate">{event.venue.district}, {event.venue.city}</span>
-                <a
-                  href={`tel:${cleanPhone}`}
-                  className="font-mono font-medium text-emerald-400 transition-colors hover:text-emerald-300 hover:underline"
-                >
-                  {event.contact.general.phone}
-                </a>
-              </div>
+             <div className="mt-2 px-1 text-[11px] text-slate-400">
+  <span className="block truncate">{event.venue.district}, {event.venue.city}</span>
+  <div className="mt-2 flex flex-col gap-1.5">
+    {event.contactList.map((c) => {
+      const firstName = c.name.replace(/^Mr\.\s+/, "").split(" ")[0];
+      return (
+        <a
+          key={c.email}
+          href={`tel:${c.phone.replace(/[^0-9+]/g, "")}`}
+          className="flex items-center justify-between font-mono font-medium text-emerald-400 transition-colors hover:text-emerald-300"
+        >
+          <span className="text-slate-400">{firstName}</span>
+          <span className="tabular-nums">{c.phone}</span>
+        </a>
+      );
+    })}
+  </div>
+</div>
             </div>
           </motion.aside>
         </div>
