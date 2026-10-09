@@ -1,101 +1,352 @@
+
 import type { MetadataRoute } from "next";
+
 import { event } from "@/config/event";
 import { getPublishedExhibitors } from "@/lib/data/exhibitors";
 import { getPublishedNews } from "@/lib/data/news";
 
+/* ==========================================
+   SITEMAP CONFIGURATION
+========================================== */
+
+// Always generate sitemap using current published data.
 export const dynamic = "force-dynamic";
 
-// High-Priority Pages for Google Sitelinks (Priority 0.9 - 0.8)
-const CORE_CONVERSION_ROUTES = [
-  { path: "/exhibit", priority: 0.9, changeFrequency: "weekly" },
-  { path: "/book-a-stand", priority: 0.9, changeFrequency: "weekly" },
-  { path: "/register-to-visit", priority: 0.9, changeFrequency: "weekly" },
-  { path: "/exhibition-profile", priority: 0.8, changeFrequency: "weekly" },
-  { path: "/who-should-exhibit", priority: 0.8, changeFrequency: "weekly" },
-  { path: "/who-should-visit", priority: 0.8, changeFrequency: "weekly" },
-  { path: "/about", priority: 0.8, changeFrequency: "monthly" },
-  { path: "/venue", priority: 0.8, changeFrequency: "monthly" },
-];
+// Official production website.
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL?.trim() ||
+  event.website ||
+  "https://www.kenyabuildcon.com/";
 
-// Secondary Informational Pages (Priority 0.6 - 0.7)
-const SECONDARY_ROUTES = [
-  { path: "/why-kenya", priority: 0.7, changeFrequency: "monthly" },
-  { path: "/organisers", priority: 0.7, changeFrequency: "monthly" },
-  { path: "/exhibitor-services", priority: 0.7, changeFrequency: "monthly" },
-  { path: "/visit", priority: 0.7, changeFrequency: "weekly" },
-  { path: "/plan-your-visit", priority: 0.7, changeFrequency: "monthly" },
-  { path: "/exhibitors", priority: 0.7, changeFrequency: "daily" },
-  { path: "/partners", priority: 0.6, changeFrequency: "monthly" },
-  { path: "/news", priority: 0.7, changeFrequency: "daily" },
-  { path: "/gallery", priority: 0.6, changeFrequency: "monthly" },
-  { path: "/downloads", priority: 0.6, changeFrequency: "monthly" },
-  { path: "/contact", priority: 0.7, changeFrequency: "monthly" },
-  { path: "/privacy-policy", priority: 0.3, changeFrequency: "yearly" },
-  { path: "/terms-and-conditions", priority: 0.3, changeFrequency: "yearly" },
-  { path: "/cookie-policy", priority: 0.3, changeFrequency: "yearly" },
-];
+/* ==========================================
+   VALID BASE URL
+========================================== */
 
-/**
- * Ensures a valid absolute URL string with 'https://' protocol and no trailing slash
- */
-function getAbsoluteBaseUrl(): string {
-  const rawUrl = process.env.NEXT_PUBLIC_SITE_URL || event.website;
-  let formatted = rawUrl.trim();
+function getBaseUrl(): string {
+  const raw = SITE_URL.trim();
 
-  if (!formatted.startsWith("http://") && !formatted.startsWith("https://")) {
-    formatted = `https://${formatted}`;
-  }
+  const formatted = /^https?:\/\//i.test(raw)
+    ? raw
+    : `https://${raw}`;
 
-  return formatted.replace(/\/$/, "");
+  const url = new URL(formatted);
+
+  return url.origin;
 }
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = getAbsoluteBaseUrl();
+/* ==========================================
+   STATIC WEBSITE ROUTES
+
+   Only include published, indexable pages.
+========================================== */
+
+const STATIC_ROUTES = [
+  // Main conversion pages
+  "/exhibit",
+  "/book-a-stand",
+  "/register-to-visit",
+  "/exhibition-profile",
+  "/who-should-exhibit",
+  "/who-should-visit",
+
+  // Event information
+  "/about",
+  "/venue",
+  "/why-kenya",
+  "/organisers",
+
+  // Exhibitor information
+  "/exhibitor-services",
+  "/exhibitors",
+
+  // Visitor information
+  "/visit",
+  "/plan-your-visit",
+
+  // Supporting pages
+  "/partners",
+  "/news",
+  "/gallery",
+  "/downloads",
+  "/contact",
+
+  // Legal pages
+  "/privacy-policy",
+  "/terms-and-conditions",
+  "/cookie-policy",
+] as const;
+
+/* ==========================================
+   SAFE URL GENERATOR
+========================================== */
+
+function createUrl(
+  baseUrl: string,
+  path: string
+): string {
+  if (path === "/") {
+    return `${baseUrl}/`;
+  }
+
+  const normalizedPath = `/${path}`
+    .replace(/\/+/g, "/")
+    .replace(/\/$/, "");
+
+  return `${baseUrl}${normalizedPath}`;
+}
+
+/* ==========================================
+   VALID DATE HELPER
+
+   Do not generate fake modification dates.
+========================================== */
+
+function getValidDate(
+  value: unknown
+): Date | undefined {
+  if (value === null || value === undefined) {
+    return undefined;
+  }
+
+  if (
+    !(value instanceof Date) &&
+    typeof value !== "string" &&
+    typeof value !== "number"
+  ) {
+    return undefined;
+  }
+
+  const date = new Date(value);
+
+  if (!Number.isFinite(date.getTime())) {
+    return undefined;
+  }
+
+  // Avoid future modification timestamps.
+  if (date.getTime() > Date.now()) {
+    return undefined;
+  }
+
+  return date;
+}
+
+/* ==========================================
+   DYNAMIC CONTENT DATE HELPER
+========================================== */
+
+function getContentLastModified(
+  item: unknown
+): Date | undefined {
+  if (!item || typeof item !== "object") {
+    return undefined;
+  }
+
+  const record = item as Record<string, unknown>;
+
+  return (
+    getValidDate(record.updatedAt) ||
+    getValidDate(record.modifiedAt) ||
+    getValidDate(record.publishedAt) ||
+    getValidDate(record.createdAt)
+  );
+}
+
+/* ==========================================
+   VALID SLUG HELPER
+========================================== */
+
+function normalizeSlug(
+  value: unknown
+): string | null {
+  if (typeof value !== "string") {
+    return null;
+  }
+
+  const slug = value.trim().replace(/^\/+|\/+$/g, "");
+
+  if (!slug) {
+    return null;
+  }
+
+  // Slugs must represent one URL segment.
+  if (
+    slug === "." ||
+    slug === ".." ||
+    slug.includes("/") ||
+    slug.includes("\\") ||
+    slug.includes("?") ||
+    slug.includes("#")
+  ) {
+    return null;
+  }
+
+  return encodeURIComponent(slug);
+}
+
+/* ==========================================
+   REMOVE DUPLICATE URLS
+========================================== */
+
+function removeDuplicates(
+  entries: MetadataRoute.Sitemap
+): MetadataRoute.Sitemap {
+  const uniqueEntries = new Map<
+    string,
+    MetadataRoute.Sitemap[number]
+  >();
+
+  for (const entry of entries) {
+    const existing = uniqueEntries.get(entry.url);
+
+    if (!existing) {
+      uniqueEntries.set(entry.url, entry);
+      continue;
+    }
+
+    // Preserve the latest valid lastModified.
+    const existingDate = getValidDate(
+      existing.lastModified
+    );
+
+    const incomingDate = getValidDate(
+      entry.lastModified
+    );
+
+    if (
+      incomingDate &&
+      (!existingDate ||
+        incomingDate.getTime() >
+          existingDate.getTime())
+    ) {
+      uniqueEntries.set(entry.url, entry);
+    }
+  }
+
+  return Array.from(uniqueEntries.values());
+}
+
+/* ==========================================
+   MAIN SITEMAP GENERATOR
+========================================== */
+
+export default async function sitemap(): Promise<
+  MetadataRoute.Sitemap
+> {
+  const baseUrl = getBaseUrl();
+
+  /* ----------------------------------------
+     FETCH PUBLISHED CONTENT
+  ---------------------------------------- */
 
   const [exhibitors, news] = await Promise.all([
-    getPublishedExhibitors().catch(() => []),
-    getPublishedNews().catch(() => []),
+    getPublishedExhibitors().catch((error) => {
+      console.error(
+        "[Sitemap] Failed to load exhibitors:",
+        error
+      );
+
+      return [];
+    }),
+
+    getPublishedNews().catch((error) => {
+      console.error(
+        "[Sitemap] Failed to load news:",
+        error
+      );
+
+      return [];
+    }),
   ]);
 
-  // 1. Homepage (Top Priority for Sitelinks generation)
+  /* ----------------------------------------
+     1. HOMEPAGE
+  ---------------------------------------- */
+
   const homeEntry: MetadataRoute.Sitemap[number] = {
-    url: `${baseUrl}/`,
-    lastModified: new Date(),
-    changeFrequency: "daily",
-    priority: 1.0,
+    url: createUrl(baseUrl, "/"),
   };
 
-  // 2. Core Navigation Routes
-  const coreEntries: MetadataRoute.Sitemap = CORE_CONVERSION_ROUTES.map((route) => ({
-    url: `${baseUrl}${route.path}`,
-    lastModified: new Date(),
-    changeFrequency: route.changeFrequency as "weekly" | "monthly",
-    priority: route.priority,
-  }));
+  /* ----------------------------------------
+     2. STATIC WEBSITE PAGES
+  ---------------------------------------- */
 
-  // 3. Secondary Routes
-  const secondaryEntries: MetadataRoute.Sitemap = SECONDARY_ROUTES.map((route) => ({
-    url: `${baseUrl}${route.path}`,
-    lastModified: new Date(),
-    changeFrequency: route.changeFrequency as "weekly" | "monthly" | "yearly" | "daily",
-    priority: route.priority,
-  }));
+  const staticEntries: MetadataRoute.Sitemap =
+    STATIC_ROUTES.map((path) => ({
+      url: createUrl(baseUrl, path),
+    }));
 
-  // 4. Dynamic Exhibitors Pages
-  const exhibitorEntries: MetadataRoute.Sitemap = exhibitors.map((e) => ({
-    url: `${baseUrl}/exhibitors/${e.slug}`,
-    lastModified: new Date(),
-    changeFrequency: "weekly",
-    priority: 0.6,
-  }));
+  /* ----------------------------------------
+     3. PUBLISHED EXHIBITOR PROFILES
+  ---------------------------------------- */
 
-  // 5. Dynamic News Pages
-  const newsEntries: MetadataRoute.Sitemap = news.map((n) => ({
-    url: `${baseUrl}/news/${n.slug}`,
-    lastModified: new Date((n.publishedAt as unknown as string) || new Date()),
-    changeFrequency: "monthly",
-    priority: 0.5,
-  }));
+  const exhibitorEntries: MetadataRoute.Sitemap =
+    exhibitors.flatMap((exhibitor) => {
+      const slug = normalizeSlug(exhibitor.slug);
 
-  return [homeEntry, ...coreEntries, ...secondaryEntries, ...exhibitorEntries, ...newsEntries];
+      if (!slug) {
+        return [];
+      }
+
+      const lastModified =
+        getContentLastModified(exhibitor);
+
+      return [
+        {
+          url: createUrl(
+            baseUrl,
+            `/exhibitors/${slug}`
+          ),
+
+          ...(lastModified
+            ? { lastModified }
+            : {}),
+        },
+      ];
+    });
+
+  /* ----------------------------------------
+     4. PUBLISHED NEWS ARTICLES
+  ---------------------------------------- */
+
+  const newsEntries: MetadataRoute.Sitemap =
+    news.flatMap((article) => {
+      const slug = normalizeSlug(article.slug);
+
+      if (!slug) {
+        return [];
+      }
+
+      const lastModified =
+        getContentLastModified(article);
+
+      return [
+        {
+          url: createUrl(
+            baseUrl,
+            `/news/${slug}`
+          ),
+
+          ...(lastModified
+            ? { lastModified }
+            : {}),
+        },
+      ];
+    });
+
+  /* ----------------------------------------
+     5. COMBINE ALL SITEMAP URLS
+  ---------------------------------------- */
+
+  const allEntries: MetadataRoute.Sitemap = [
+    homeEntry,
+    ...staticEntries,
+    ...exhibitorEntries,
+    ...newsEntries,
+  ];
+
+  /* ----------------------------------------
+     6. RETURN CLEAN SITEMAP
+  ---------------------------------------- */
+
+  return removeDuplicates(allEntries);
 }
