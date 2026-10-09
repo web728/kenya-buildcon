@@ -10,7 +10,7 @@ import { appendLeadRow, isSheetsConfigured } from "@/lib/google/sheets";
 import { sendBrochureDownloadEmails } from "@/lib/email/sendLeadEmails";
 import { isEmailConfigured } from "@/lib/email/mailer";
 
-const BROCHURE_FILE_URL = "/downloads/Kenya-Buildcon-Expo-Brochure-2027.pdf";
+const BROCHURE_FILE_URL = "/downloads/4th-Kenya-Buildcon-International-Expo-2027-Brochure.pdf";
 
 export async function POST(req: NextRequest) {
   const ip = getClientIp(req.headers);

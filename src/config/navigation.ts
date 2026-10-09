@@ -39,12 +39,30 @@ export const mainNav: NavItem[] = [
     ],
   },
   {
+  label: "Downloads",
+  href: "/downloads/brochure",
+  children: [
+    {
+      label: "Exhibition Brochure",
+      href: "/downloads",
+      description:
+        "Download the official India Battery International Show brochure.",
+    },
+    {
+      label: "Post Show Report",
+      href: "/downloads/3rd-Kenya-Buildcon-International-Expo-2026-Post-Show-Report.pdf",
+      description:
+        "View the official post show report from the previous edition.",
+    },
+  ],
+},
+  {
     label: "Media & Resources",
     href: "/news",
     children: [
       { label: "Latest News", href: "/news", description: "Press releases and updates." },
       { label: "Gallery", href: "/gallery", description: "Event photos and video highlights." },
-      { label: "Downloads", href: "/downloads", description: "Brochures, floor plan, and forms." },
+      // { label: "Downloads", href: "/downloads", description: "Brochures, floor plan, and forms." },
     ],
   },
   { label: "Contact", href: "/contact" },
