@@ -1,230 +1,594 @@
+
 "use client";
 
 import Image from "next/image";
-import { motion, type Variants } from "framer-motion";
+import {
+  motion,
+  useReducedMotion,
+  type Variants,
+} from "framer-motion";
+
 import { event } from "@/config/event";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 
+/* ==========================================
+   BRAND SETTINGS
+========================================== */
+
+const RED = "#BE202B";
+const GREEN = "#25B34B";
+const BLACK = "#111111";
+
+const HERO_IMAGE = "/images/gallery/hero.jpg";
+
+const ARCHITECTURE_IMAGE =
+  "/images/home/hero-architecture.svg";
+
+const EASE = [0.16, 1, 0.3, 1] as const;
+
+/* ==========================================
+   ENTRANCE ANIMATIONS
+========================================== */
+
 const containerVariants: Variants = {
-  hidden: { opacity: 0 },
+  hidden: {},
   visible: {
-    opacity: 1,
     transition: {
-      staggerChildren: 0.1,
+      staggerChildren: 0.09,
       delayChildren: 0.1,
     },
   },
 };
 
 const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 18, filter: "blur(4px)" },
+  hidden: {
+    opacity: 0,
+    y: 15,
+  },
   visible: {
     opacity: 1,
     y: 0,
-    filter: "blur(0px)",
     transition: {
-      duration: 0.8,
-      ease: [0.16, 1, 0.3, 1],
+      duration: 0.65,
+      ease: EASE,
     },
   },
 };
 
-export function HeroSection() {
+/* ==========================================
+   SUBTLE ANIMATED BACKGROUND
+========================================== */
+
+function HeroBackground() {
+  const reduceMotion = useReducedMotion();
+
   return (
-  <section
-  className="relative flex min-h-[100dvh] w-full items-center justify-center overflow-hidden bg-[#071118] pt-28 sm:pt-36 lg:pt-40 pb-16 text-white selection:bg-brand-red selection:text-white"
-  aria-label={`${event.name} — ${event.dates.display}, ${event.venue.fullLocation}`}
->
-      {/* Background Image Canvas with Soft Frosted Fog */}
-      <div className="absolute inset-0 z-0 select-none overflow-hidden">
-        <Image
-          src="/images/home/kenya-buildcon-exhibition-hall.jpg"
-          alt="Exhibition hall at a previous Kenya Buildcon International Expo, The Sarit Expo Centre, Nairobi"
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover opacity-75 scale-100"
-          style={{ objectPosition: "center 45%" }}
+    <div
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-0 overflow-hidden"
+    >
+      {/* Subtle architectural grid */}
+      <div
+        className="absolute inset-0 opacity-[0.025]"
+        style={{
+          backgroundImage:
+            "linear-gradient(#111111 1px,transparent 1px),linear-gradient(90deg,#111111 1px,transparent 1px)",
+          backgroundSize: "70px 70px",
+        }}
+      />
+
+      {/* Soft radial accents */}
+      <div className="absolute -left-32 bottom-0 h-[360px] w-[360px] rounded-full bg-[#BE202B]/[0.035] blur-[85px]" />
+
+      <div className="absolute -right-32 top-0 h-[350px] w-[350px] rounded-full bg-[#25B34B]/[0.035] blur-[90px]" />
+
+      {/* Architectural rings */}
+      <svg
+        viewBox="0 0 1440 700"
+        preserveAspectRatio="xMidYMid slice"
+        fill="none"
+        className="absolute inset-0 h-full w-full"
+      >
+        <circle
+          cx="40"
+          cy="640"
+          r="210"
+          stroke={RED}
+          strokeWidth="0.8"
+          strokeOpacity="0.12"
+          strokeDasharray="6 12"
         />
 
-        {/* Translucent Frosted Fog Wash */}
-        <div className="absolute inset-0 bg-[#071118]/45 backdrop-blur-[3px]" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#071118]/85 via-transparent to-[#071118]/40" />
-      </div>
+        <circle
+          cx="40"
+          cy="640"
+          r="315"
+          stroke={GREEN}
+          strokeWidth="0.8"
+          strokeOpacity="0.09"
+        />
 
-      {/* Floating 3D Wireframe Wave Mesh (Reference Image Inspired) */}
-      <div className="pointer-events-none absolute inset-0 z-0 select-none overflow-hidden">
-        <svg
-          viewBox="0 0 1440 900"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-full w-full opacity-65"
-          preserveAspectRatio="xMidYMid slice"
-        >
-          <defs>
-            <linearGradient id="waveBlueLight" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#c8262d" stopOpacity="0.1" />
-              <stop offset="50%" stopColor="#c8262d" stopOpacity="0.8" />
-              <stop offset="85%" stopColor="#25b34b" stopOpacity="0.7" />
-              <stop offset="100%" stopColor="#c8262d" stopOpacity="0.05" />
-            </linearGradient>
-            <linearGradient id="waveGreenLight" x1="100%" y1="0%" x2="0%" y2="0%">
-              <stop offset="0%" stopColor="#25b34b" stopOpacity="0.1" />
-              <stop offset="50%" stopColor="#25b34b" stopOpacity="0.75" />
-              <stop offset="85%" stopColor="#c8262d" stopOpacity="0.65" />
-              <stop offset="100%" stopColor="#25b34b" stopOpacity="0.05" />
-            </linearGradient>
-          </defs>
+        <circle
+          cx="1390"
+          cy="60"
+          r="260"
+          stroke={RED}
+          strokeWidth="0.8"
+          strokeOpacity="0.1"
+        />
 
-          {/* Left Side Concentric Rings */}
-          <g opacity="0.4">
-            <circle cx="80" cy="620" r="150" stroke="#c8262d" strokeWidth="1" strokeDasharray="5 7" />
-            <circle cx="80" cy="620" r="230" stroke="#ffffff" strokeWidth="0.8" strokeOpacity="0.3" />
-            <circle cx="80" cy="620" r="320" stroke="#25b34b" strokeWidth="1" strokeDasharray="8 12" />
-          </g>
+        {/* Moving architectural waves */}
+        {Array.from({ length: 5 }).map((_, i) => {
+          const pathA = `M-100,${420 + i * 24} C250,${310 + i * 12} 600,${560 - i * 9} 940,${430 + i * 8} C1200,${320 + i * 10} 1420,${490 - i * 8} 1550,${420 + i * 8}`;
 
-          {/* Right Side Concentric Rings */}
-          <g opacity="0.4">
-            <circle cx="1360" cy="620" r="160" stroke="#25b34b" strokeWidth="1" strokeDasharray="6 8" />
-            <circle cx="1360" cy="620" r="250" stroke="#ffffff" strokeWidth="0.8" strokeOpacity="0.3" />
-            <circle cx="1360" cy="620" r="340" stroke="#c8262d" strokeWidth="1" strokeDasharray="10 14" />
-          </g>
+          const pathB = `M-100,${440 + i * 24} C270,${370 + i * 12} 580,${510 - i * 8} 950,${460 + i * 7} C1200,${380 + i * 9} 1420,${460 - i * 7} 1550,${450 + i * 8}`;
 
-          {/* Animated 3D Flowing Ribbon Lines */}
-          {Array.from({ length: 10 }).map((_, i) => (
+          return (
             <motion.path
               key={i}
-              d={`M-100,${520 + i * 16} C${240 + i * 14},${400 + i * 10} ${580 - i * 10},${680 - i * 8} ${920 + i * 8},${520 + i * 6} C${1200 - i * 8},${400 + i * 10} 1360,${610 - i * 6} 1600,${500 + i * 8}`}
-              stroke={i % 2 === 0 ? "url(#waveBlueLight)" : "url(#waveGreenLight)"}
-              strokeWidth={i % 3 === 0 ? "1.4" : "0.85"}
-              strokeOpacity={0.25 + (i / 10) * 0.45}
-              fill="none"
-              animate={{
-                d: [
-                  `M-100,${520 + i * 16} C${240 + i * 14},${400 + i * 10} ${580 - i * 10},${680 - i * 8} ${920 + i * 8},${520 + i * 6} C${1200 - i * 8},${400 + i * 10} 1360,${610 - i * 6} 1600,${500 + i * 8}`,
-                  `M-100,${500 + i * 16} C${260 + i * 12},${430 + i * 8} ${560 - i * 8},${640 - i * 6} ${940 + i * 6},${550 + i * 4} C${1180 - i * 8},${420 + i * 8} 1380,${580 - i * 8} 1600,${520 + i * 6}`,
-                  `M-100,${520 + i * 16} C${240 + i * 14},${400 + i * 10} ${580 - i * 10},${680 - i * 8} ${920 + i * 8},${520 + i * 6} C${1200 - i * 8},${400 + i * 10} 1360,${610 - i * 6} 1600,${500 + i * 8}`,
-                ],
-              }}
+              d={pathA}
+              stroke={
+                i % 2 === 0 ? RED : GREEN
+              }
+              strokeWidth="0.8"
+              strokeOpacity="0.075"
+              animate={
+                reduceMotion
+                  ? undefined
+                  : {
+                      d: [pathA, pathB, pathA],
+                    }
+              }
               transition={{
-                duration: 14 + i * 1,
+                duration: 18 + i * 2,
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
             />
-          ))}
-        </svg>
+          );
+        })}
+      </svg>
 
-        {/* Ambient Fog Glow Points */}
-        <div className="absolute top-1/4 left-1/3 h-[320px] w-[320px] rounded-full bg-brand-red/20 blur-[130px] pointer-events-none" />
-        <div className="absolute bottom-1/3 right-1/3 h-[300px] w-[300px] rounded-full bg-brand-green/20 blur-[140px] pointer-events-none" />
+      {/* Bottom left decoration */}
+      <motion.div
+        className="absolute -bottom-6 -left-8 h-[180px] w-[240px] bg-contain bg-bottom bg-no-repeat opacity-[0.08] sm:h-[260px] sm:w-[340px] lg:h-[300px] lg:w-[400px]"
+        style={{
+          backgroundImage: `url("${ARCHITECTURE_IMAGE}")`,
+        }}
+        animate={
+          reduceMotion
+            ? undefined
+            : {
+                y: [0, -8, 0],
+              }
+        }
+        transition={{
+          duration: 9,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      />
+    </div>
+  );
+}
+
+/* ==========================================
+   COMPACT EVENT DETAIL
+========================================== */
+
+function DetailItem({
+  type,
+  label,
+  title,
+  subtitle,
+}: {
+  type: "date" | "venue";
+  label: string;
+  title: string;
+  subtitle: string;
+}) {
+  const isDate = type === "date";
+
+  return (
+    <div className="flex min-w-0 items-center gap-2.5">
+      <div
+        className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${
+          isDate
+            ? "bg-[#BE202B]/[0.07] text-[#BE202B]"
+            : "bg-[#25B34B]/[0.08] text-[#1D9440]"
+        }`}
+      >
+        {isDate ? (
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.7"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="h-[18px] w-[18px]"
+            aria-hidden="true"
+          >
+            <rect
+              x="3"
+              y="5"
+              width="18"
+              height="16"
+              rx="2"
+            />
+            <path d="M7 3v4M17 3v4M3 10h18" />
+          </svg>
+        ) : (
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.7"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="h-[18px] w-[18px]"
+            aria-hidden="true"
+          >
+            <path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1116 0Z" />
+            <circle cx="12" cy="10" r="2.5" />
+          </svg>
+        )}
       </div>
 
-      {/* Main Content (Spacious & Minimal) */}
-      <Container className="relative z-10 w-full py-16 sm:py-20">
+      <div className="min-w-0">
+        <span className="block text-[9px] font-bold uppercase tracking-[0.12em] text-[#888888]">
+          {label}
+        </span>
+
+        <span className="mt-0.5 block text-[12px] font-extrabold leading-[1.3] text-[#111111]">
+          {title}
+        </span>
+
+        <span className="mt-0.5 block text-[10px] font-medium text-[#777777]">
+          {subtitle}
+        </span>
+      </div>
+    </div>
+  );
+}
+
+/* ==========================================
+   COMPACT PREMIUM HERO SECTION
+========================================== */
+
+export function HeroSection() {
+  const reduceMotion = useReducedMotion();
+
+  return (
+    <section
+      aria-labelledby="hero-title"
+      className="relative isolate flex min-h-[100svh] w-full items-center overflow-hidden bg-white text-[#111111] selection:bg-[#BE202B] selection:text-white"
+    >
+      <HeroBackground />
+
+      {/* Side red accent */}
+      <div
+        aria-hidden="true"
+        className="absolute bottom-[25%] left-0 hidden h-24 w-[3px] bg-[#BE202B] lg:block"
+      />
+
+      <Container className="relative z-10 w-full pb-7 pt-[calc(92px+env(safe-area-inset-top))] sm:pb-9 sm:pt-[calc(105px+env(safe-area-inset-top))] lg:pb-5 lg:pt-[calc(112px+env(safe-area-inset-top))]">
         <motion.div
           variants={containerVariants}
-          initial="hidden"
+          initial={reduceMotion ? false : "hidden"}
           animate="visible"
-          className="mx-auto flex max-w-4xl flex-col items-center text-center"
+          className="mx-auto grid w-full max-w-[1200px] items-center gap-7 lg:grid-cols-[1.06fr_0.94fr] lg:gap-9 xl:gap-12"
         >
+          {/* ==================================
+              LEFT CONTENT
+          ================================== */}
 
-       {/* Featured Glass Date & Venue Pill */}
-<motion.div
-  variants={itemVariants}
-  className="mb-8 inline-flex max-w-full flex-col items-center justify-center gap-1.5 rounded-2xl border border-white/15 bg-white/[0.06] p-1.5 backdrop-blur-xl shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] sm:mb-10 sm:flex-row sm:gap-0 sm:rounded-full sm:px-4 sm:py-1.5"
->
-  {/* Date */}
-  <div className="inline-flex items-center gap-2 px-3 py-1 text-xs font-medium text-slate-100 sm:text-sm">
-    <svg 
-      className="h-4 w-4 shrink-0 text-brand-red" 
-      fill="none" 
-      viewBox="0 0 24 24" 
-      stroke="currentColor"
-    >
-      <path 
-        strokeLinecap="round" 
-        strokeLinejoin="round" 
-        strokeWidth={2} 
-        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" 
-      />
-    </svg>
-    <span className="whitespace-nowrap tracking-wide">{event.dates.display}</span>
-  </div>
+          <div className="relative flex min-w-0 flex-col items-start">
+            {/* Edition eyebrow */}
+            <motion.div
+              variants={itemVariants}
+              className="mb-3 flex flex-wrap items-center gap-2.5"
+            >
+              <span className="h-[2px] w-6 bg-[#BE202B]" />
 
-  {/* Divider (Desktop only) */}
-  <div className="hidden h-3.5 w-px bg-white/20 sm:block mx-1" aria-hidden="true" />
+              <span className="text-[10px] font-extrabold uppercase tracking-[0.15em] text-[#BE202B]">
+                {event.editionLabel}
+              </span>
 
-  {/* Venue & City */}
-  <div className="inline-flex items-center gap-2 px-3 py-1 text-xs font-medium text-slate-100 sm:text-sm">
-    <svg 
-      className="h-4 w-4 shrink-0 text-brand-green" 
-      fill="none" 
-      viewBox="0 0 24 24" 
-      stroke="currentColor"
-    >
-      <path 
-        strokeLinecap="round" 
-        strokeLinejoin="round" 
-        strokeWidth={2} 
-        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" 
-      />
-      <path 
-        strokeLinecap="round" 
-        strokeLinejoin="round" 
-        strokeWidth={2} 
-        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" 
-      />
-    </svg>
-    <span className="whitespace-nowrap tracking-wide">
-      {event.venue.name}, {event.venue.city}
-    </span>
-  </div>
-</motion.div>
+              <span className="h-1 w-1 rounded-full bg-[#111111]/25" />
 
-          {/* Main Title */}
-          <motion.h1
-            variants={itemVariants}
-            className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight leading-[1.08] text-white drop-shadow-md"
-          >
-            {event.shortName}
-            <span className="block mt-2 font-extrabold tracking-normal text-transparent bg-clip-text bg-gradient-to-r from-brand-red via-white to-brand-green">
-              International Expo {event.edition}
-            </span>
-          </motion.h1>
+              <span className="text-[10px] font-bold uppercase tracking-[0.1em] text-[#777777]">
+                {event.venue.city}, {event.venue.country}
+              </span>
+            </motion.div>
 
-          {/* Short Crisp Tagline */}
-          <motion.p
-            variants={itemVariants}
-            className="mt-6 max-w-xl text-sm sm:text-base leading-relaxed tracking-wide text-slate-100 font-normal drop-shadow"
-          >
-            <span className="font-semibold text-white">{event.editionLabel}</span> · {event.descriptor}
-          </motion.p>
+            {/* Main SEO heading */}
+            <motion.div
+              variants={itemVariants}
+              className="w-full min-w-0"
+            >
+              <h1
+                id="hero-title"
+                className="flex flex-col items-start"
+              >
+                <span className="block text-[clamp(2.15rem,3.65vw,3.9rem)] font-black leading-[1.06] tracking-[-0.055em] text-[#111111]">
+                  {event.shortName}
+                </span>
 
-         
+                <span className="mt-1.5 block text-[clamp(1.5rem,2.45vw,2.65rem)] font-bold leading-[1.13] tracking-[-0.035em] text-[#272727]">
+                  International Expo
+                </span>
 
-          {/* Action CTAs */}
+                {/* Compact year */}
+                <span className="mt-1.5 flex items-end gap-5">
+                  <span className="block text-[clamp(4rem,6.4vw,6.5rem)] font-black leading-[0.95] tracking-[-0.08em] text-[#BE202B]">
+                    {event.edition}
+                  </span>
+
+                  <span
+                    aria-hidden="true"
+                    className="mb-2 hidden items-center gap-2.5 sm:flex"
+                  >
+                    <span className="h-10 w-[2px] bg-[#25B34B]" />
+
+                    <span className="text-[9px] font-extrabold uppercase leading-[1.5] tracking-[0.09em] text-[#888888]">
+                      Building
+                      <br />
+                      Construction
+                      <br />
+                      Innovation
+                    </span>
+                  </span>
+                </span>
+              </h1>
+
+              {/* Brand underline */}
+              <div
+                aria-hidden="true"
+                className="mt-3 flex h-[3px] w-32 overflow-hidden"
+              >
+                <span className="w-[75%] bg-[#BE202B]" />
+                <span className="w-[18%] bg-[#25B34B]" />
+                <span className="flex-1 bg-[#111111]" />
+              </div>
+            </motion.div>
+
+            {/* Theme */}
+            <motion.p
+              variants={itemVariants}
+              className="mt-3 text-[10px] font-extrabold uppercase tracking-[0.13em] text-[#BE202B] sm:text-[11px]"
+            >
+              {event.theme}
+            </motion.p>
+
+            {/* Compact description */}
+            <motion.p
+              variants={itemVariants}
+              className="mt-2.5 max-w-[490px] text-[13px] font-medium leading-[1.65] text-[#666666] sm:text-[14px]"
+            >
+              Explore building materials, construction
+              technology and industry innovations at{" "}
+              <strong className="font-semibold text-[#222222]">
+                {event.name}
+              </strong>
+              . Connect with leading professionals
+              and decision-makers in East Africa.
+            </motion.p>
+
+            {/* Compact date and venue card */}
+            <motion.div
+              variants={itemVariants}
+              className="mt-4 grid w-full max-w-[520px] grid-cols-1 gap-3 rounded-xl border border-[#111111]/[0.08] bg-white/95 px-4 py-3.5 shadow-[0_8px_30px_rgba(17,17,17,0.04)] min-[420px]:grid-cols-2"
+            >
+              <DetailItem
+                type="date"
+                label="Event Dates"
+                title={event.dates.display}
+                subtitle={event.dates.openingHours}
+              />
+
+              <DetailItem
+                type="venue"
+                label="Event Venue"
+                title={event.venue.name}
+                subtitle={`${event.venue.district}, ${event.venue.city}`}
+              />
+            </motion.div>
+
+            {/* Compact CTA buttons */}
+            <motion.div
+              variants={itemVariants}
+              className="mt-4 flex w-full flex-wrap items-center gap-3"
+            >
+              <Button
+                href={event.cta.bookStand}
+                className="group inline-flex min-h-[44px] items-center justify-center gap-4 rounded-md border border-[#BE202B] !bg-[#BE202B] px-5 py-2.5 text-[11px] font-extrabold uppercase tracking-[0.07em] !text-white shadow-[0_7px_18px_rgba(190,32,43,0.15)] transition-all duration-300 hover:-translate-y-0.5 hover:!bg-[#991B24] hover:shadow-[0_11px_25px_rgba(190,32,43,0.22)]"
+              >
+                Book a Stand
+
+                <span
+                  aria-hidden="true"
+                  className="text-[16px] transition-transform duration-300 group-hover:translate-x-1"
+                >
+                  ↗
+                </span>
+              </Button>
+
+              <Button
+                href={event.cta.registerVisit}
+                variant="secondary"
+                className="group inline-flex min-h-[44px] items-center justify-center gap-4 rounded-md border border-[#111111]/20 !bg-white px-5 py-2.5 text-[11px] font-extrabold uppercase tracking-[0.07em] !text-[#111111] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#111111] hover:!bg-[#111111] hover:!text-white"
+              >
+                Register to Visit
+
+                <span
+                  aria-hidden="true"
+                  className="text-[16px] transition-transform duration-300 group-hover:translate-x-1"
+                >
+                  →
+                </span>
+              </Button>
+            </motion.div>
+
+            {/* Small branding */}
+            <motion.div
+              variants={itemVariants}
+              className="mt-3 flex flex-wrap items-center gap-2.5"
+            >
+              <span className="h-1.5 w-1.5 rounded-full bg-[#25B34B]" />
+
+              <span className="text-[9px] font-bold uppercase tracking-[0.1em] text-[#888888]">
+                {event.format}
+              </span>
+
+              <span className="h-px w-5 bg-[#111111]/15" />
+
+              <span className="text-[9px] font-bold tracking-[0.12em] text-[#BE202B]">
+                KE / {event.edition}
+              </span>
+            </motion.div>
+          </div>
+
+          {/* ==================================
+              RIGHT IMAGE - PREMIUM PRESERVED
+          ================================== */}
+
           <motion.div
             variants={itemVariants}
-            className="mt-10 flex flex-wrap items-center justify-center gap-4 sm:gap-5"
+            className="relative min-w-0"
           >
-            <Button
-              href={event.cta.bookStand}
-              className="inline-flex items-center justify-center rounded-full bg-brand-red px-9 py-3.5 text-xs sm:text-sm font-semibold tracking-wider uppercase text-white shadow-[0_0_28px_rgba(200,38,45,0.4)] transition-all duration-300 hover:bg-brand-red-dark hover:shadow-[0_0_36px_rgba(200,38,45,0.55)] hover:-translate-y-0.5 active:translate-y-0"
-            >
-              Book a Stand
-            </Button>
-            <Button
-              href={event.cta.registerVisit}
-              variant="secondary"
-              className="inline-flex items-center justify-center rounded-full border border-white/25 bg-white/10 px-9 py-3.5 text-xs sm:text-sm font-semibold tracking-wider uppercase text-white backdrop-blur-xl transition-all duration-300 hover:border-brand-green/60 hover:bg-white/20 hover:-translate-y-0.5 active:translate-y-0"
-            >
-              Register to Visit
-            </Button>
+            <div className="relative mx-auto w-full max-w-[530px] lg:max-w-none">
+              {/* Floating image label */}
+              <div className="absolute -top-4 right-4 z-20 flex items-center gap-2 border border-[#111111]/10 bg-white px-3.5 py-2.5 shadow-[0_8px_24px_rgba(17,17,17,0.08)] sm:right-6">
+                <span className="relative flex h-2 w-2">
+                  <motion.span
+                    className="absolute inline-flex h-full w-full rounded-full bg-[#25B34B]/35"
+                    animate={
+                      reduceMotion
+                        ? undefined
+                        : {
+                            scale: [1, 1.8, 1],
+                            opacity: [0.7, 0, 0.7],
+                          }
+                    }
+                    transition={{
+                      duration: 2.5,
+                      repeat: Infinity,
+                    }}
+                  />
+
+                  <span className="relative h-2 w-2 rounded-full bg-[#25B34B]" />
+                </span>
+
+                <span className="text-[9px] font-extrabold uppercase tracking-[0.11em] text-[#111111] sm:text-[10px]">
+                  {event.industry}
+                </span>
+              </div>
+
+              {/* Photo frame */}
+              <div className="relative aspect-[1.45/1] overflow-hidden rounded-lg bg-[#111111] shadow-[0_18px_50px_rgba(17,17,17,0.15)] lg:aspect-auto lg:h-[min(61svh,540px)] lg:min-h-[350px]">
+                <motion.div
+                  className="absolute inset-0"
+                  initial={
+                    reduceMotion
+                      ? false
+                      : { scale: 1.045 }
+                  }
+                  animate={{ scale: 1 }}
+                  transition={{
+                    duration: 1.7,
+                    ease: EASE,
+                  }}
+                >
+                  <Image
+                    src={HERO_IMAGE}
+                    alt={`${event.name} building and construction exhibition at ${event.venue.name}, ${event.venue.city}`}
+                    fill
+                    priority
+                    sizes="(max-width: 1024px) 100vw, 44vw"
+                    className="object-cover"
+                    style={{
+                      objectPosition: "center 45%",
+                    }}
+                  />
+                </motion.div>
+
+                {/* Image tint */}
+                <div className="pointer-events-none absolute inset-0 bg-[#111111]/[0.08]" />
+
+                {/* Top image index */}
+                <div className="absolute left-5 top-5 flex items-center gap-2">
+                  <span className="h-[2px] w-6 bg-white" />
+
+                  <span className="text-[10px] font-bold tracking-[0.18em] text-white drop-shadow-md">
+                    EXPO / {event.edition.slice(-2)}
+                  </span>
+                </div>
+
+                {/* Bottom photo caption */}
+                <div className="absolute inset-x-0 bottom-0 bg-[#111111]/95 px-5 py-3.5 backdrop-blur-sm sm:px-6 sm:py-4">
+                  <div className="flex items-center justify-between gap-4">
+                    <div>
+                      <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-white/55">
+                        The Industry Meets Here
+                      </p>
+
+                      <p className="mt-1 text-[15px] font-bold tracking-[-0.025em] text-white sm:text-[17px]">
+                        {event.venue.city}, {event.venue.country}
+                      </p>
+                    </div>
+
+                    <div className="flex items-center gap-3">
+                      <span className="h-8 w-px bg-white/20" />
+
+                      <span className="text-[22px] font-black tracking-[-0.06em] text-white">
+                        {event.edition.slice(-2)}
+                        <span className="text-[#F26B70]">
+                          .
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Bottom decorative lines */}
+              <div
+                aria-hidden="true"
+                className="absolute -bottom-[8px] left-6 h-[3px] w-24 bg-[#BE202B]"
+              />
+
+              <div
+                aria-hidden="true"
+                className="absolute -bottom-[8px] left-[120px] h-[3px] w-10 bg-[#25B34B]"
+              />
+
+              {/* Vertical branding */}
+              <div
+                aria-hidden="true"
+                className="absolute -left-7 bottom-8 hidden flex-col items-center gap-2 xl:flex"
+              >
+                <span className="h-9 w-px bg-[#BE202B]" />
+
+                <span className="text-[9px] font-black tracking-[0.12em] text-[#111111]/40 [writing-mode:vertical-rl]">
+                  BUILDCON / {event.edition}
+                </span>
+              </div>
+            </div>
           </motion.div>
         </motion.div>
       </Container>
+
+      {/* Bottom brand line */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-x-0 bottom-0 z-20 flex h-[3px]"
+      >
+        <div className="w-[82%] bg-[#BE202B]" />
+        <div className="w-[13%] bg-[#25B34B]" />
+        <div className="flex-1 bg-[#111111]" />
+      </div>
     </section>
   );
 }

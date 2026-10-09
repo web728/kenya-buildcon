@@ -1,394 +1,740 @@
 "use client";
 
-import { useRef, useEffect } from "react";
-import { motion, useInView, useSpring, useTransform, type Variants } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import {
+  animate,
+  motion,
+  useInView,
+  useReducedMotion,
+  type Variants,
+} from "framer-motion";
+
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
-import { marketFacts, opportunityCategories, type MarketFact } from "@/data/marketFacts";
+
+import {
+  marketFacts,
+  opportunityCategories,
+  type MarketFact,
+} from "@/data/marketFacts";
+
+/* ==========================================
+   KENYA BUILDCON BRAND
+========================================== */
+
+const BRAND = {
+  red: "#BE202B",
+  black: "#111111",
+  green: "#25B34B",
+  darkGreen: "#1D9440",
+  coral: "#F26B70",
+  white: "#FFFFFF",
+};
+
+const EASE = [0.16, 1, 0.3, 1] as const;
+
+/* ==========================================
+   ANIMATION VARIANTS
+========================================== */
 
 const containerVariants: Variants = {
-  hidden: { opacity: 0 },
+  hidden: {},
   visible: {
-    opacity: 1,
     transition: {
-      staggerChildren: 0.08,
-      delayChildren: 0.05,
+      staggerChildren: 0.1,
+      delayChildren: 0.08,
     },
   },
 };
 
 const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 16, filter: "blur(4px)" },
+  hidden: {
+    opacity: 0,
+    y: 22,
+  },
   visible: {
     opacity: 1,
     y: 0,
-    filter: "blur(0px)",
     transition: {
-      duration: 0.6,
-      ease: [0.16, 1, 0.3, 1],
+      duration: 0.8,
+      ease: EASE,
     },
   },
 };
 
-function AnimatedCounter({ value }: { value: string }) {
+/* ==========================================
+   SCROLL ANIMATED COUNTER
+========================================== */
+
+function AnimatedCounter({
+  value,
+  delay = 0,
+}: {
+  value: string;
+  delay?: number;
+}) {
   const ref = useRef<HTMLSpanElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-30px" });
 
-  const numericMatch = value.match(/[\d,.]+/);
-  const rawNumber = numericMatch ? numericMatch[0] : "0";
-  const cleanNumber = parseFloat(rawNumber.replace(/,/g, ""));
-  // Keep the source's precision and grouping ("6.7%" -> 1 dp, "2030" -> no comma, "9,500" -> grouped)
-  const decimals = (rawNumber.split(".")[1] ?? "").length;
-  const useGrouping = rawNumber.includes(",");
-
-  const prefix = value.split(/[\d,.]+/)[0] || "";
-  const suffix = value.split(/[\d,.]+/)[1] || "";
-
-  const spring = useSpring(0, {
-    stiffness: 45,
-    damping: 18,
-    restDelta: 0.01,
+  const isInView = useInView(ref, {
+    once: true,
+    margin: "0px 0px -5% 0px",
   });
 
-  const displayValue = useTransform(spring, (latest) => {
-    const formatted = latest.toLocaleString("en-US", {
+  const reduceMotion = useReducedMotion();
+
+  const match = value.match(/-?\d[\d,]*(?:\.\d+)?/);
+  const numberText = match?.[0] ?? "";
+  const numericValue = Number(numberText.replace(/,/g, ""));
+
+  const validNumber = numberText !== "" && Number.isFinite(numericValue);
+
+  const decimals = numberText.split(".")[1]?.length ?? 0;
+
+  const grouping = numberText.includes(",");
+
+  const prefix = match ? value.slice(0, match.index ?? 0) : "";
+
+  const suffix = match
+    ? value.slice((match.index ?? 0) + numberText.length)
+    : "";
+
+  const formatNumber = (number: number) => {
+    return number.toLocaleString("en-US", {
       minimumFractionDigits: decimals,
       maximumFractionDigits: decimals,
-      useGrouping,
+      useGrouping: grouping,
     });
-    return `${prefix}${formatted}${suffix}`;
-  });
+  };
+
+  const [count, setCount] = useState(0);
 
   useEffect(() => {
-    if (isInView) {
-      spring.set(cleanNumber);
+    if (!isInView || !validNumber) return;
+
+    if (reduceMotion) {
+      setCount(numericValue);
+      return;
     }
-  }, [isInView, spring, cleanNumber]);
+
+    const controls = animate(0, numericValue, {
+      duration: 2.1,
+      delay,
+      ease: EASE,
+
+      onUpdate(latest) {
+        setCount(latest);
+      },
+
+      onComplete() {
+        setCount(numericValue);
+      },
+    });
+
+    return () => controls.stop();
+  }, [isInView, numericValue, validNumber, delay, reduceMotion]);
 
   return (
-    <span ref={ref} className="tabular-nums">
-      {isInView ? <motion.span>{displayValue}</motion.span> : `${prefix}0${suffix}`}
+    <span ref={ref} className="inline-block tabular-nums">
+      {validNumber ? `${prefix}${formatNumber(count)}${suffix}` : value}
     </span>
   );
 }
 
-export function WhyKenyaSection() {
+/* ==========================================
+   ANIMATED ARCHITECTURAL BACKGROUND
+========================================== */
+
+function MarketBackground() {
+  const reduceMotion = useReducedMotion();
+
   return (
-    <section className="relative overflow-hidden bg-[#071118] py-14 sm:py-18 text-white selection:bg-brand-red selection:text-white border-b border-white/10">
-      
-      {/* ========================================================================= */}
-      {/* OFFICIAL BUILDCON THEME VECTOR (EXACT MATCH TO GUIDELINE IMAGE)           */}
-      {/* ========================================================================= */}
-      <div className="pointer-events-none absolute -right-[15%] md:-right-[8%] lg:-right-[4%] top-1/2 -translate-y-1/2 z-0 h-[650px] w-[650px] sm:h-[780px] sm:w-[780px] select-none opacity-30 md:opacity-45">
-        <svg
-          viewBox="0 0 800 800"
-          className="h-full w-full"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          {/* Subtle Backlit Glow */}
-          <circle cx="400" cy="400" r="260" fill="#c8262d" opacity="0.08" filter="blur(60px)" />
-          <circle cx="400" cy="400" r="190" fill="#25b34b" opacity="0.06" filter="blur(50px)" />
-
-          {/* Outer Curved Orbit Tracking Lines & Nodes (Slow Linear Rotation) */}
-          <motion.g
-            animate={{ rotate: 360 }}
-            transition={{ duration: 75, repeat: Infinity, ease: "linear" }}
-            style={{ transformOrigin: "400px 400px" }}
-          >
-            {/* Outer Orbit Line 1 */}
-            <path
-              d="M180,210 A320,320 0 0,1 620,210"
-              fill="none"
-              stroke="#ffffff"
-              strokeOpacity="0.2"
-              strokeWidth="1.2"
-            />
-            {/* Orbit Node Dot 1 */}
-            <circle cx="280" cy="140" r="6" fill="#c8262d" />
-            <circle cx="580" cy="170" r="8" fill="#ffffff" />
-
-            {/* Orbit Line 2 */}
-            <path
-              d="M130,340 A320,320 0 0,1 360,90"
-              fill="none"
-              stroke="#ffffff"
-              strokeOpacity="0.25"
-              strokeWidth="1"
-            />
-            <circle cx="160" cy="270" r="9" fill="#ffffff" />
-            <circle cx="165" cy="400" r="8" fill="#c8262d" />
-
-            {/* Bottom-Right Orbit Lines & Nodes */}
-            <path
-              d="M480,680 A320,320 0 0,0 710,510"
-              fill="none"
-              stroke="#ffffff"
-              strokeOpacity="0.22"
-              strokeWidth="1"
-            />
-            <circle cx="560" cy="620" r="8" fill="#25b34b" />
-          </motion.g>
-
-          {/* Top Primary Fan Wedge Sector (Official Brand Red) */}
-          <motion.path
-            d="M400,400 L275,100 A340,340 0 0,1 525,100 Z"
-            fill="#c8262d"
-            opacity="0.9"
-            animate={{ scale: [1, 1.018, 1] }}
-            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-            style={{ transformOrigin: "400px 400px" }}
-          />
-
-          {/* Right Sharp Vertical Triangle Sector (Official Brand Green) */}
-          <motion.polygon
-            points="465,370 655,80 655,470"
-            fill="#25b34b"
-            opacity="0.95"
-            animate={{ scale: [1, 1.015, 1] }}
-            transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 0.4 }}
-            style={{ transformOrigin: "400px 400px" }}
-          />
-
-          {/* Bottom-Left Main Fan Wedge Sector (Official Brand Green) */}
-          <motion.path
-            d="M400,400 L95,475 A330,330 0 0,0 270,710 Z"
-            fill="#25b34b"
-            opacity="0.88"
-            animate={{ scale: [1, 1.02, 1] }}
-            transition={{ duration: 6.5, repeat: Infinity, ease: "easeInOut", delay: 0.2 }}
-            style={{ transformOrigin: "400px 400px" }}
-          />
-
-          {/* Inner Nested Concentric Sector: Left (Secondary Emerald Green) */}
-          <path
-            d="M400,400 L210,340 A205,205 0 0,0 280,560 Z"
-            fill="#1d9440"
-            opacity="0.8"
-          />
-
-          {/* Inner Nested Concentric Sector: Right */}
-          <path
-            d="M400,400 L510,480 A205,205 0 0,1 465,565 Z"
-            fill="#25b34b"
-            opacity="0.85"
-          />
-
-          {/* Central Target Concentric White & Blue Track Rings */}
-          <circle
-            cx="400"
-            cy="400"
-            r="140"
-            fill="none"
-            stroke="#ffffff"
-            strokeOpacity="0.3"
-            strokeWidth="1.5"
-          />
-          <circle
-            cx="400"
-            cy="400"
-            r="125"
-            fill="none"
-            stroke="#ffffff"
-            strokeWidth="3.5"
-          />
-
-          {/* Solid Center Core Circle Node (Pulsing Glow) */}
-          <motion.circle
-            cx="400"
-            cy="400"
-            r="105"
-            fill="#c8262d"
-            animate={{
-              r: [105, 109, 105],
-              fill: ["#c8262d", "#a51e24", "#c8262d"],
-            }}
-            transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
-          />
-        </svg>
-      </div>
-
-      {/* Blueprint Grid Texture Overlay */}
+    <div
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-0 z-0 overflow-hidden"
+    >
+      {/* Fine architectural grid */}
       <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 z-0 opacity-[0.035] [mask-image:radial-gradient(ellipse_75%_65%_at_50%_50%,#000_40%,transparent_100%)]"
+        className="absolute inset-0 opacity-[0.04]"
         style={{
           backgroundImage:
-            "linear-gradient(to right, #ffffff 1px, transparent 1px), linear-gradient(to bottom, #ffffff 1px, transparent 1px)",
-          backgroundSize: "40px 40px",
+            "linear-gradient(#FFFFFF 1px, transparent 1px), linear-gradient(90deg, #FFFFFF 1px, transparent 1px)",
+          backgroundSize: "76px 76px",
         }}
       />
 
+      {/* Background vector */}
+      <div className="absolute -right-[230px] top-[2%] h-[540px] w-[540px] opacity-[0.22] sm:-right-[160px] sm:h-[650px] sm:w-[650px] lg:-right-[170px] lg:top-[8%] lg:h-[760px] lg:w-[760px] lg:opacity-[0.3]">
+        <svg viewBox="0 0 800 800" fill="none" className="h-full w-full">
+          {/* Outer rotating tracking rings */}
+          <motion.g
+            style={{
+              transformOrigin: "400px 400px",
+            }}
+            animate={reduceMotion ? undefined : { rotate: 360 }}
+            transition={{
+              duration: 95,
+              repeat: Infinity,
+              ease: "linear",
+            }}
+          >
+            <circle
+              cx="400"
+              cy="400"
+              r="345"
+              stroke={BRAND.white}
+              strokeOpacity="0.25"
+              strokeWidth="1"
+              strokeDasharray="8 16"
+            />
+
+            <circle
+              cx="400"
+              cy="400"
+              r="312"
+              stroke={BRAND.red}
+              strokeOpacity="0.6"
+              strokeWidth="1.2"
+              strokeDasharray="70 24 15 30"
+            />
+
+            <circle cx="400" cy="55" r="6" fill={BRAND.red} />
+
+            <circle cx="710" cy="400" r="5" fill={BRAND.green} />
+          </motion.g>
+
+          {/* Reverse rotation */}
+          <motion.g
+            style={{
+              transformOrigin: "400px 400px",
+            }}
+            animate={reduceMotion ? undefined : { rotate: -360 }}
+            transition={{
+              duration: 125,
+              repeat: Infinity,
+              ease: "linear",
+            }}
+          >
+            <circle
+              cx="400"
+              cy="400"
+              r="270"
+              stroke={BRAND.white}
+              strokeOpacity="0.35"
+              strokeWidth="1"
+              strokeDasharray="5 13"
+            />
+
+            <circle cx="400" cy="130" r="7" fill={BRAND.white} />
+
+            <circle cx="400" cy="670" r="5" fill={BRAND.green} />
+          </motion.g>
+
+          {/* Original construction-inspired sectors */}
+          <motion.g
+            style={{
+              transformOrigin: "400px 400px",
+            }}
+            animate={
+              reduceMotion
+                ? undefined
+                : {
+                    scale: [1, 1.018, 1],
+                  }
+            }
+            transition={{
+              duration: 7,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          >
+            <path
+              d="M400 400L275 100A340 340 0 0 1 525 100Z"
+              fill={BRAND.red}
+              fillOpacity="0.85"
+            />
+
+            <path
+              d="M465 370L655 80L655 470Z"
+              fill={BRAND.green}
+              fillOpacity="0.9"
+            />
+
+            <path
+              d="M400 400L95 475A330 330 0 0 0 270 710Z"
+              fill={BRAND.green}
+              fillOpacity="0.78"
+            />
+
+            <path
+              d="M400 400L210 340A205 205 0 0 0 280 560Z"
+              fill={BRAND.darkGreen}
+              fillOpacity="0.9"
+            />
+
+            <path
+              d="M400 400L510 480A205 205 0 0 1 465 565Z"
+              fill={BRAND.green}
+              fillOpacity="0.85"
+            />
+          </motion.g>
+
+          {/* Centre rings */}
+          <circle
+            cx="400"
+            cy="400"
+            r="148"
+            stroke={BRAND.white}
+            strokeOpacity="0.4"
+            strokeWidth="1.5"
+          />
+
+          <circle
+            cx="400"
+            cy="400"
+            r="127"
+            stroke={BRAND.white}
+            strokeOpacity="0.8"
+            strokeWidth="2.5"
+          />
+
+          {/* Animated centre */}
+          <motion.circle
+            cx="400"
+            cy="400"
+            r="104"
+            fill={BRAND.red}
+            animate={
+              reduceMotion
+                ? undefined
+                : {
+                    r: [104, 109, 104],
+                  }
+            }
+            transition={{
+              duration: 5,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
+
+          {/* Centre detailing */}
+          <circle
+            cx="400"
+            cy="400"
+            r="78"
+            stroke={BRAND.white}
+            strokeOpacity="0.25"
+          />
+
+          <circle cx="400" cy="400" r="5" fill={BRAND.white} />
+        </svg>
+      </div>
+
+      {/* Continuous fine flowing lines */}
+      <svg
+        viewBox="0 0 1440 900"
+        preserveAspectRatio="xMidYMid slice"
+        fill="none"
+        className="absolute inset-0 h-full w-full"
+      >
+        {Array.from({ length: 7 }).map((_, i) => {
+          const pathA = `M-100,${610 + i * 18} C250,${500 + i * 12} 560,${750 - i * 7} 900,${590 + i * 8} C1180,${480 + i * 9} 1400,${680 - i * 7} 1550,${590 + i * 7}`;
+
+          const pathB = `M-100,${630 + i * 18} C280,${540 + i * 10} 580,${710 - i * 6} 930,${615 + i * 7} C1200,${520 + i * 7} 1410,${650 - i * 6} 1550,${610 + i * 6}`;
+
+          return (
+            <motion.path
+              key={i}
+              d={pathA}
+              stroke={
+                i % 3 === 0
+                  ? BRAND.red
+                  : i % 3 === 1
+                    ? BRAND.green
+                    : BRAND.white
+              }
+              strokeWidth="0.8"
+              strokeOpacity={i % 3 === 2 ? 0.05 : 0.12}
+              animate={
+                reduceMotion
+                  ? undefined
+                  : {
+                      d: [pathA, pathB, pathA],
+                    }
+              }
+              transition={{
+                duration: 19 + i * 1.7,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+            />
+          );
+        })}
+      </svg>
+    </div>
+  );
+}
+
+/* ==========================================
+   PREMIUM MARKET FACT CARD
+========================================== */
+
+function MarketFactCard({ fact, index }: { fact: MarketFact; index: number }) {
+  const reduceMotion = useReducedMotion();
+
+  return (
+    <motion.article
+      variants={itemVariants}
+      whileHover={
+        reduceMotion
+          ? undefined
+          : {
+              y: -5,
+              transition: {
+                duration: 0.35,
+                ease: EASE,
+              },
+            }
+      }
+      className="group relative flex min-w-0 flex-col justify-between overflow-hidden rounded-xl border border-white/[0.12] bg-[#1B1B1B]/95 p-5 shadow-[0_12px_35px_rgba(0,0,0,0.12)] transition-colors duration-300 hover:border-[#BE202B]/55 hover:bg-[#202020] sm:p-6"
+    >
+      {/* Small top accent */}
+      <span
+        aria-hidden="true"
+        className="absolute left-0 top-0 h-[2px] w-14 bg-[#BE202B]"
+      />
+
+      <div>
+        {/* CARD TOP */}
+        <div className="flex items-start justify-between gap-3 border-b border-white/10 pb-4">
+          <div className="min-w-0">
+            <span className="block text-[9px] font-bold uppercase tracking-[0.16em] text-[#F26B70]">
+              Market Indicator
+            </span>
+
+            <span className="mt-1 block text-[11px] font-semibold leading-[1.45] tracking-[0.02em] text-white/55">
+              {fact.period || "Official Metric"}
+            </span>
+          </div>
+
+          <span className="text-[11px] font-bold tracking-[0.1em] text-white/35">
+            {String(index + 1).padStart(2, "0")}
+          </span>
+        </div>
+
+        {/* ANIMATED METRIC */}
+        <div className="mt-5 text-[clamp(2rem,3vw,3.35rem)] font-black leading-[1.05] tracking-[-0.052em] text-white">
+          <AnimatedCounter value={fact.value} delay={index * 0.1} />
+        </div>
+
+        {/* METRIC HEADING */}
+        <h3 className="mt-3 text-[14px] font-bold leading-[1.4] tracking-[-0.015em] text-[#F26B70] sm:text-[15px]">
+          {fact.label}
+        </h3>
+
+        {/* DESCRIPTION */}
+        {fact.detail && (
+          <p className="mt-3 text-[12px] font-normal leading-[1.75] tracking-[-0.005em] text-white/65 sm:text-[13px]">
+            {fact.detail}
+          </p>
+        )}
+      </div>
+
+      {/* SOURCE FOOTER */}
+      <div className="mt-6 flex items-center justify-between gap-3 border-t border-white/10 pt-4">
+        <div className="min-w-0">
+          <span className="mb-1 block text-[9px] font-semibold uppercase tracking-[0.12em] text-white/35">
+            Data Source
+          </span>
+
+          {fact.sourceUrl ? (
+            <a
+              href={fact.sourceUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block truncate text-[11px] font-semibold text-white/75 underline decoration-white/25 underline-offset-4 transition-colors duration-300 hover:text-[#F26B70]"
+              title={fact.sourceName}
+            >
+              {fact.sourceName}
+            </a>
+          ) : (
+            <span
+              className="block truncate text-[11px] font-semibold text-white/75"
+              title={fact.sourceName}
+            >
+              {fact.sourceName}
+            </span>
+          )}
+        </div>
+
+        {/* SOURCE MARKER */}
+        <span className="flex shrink-0 items-center gap-2">
+          <span className="h-1.5 w-1.5 rounded-full bg-[#25B34B]" />
+          <span className="text-[9px] font-bold uppercase tracking-[0.07em] text-white/45">
+            Source
+          </span>
+        </span>
+      </div>
+
+      {/* Bottom hover line */}
+      <span
+        aria-hidden="true"
+        className="absolute bottom-0 left-0 h-[2px] w-0 bg-[#25B34B] transition-all duration-500 group-hover:w-full"
+      />
+    </motion.article>
+  );
+}
+
+/* ==========================================
+   INFINITE FOCUS SECTORS MARQUEE
+========================================== */
+
+function FocusSectorsMarquee() {
+  const reduceMotion = useReducedMotion();
+
+  const categories = opportunityCategories;
+
+  return (
+    <div className="relative mt-9 overflow-hidden rounded-lg border border-white/[0.12] bg-[#1B1B1B]">
+      <div className="flex flex-col sm:flex-row sm:items-center">
+        {/* FIXED LABEL */}
+     
+        {/* MARQUEE VIEWPORT */}
+        <div className="min-w-0 flex-1 overflow-hidden py-4 sm:py-5">
+          {categories.length > 0 && (
+            <motion.div
+              className="flex w-max items-center"
+              animate={
+                reduceMotion
+                  ? undefined
+                  : {
+                      x: ["0%", "-50%"],
+                    }
+              }
+              transition={{
+                duration: 32,
+                repeat: Infinity,
+                ease: "linear",
+              }}
+            >
+              {[0, 1].map((copy) => (
+                <div
+                  key={copy}
+                  className="flex shrink-0 items-center"
+                  aria-hidden={copy === 1}
+                >
+                  {categories.map((category, index) => (
+                    <div
+                      key={`${copy}-${index}`}
+                      className="flex shrink-0 items-center gap-4 pl-7"
+                    >
+                      <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#25B34B]" />
+
+                      <span className="whitespace-nowrap text-[12px] font-semibold tracking-[0.025em] text-white/75">
+                        {category}
+                      </span>
+
+                      <span className="text-white/25">/</span>
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </motion.div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ==========================================
+   WHY KENYA SECTION
+========================================== */
+
+export function WhyKenyaSection() {
+  const reduceMotion = useReducedMotion();
+
+  return (
+    <section
+      aria-labelledby="why-kenya-heading"
+      className="relative isolate overflow-hidden border-b border-white/10 bg-[#111111] py-16 text-white selection:bg-[#BE202B] selection:text-white sm:py-20 lg:py-24"
+    >
+      <MarketBackground />
+
+      {/* TOP BRAND DETAIL */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-x-0 top-0 z-10 flex h-[3px]"
+      >
+        <span className="w-[82%] bg-[#BE202B]" />
+        <span className="w-[13%] bg-[#25B34B]" />
+        <span className="flex-1 bg-white" />
+      </div>
+
       <Container className="relative z-10 w-full">
-        
-        {/* ========================================================= */}
-        {/* Balanced Top Header: Left (Titles) & Right (CTA Button)   */}
-        {/* ========================================================= */}
-        <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between pb-7 border-b border-white/[0.08]">
-          <div className="max-w-2xl">
-            {/* Live Context Badge */}
-            <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3.5 py-1 backdrop-blur-md">
-              <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand-green opacity-75" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-brand-green" />
-              </span>
-              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-200">
+        {/* ==================================
+            SECTION HEADER
+        ================================== */}
+
+        <motion.div
+          variants={containerVariants}
+          initial={reduceMotion ? false : "hidden"}
+          whileInView="visible"
+          viewport={{
+            once: true,
+            margin: "-70px",
+          }}
+          className="flex flex-col justify-between gap-7 border-b border-white/15 pb-9 lg:flex-row lg:items-end"
+        >
+          {/* HEADING */}
+          <motion.div variants={itemVariants} className="max-w-[780px]">
+            <div className="mb-5 flex items-center gap-3">
+              <span className="h-[2px] w-8 bg-[#BE202B]" />
+
+              <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#F26B70] sm:text-[11px]">
                 Strategic Market Overview
               </span>
             </div>
 
-            {/* Section Main Title */}
-            <h2 className="mt-3.5 text-2xl sm:text-4xl lg:text-[2.65rem] font-extrabold tracking-[-0.03em] leading-[1.12] text-white">
-              Kenya — East Africa&apos;s Construction{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-red via-white to-brand-green">
-                Hub
+            <h2
+              id="why-kenya-heading"
+              className="text-[clamp(2rem,3.8vw,3.8rem)] font-black leading-[1.1] tracking-[-0.045em] text-white"
+            >
+              Kenya — East Africa&apos;s
+              <span className="mt-1 block">
+                Construction <span className="text-[#F26B70]">Hub.</span>
               </span>
             </h2>
 
-            {/* Crisp Description */}
-            <p className="mt-2.5 text-xs sm:text-sm leading-[1.65] tracking-wide text-slate-300 font-normal">
-              Government investment in infrastructure, a rapidly urbanising population and Vision 2030 flagship projects are driving demand for building materials, machinery, and construction technology.
-            </p>
-          </div>
+            {/* Small brand line */}
+            <motion.div
+              aria-hidden="true"
+              className="mt-6 flex h-[3px] w-28 origin-left overflow-hidden"
+              initial={reduceMotion ? false : { scaleX: 0 }}
+              whileInView={{
+                scaleX: 1,
+              }}
+              viewport={{ once: true }}
+              transition={{
+                duration: 0.9,
+                ease: EASE,
+              }}
+            >
+              <span className="h-full w-[75%] bg-[#BE202B]" />
+              <span className="h-full flex-1 bg-[#25B34B]" />
+            </motion.div>
 
-          {/* Top-Right Action Button */}
-          <div className="shrink-0">
+            <p className="mt-6 max-w-[680px] text-[14px] font-normal leading-[1.8] tracking-[-0.006em] text-white/65 sm:text-[15px]">
+              Government investment in infrastructure, a rapidly urbanising
+              population and Vision 2030 flagship projects are driving demand
+              for building materials, machinery, and construction technology.
+            </p>
+          </motion.div>
+
+          {/* CTA */}
+          <motion.div variants={itemVariants} className="shrink-0">
             <Button
               href="/why-kenya"
-              className="inline-flex items-center justify-center rounded-full border border-white/20 bg-white/[0.06] px-6 py-2.5 text-xs font-semibold uppercase tracking-wider text-white backdrop-blur-xl transition-all duration-300 hover:border-brand-red/60 hover:bg-white/[0.12] hover:-translate-y-0.5 active:translate-y-0 shadow-lg shadow-black/20"
+              className="group inline-flex min-h-[48px] items-center justify-center gap-3 rounded-md border border-white/25 !bg-white px-6 py-3 text-[12px] font-bold uppercase tracking-[0.07em] !text-[#111111] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#BE202B] hover:!bg-[#BE202B] hover:!text-white"
             >
-              Explore Full Market Report →
+              Explore Full Market Report
+              <span
+                aria-hidden="true"
+                className="text-[17px] font-normal transition-transform duration-300 group-hover:translate-x-1"
+              >
+                ↗
+              </span>
             </Button>
-          </div>
+          </motion.div>
+        </motion.div>
+
+        {/* ==================================
+            SECTION MICRO LABEL
+        ================================== */}
+
+        <div className="mb-5 mt-8 flex items-center justify-between gap-3">
+          <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-white/50">
+            Market Intelligence
+          </span>
+
+          <span className="text-[10px] font-semibold tracking-[0.1em] text-[#F26B70]">
+            KE / CONSTRUCTION
+          </span>
         </div>
 
-        {/* ========================================================= */}
-        {/* Compact Market Facts Grid                                 */}
-        {/* ========================================================= */}
+        {/* ==================================
+            MARKET FACTS GRID
+        ================================== */}
+
         <motion.div
           variants={containerVariants}
-          initial="hidden"
+          initial={reduceMotion ? false : "hidden"}
           whileInView="visible"
-          viewport={{ once: true, margin: "-40px" }}
-          className="mt-7 grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+          viewport={{
+            once: true,
+            amount: 0.12,
+          }}
+          className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
         >
-          {marketFacts.map((fact: MarketFact) => (
-            <motion.div
-              key={fact.id}
-              variants={itemVariants}
-              className="group relative flex flex-col justify-between rounded-2xl border border-white/[0.08] bg-[#071118]/70 p-5 backdrop-blur-xl transition-all duration-300 hover:border-brand-red/40 hover:bg-[#071118]/90 hover:shadow-xl hover:shadow-black/30"
-            >
-              <div>
-                {/* Header Period Pill & Line Icon */}
-                <div className="flex items-center justify-between pb-3 border-b border-white/[0.06]">
-                  <span className="rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-brand-red-light">
-                    {fact.period || "Official Metric"}
-                  </span>
-                  
-                  <svg
-                    className="h-4 w-4 text-slate-400 transition-colors duration-300 group-hover:text-brand-green"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                  </svg>
-                </div>
-
-                {/* Animated Dynamic Metric */}
-                <div className="mt-3 text-3xl sm:text-4xl font-black tracking-tight text-white">
-                  <AnimatedCounter value={fact.value} />
-                </div>
-
-                {/* Metric Title Label */}
-                <h3 className="mt-1 text-xs sm:text-sm font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-brand-red-light to-red-200">
-                  {fact.label}
-                </h3>
-
-                {/* Brief Narrative Detail */}
-                {fact.detail && (
-                  <p className="mt-2 text-[11px] sm:text-xs leading-[1.55] tracking-normal text-slate-300 font-normal line-clamp-2">
-                    {fact.detail}
-                  </p>
-                )}
-              </div>
-
-              {/* Verified Source Line */}
-              <div className="mt-4 pt-2.5 border-t border-white/[0.06] flex items-center justify-between text-[10px] text-slate-400">
-                <span className="truncate pr-2 font-medium">
-                  {fact.sourceUrl ? (
-                    <a
-                      href={fact.sourceUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="transition-colors hover:text-brand-red-light underline decoration-white/20 underline-offset-2"
-                    >
-                      {fact.sourceName}
-                    </a>
-                  ) : (
-                    fact.sourceName
-                  )}
-                </span>
-                <span className="shrink-0 text-[9px] text-slate-400 font-medium">
-                  Verified
-                </span>
-              </div>
-            </motion.div>
+          {marketFacts.map((fact: MarketFact, index: number) => (
+            <MarketFactCard key={fact.id} fact={fact} index={index} />
           ))}
         </motion.div>
 
-      {/* ========================================================= */}
-{/* High-Growth Sectors Smooth Marquee Strip                   */}
-{/* ========================================================= */}
-<motion.div
-  initial={{ opacity: 0, y: 20 }}
-  whileInView={{ opacity: 1, y: 0 }}
-  viewport={{ once: true }}
-  transition={{ duration: 0.6, delay: 0.2 }}
-  className="relative mt-8 overflow-hidden rounded-2xl border border-white/[0.08] bg-gradient-to-r from-white/[0.02] via-white/[0.05] to-white/[0.02] py-3.5 backdrop-blur-xl"
->
-  {/* Side Fade Masks for ultra-clean edge fade */}
-  <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-[#071118] to-transparent sm:w-28" />
-  <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-[#071118] to-transparent sm:w-28" />
+        {/* ==================================
+            ANIMATED FOCUS SECTOR MARQUEE
+        ================================== */}
 
-  <div className="flex items-center">
-    {/* Left Fixed Label */}
-    <div className="relative z-20 flex shrink-0 items-center gap-2 border-r border-white/10 bg-[#071118]/90 py-1 pl-4 pr-5 shadow-lg">
-      <span className="relative flex h-2 w-2">
-        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand-red opacity-75" />
-        <span className="relative inline-flex h-2 w-2 rounded-full bg-brand-red" />
-      </span>
-      <span className="text-[10px] font-extrabold uppercase tracking-[0.2em] text-slate-300 sm:text-[11px]">
-        Key Focus Areas
-      </span>
-    </div>
+        {/* <motion.div
+          initial={
+            reduceMotion
+              ? false
+              : {
+                  opacity: 0,
+                  y: 18,
+                }
+          }
+          whileInView={{
+            opacity: 1,
+            y: 0,
+          }}
+          viewport={{
+            once: true,
+            amount: 0.3,
+          }}
+          transition={{
+            duration: 0.8,
+            ease: EASE,
+          }}
+        >
+          <FocusSectorsMarquee />
+        </motion.div> */}
 
-    {/* Seamless Infinite Looping Track */}
-    <div className="flex select-none overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
-      <motion.div
-        animate={{ x: ["0%", "-50%"] }}
-        transition={{
-          repeat: Infinity,
-          ease: "linear",
-          duration: 25,
-        }}
-        className="flex shrink-0 items-center gap-6 pr-6"
-      >
-        {/* Array duplicate kiya hai infinite continuous loop ke liye */}
-        {[...opportunityCategories, ...opportunityCategories].map((cat: string, index: number) => (
-          <div
-            key={`${cat}-${index}`}
-            className="flex items-center gap-2 text-xs font-semibold tracking-wide text-slate-300/90 whitespace-nowrap"
-          >
-            <span className="h-1.5 w-1.5 rounded-full bg-brand-green/80" />
-            <span>{cat}</span>
-            <span className="ml-4 text-white/20">•</span>
-          </div>
-        ))}
-      </motion.div>
-    </div>
-  </div>
-</motion.div>
+        {/* BOTTOM MICRO BRANDING */}
+        <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-white/10 pt-5">
+          <span className="text-[10px] font-semibold uppercase tracking-[0.13em] text-white/40">
+            Kenya Buildcon International Expo
+          </span>
+
+          <span className="flex items-center gap-2">
+            <span className="h-1.5 w-1.5 rounded-full bg-[#25B34B]" />
+
+            <span className="text-[10px] font-bold tracking-[0.1em] text-white/60">
+              Nairobi, Kenya · 2027
+            </span>
+          </span>
+        </div>
       </Container>
+
+      {/* BOTTOM BRAND LINE */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-x-0 bottom-0 z-10 flex h-[2px]"
+      >
+        <span className="w-[82%] bg-[#BE202B]" />
+        <span className="w-[13%] bg-[#25B34B]" />
+        <span className="flex-1 bg-white" />
+      </div>
     </section>
   );
 }

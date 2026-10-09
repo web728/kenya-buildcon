@@ -1,7 +1,15 @@
+
 /**
- * Results of the previous Kenya Buildcon edition, from the official Post Show
- * Report (The Sarit Expo Centre, Nairobi). Figures are published as reported.
+ * Results of the previous Kenya Buildcon edition,
+ * from the official Post Show Report
+ * (The Sarit Expo Centre, Nairobi).
+ *
+ * Figures are published as reported.
  */
+
+/* ==========================================
+   STAT TYPES
+========================================== */
 
 export type ShowStat = {
   value: number;
@@ -9,27 +17,78 @@ export type ShowStat = {
   label: string;
 };
 
+/* ==========================================
+   HERO STATS - ANIMATED COUNTERS
+========================================== */
+
 export const showStats: ShowStat[] = [
-  { value: 250, suffix: "+", label: "Exhibiting Brands" },
-  { value: 9500, suffix: "+", label: "Trade Visitors" },
-  { value: 700, suffix: "+", label: "Product Categories" },
+  {
+    value: 250,
+    suffix: "+",
+    label: "Exhibiting Brands",
+  },
+  {
+    value: 9500,
+    suffix: "+",
+    label: "Trade Visitors",
+  },
+  {
+    value: 700,
+    suffix: "+",
+    label: "Product Categories",
+  },
 ];
+
+/* ==========================================
+   EXHIBITOR FEEDBACK
+========================================== */
 
 export const exhibitorFeedback = [
-  { value: "85%", label: "of exhibitors made beneficial business connections" },
-  { value: "95%", label: "rated the quality of visitors outstanding or exceptional" },
-  { value: "90%", label: "expect orders as a result of displaying" },
-  { value: "90%", label: "intend to participate again as exhibitors" },
+  {
+    value: "85%",
+    label: "of exhibitors made beneficial business connections",
+  },
+  {
+    value: "95%",
+    label: "rated the quality of visitors outstanding or exceptional",
+  },
+  {
+    value: "90%",
+    label: "expect orders as a result of displaying",
+  },
+  {
+    value: "90%",
+    label: "intend to participate again as exhibitors",
+  },
 ];
+
+/* ==========================================
+   VISITOR FEEDBACK
+========================================== */
 
 export const visitorFeedback = [
-  { value: "9,595", label: "total trade visitors over three days" },
-  { value: "95%", label: "of visitors were satisfied" },
-  { value: "83%", label: "plan to visit again" },
-  { value: "76%", label: "recommended the exhibition" },
+  {
+    value: "9,595",
+    label: "total trade visitors over three days",
+  },
+  {
+    value: "95%",
+    label: "of visitors were satisfied",
+  },
+  {
+    value: "83%",
+    label: "plan to visit again",
+  },
+  {
+    value: "76%",
+    label: "recommended the exhibition",
+  },
 ];
 
-/** Prominent participating brands & companies listed in the Post Show Report. */
+/* ==========================================
+   PAST PARTICIPANTS
+========================================== */
+
 export const pastParticipants: string[] = [
   "Bosch East Africa",
   "Mather + Platt (K) Ltd.",
@@ -49,7 +108,10 @@ export const pastParticipants: string[] = [
   "RFL Bangladesh",
 ];
 
-/** Supporting associations that took part in the previous edition (Post Show Report). */
+/* ==========================================
+   SUPPORTING ASSOCIATIONS
+========================================== */
+
 export const supportingAssociations: string[] = [
   "Kenya National Chamber of Commerce and Industry (KNCCI)",
   "The Kenya Association of Building and Civil Engineering Contractors (KABCEC)",
@@ -60,7 +122,10 @@ export const supportingAssociations: string[] = [
   "Town and County Planners Association of Kenya",
 ];
 
-/** Key features of the 4th edition, from the brochure. */
+/* ==========================================
+   KEY FEATURES
+========================================== */
+
 export const keyFeatures = [
   {
     title: "Networking",

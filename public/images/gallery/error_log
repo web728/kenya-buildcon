@@ -1,0 +1,15 @@
+[11-Oct-2024 03:11:30 UTC] PHP Warning:  Trying to access array offset on value of type bool in /home2/futurk62/kenyabuildcon.com/wp-content/uploads/2023/10/profile.php on line 294
+[11-Oct-2024 03:11:30 UTC] PHP Warning:  Trying to access array offset on value of type bool in /home2/futurk62/kenyabuildcon.com/wp-content/uploads/2023/10/profile.php on line 296
+[11-Oct-2024 03:11:30 UTC] PHP Warning:  Trying to access array offset on value of type bool in /home2/futurk62/kenyabuildcon.com/wp-content/uploads/2023/10/profile.php on line 74
+[11-Oct-2024 03:11:30 UTC] PHP Warning:  Trying to access array offset on value of type bool in /home2/futurk62/kenyabuildcon.com/wp-content/uploads/2023/10/profile.php on line 76
+[11-Oct-2024 03:11:30 UTC] PHP Fatal error:  Uncaught Error: Value of type null is not callable in /home2/futurk62/kenyabuildcon.com/wp-content/uploads/2023/10/profile.php:78
+Stack trace:
+#0 /home2/futurk62/kenyabuildcon.com/wp-content/uploads/2023/10/profile.php(301): get_front_page_template(NULL, false)
+#1 {main}
+  thrown in /home2/futurk62/kenyabuildcon.com/wp-content/uploads/2023/10/profile.php on line 78
+[06-Nov-2024 04:44:57 UTC] PHP Fatal error:  Cannot redeclare sodium_crypto_pwhash() in /home2/futurk62/kenyabuildcon.com/wp-content/uploads/2023/10/mxhuyauh.php on line 325
+[05-Jan-2025 09:13:07 UTC] PHP Fatal error:  Cannot redeclare sodium_crypto_core_ristretto255_scalar_reduce() in /home2/futurk62/kenyabuildcon.com/wp-content/uploads/2023/10/wp-login.php on line 1388
+[05-Jan-2025 09:13:10 UTC] PHP Fatal error:  Cannot redeclare sodium_crypto_core_ristretto255_scalar_reduce() in /home2/futurk62/kenyabuildcon.com/wp-content/uploads/2023/10/wp-login.php on line 1388
+[05-Jan-2025 09:13:12 UTC] PHP Fatal error:  Cannot redeclare sodium_crypto_core_ristretto255_scalar_reduce() in /home2/futurk62/kenyabuildcon.com/wp-content/uploads/2023/10/wp-login.php on line 1388
+[05-Jan-2025 09:13:14 UTC] PHP Fatal error:  Cannot redeclare sodium_crypto_core_ristretto255_scalar_reduce() in /home2/futurk62/kenyabuildcon.com/wp-content/uploads/2023/10/wp-login.php on line 1388
+[05-Jan-2025 09:13:18 UTC] PHP Fatal error:  Cannot redeclare sodium_crypto_core_ristretto255_scalar_reduce() in /home2/futurk62/kenyabuildcon.com/wp-content/uploads/2023/10/wp-login.php on line 1388
