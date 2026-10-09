@@ -1,10 +1,16 @@
+
 import type { Metadata } from "next";
 import { Manrope, Inter } from "next/font/google";
 import "./globals.css";
+
 import { event } from "@/config/event";
 import { CookieConsent } from "@/components/ui/CookieConsent";
 import { Analytics } from "@/components/ui/Analytics";
 import { InitialSiteLoader } from "@/components/ui/InitialSiteLoader";
+
+/* ==========================================
+   FONTS
+========================================== */
 
 const manrope = Manrope({
   variable: "--font-manrope",
@@ -18,36 +24,62 @@ const inter = Inter({
   display: "swap",
 });
 
-const rawSiteUrl = process.env.NEXT_PUBLIC_SITE_URL || event.website;
-const siteUrl = rawSiteUrl.startsWith("http://") || rawSiteUrl.startsWith("https://")
-  ? rawSiteUrl.replace(/\/$/, "")
-  : `https://${rawSiteUrl.replace(/\/$/, "")}`;
+/* ==========================================
+   WEBSITE CONFIGURATION
+========================================== */
+
+const rawSiteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL || event.website;
+
+const siteUrl = (
+  /^https?:\/\//i.test(rawSiteUrl)
+    ? rawSiteUrl
+    : `https://${rawSiteUrl}`
+).replace(/\/$/, "");
+
+/* ==========================================
+   GOOGLE SEARCH CONSOLE VERIFICATION
+========================================== */
+
+const GOOGLE_SITE_VERIFICATION =
+  process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION ||
+  "9DJARkVtcIJI4V8V9exuXNVnTw_tp8iiPQ7NebAmVDQ";
+
+/* ==========================================
+   GLOBAL SEO METADATA
+========================================== */
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
 
-  // Google Search Console verification for the Kenya property (set per environment)
-  ...(process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
-    ? { verification: { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION } }
-    : {}),
+  /* Google Search Console */
+  verification: {
+    google: GOOGLE_SITE_VERIFICATION,
+  },
 
-  // Canonical Tag for Search Engines
+  /* Canonical URL */
   alternates: {
     canonical: "/",
   },
 
+  /* SEO Title */
   title: {
     default: `${event.name} | ${event.dates.display}, ${event.venue.fullLocation}`,
     template: `%s | ${event.shortName}`,
   },
+
+  /* SEO Description */
   description: `${event.editionLabel} of ${event.name}: ${event.descriptor}. ${event.dates.display} at ${event.venue.fullLocation}.`,
+
   applicationName: event.shortName,
+
   category: "Trade Exhibition",
 
-  // Indexing rules for Google
+  /* Google Indexing */
   robots: {
     index: true,
     follow: true,
+
     googleBot: {
       index: true,
       follow: true,
@@ -57,9 +89,11 @@ export const metadata: Metadata = {
     },
   },
 
+  /* SEO Keywords */
   keywords: [
     "Kenya Buildcon",
     "Kenya Buildcon International Expo",
+    "Kenya Buildcon 2027",
     "Kenya construction exhibition",
     "construction expo Kenya",
     "building materials exhibition Kenya",
@@ -69,13 +103,17 @@ export const metadata: Metadata = {
     "East Africa construction trade show",
   ],
 
+  /* Open Graph */
   openGraph: {
     type: "website",
     siteName: event.name,
     title: event.name,
+
     description: `${event.descriptor}. ${event.dates.display}, ${event.venue.fullLocation}.`,
+
     url: siteUrl,
     locale: "en_KE",
+
     images: [
       {
         url: "/images/og/og-default.jpg",
@@ -86,13 +124,17 @@ export const metadata: Metadata = {
     ],
   },
 
+  /* Twitter / X */
   twitter: {
     card: "summary_large_image",
     title: event.name,
+
     description: `${event.descriptor}. ${event.dates.display}, ${event.venue.fullLocation}.`,
+
     images: ["/images/og/og-default.jpg"],
   },
 
+  /* Favicons */
   icons: {
     icon: "/favicon.ico",
     shortcut: "/favicon.ico",
@@ -100,11 +142,27 @@ export const metadata: Metadata = {
   },
 };
 
+/* ==========================================
+   SAFE JSON-LD SERIALIZATION
+========================================== */
+
+function serializeJsonLd(data: object): string {
+  return JSON.stringify(data).replace(/</g, "\\u003c");
+}
+
+/* ==========================================
+   ROOT LAYOUT
+========================================== */
+
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  /* ----------------------------------------
+     OFFICIAL SOCIAL PROFILES
+  ---------------------------------------- */
+
   const sameAs = [
     event.social.linkedin,
     event.social.facebook,
@@ -113,88 +171,150 @@ export default function RootLayout({
     event.social.youtube,
   ].filter(Boolean);
 
-  // 1. Combined Master Schema (Organization + WebSite + SiteNavigationElement)
+  /* ==========================================
+     MASTER STRUCTURED DATA
+     Organization + Website + Navigation
+  ========================================== */
+
   const masterGraphSchema = {
     "@context": "https://schema.org",
+
     "@graph": [
+      /* Organization */
       {
         "@type": "Organization",
+
         "@id": `${siteUrl}/#organization`,
-        "name": event.name,
-        "alternateName": event.shortName,
-        "url": siteUrl,
-        "logo": `${siteUrl}/logos/kenya-buildcon-logo.png`,
-        "sameAs": sameAs,
+
+        name: event.name,
+
+        alternateName: event.shortName,
+
+        url: siteUrl,
+
+        logo: `${siteUrl}/logos/kenya-buildcon-logo.png`,
+
+        sameAs,
       },
+
+      /* Website */
       {
         "@type": "WebSite",
+
         "@id": `${siteUrl}/#website`,
-        "url": siteUrl,
-        "name": event.name,
-        "inLanguage": "en",
-        "publisher": { "@id": `${siteUrl}/#organization` },
+
+        url: siteUrl,
+
+        name: event.name,
+
+        inLanguage: "en",
+
+        publisher: {
+          "@id": `${siteUrl}/#organization`,
+        },
       },
-      // Navigation Schema for Google Sitelinks (Sub-headings in search)
+
+      /* Site Navigation */
       {
         "@type": "SiteNavigationElement",
+
         "@id": `${siteUrl}/#header-nav`,
-        "name": [
+
+        name: [
           "Exhibition Profile",
           "Book A Stand",
           "Who Should Exhibit",
           "Register To Visit",
           "Why Visit",
-          "About Expo"
+          "About Expo",
         ],
-        "url": [
+
+        url: [
           `${siteUrl}/exhibition-profile`,
           `${siteUrl}/book-a-stand`,
           `${siteUrl}/who-should-exhibit`,
           `${siteUrl}/register-to-visit`,
           `${siteUrl}/visit`,
-          `${siteUrl}/about`
-        ]
-      }
+          `${siteUrl}/about`,
+        ],
+      },
     ],
   };
 
-  // 2. Event Schema — only facts published in the official brochure / website
+  /* ==========================================
+     EVENT STRUCTURED DATA
+  ========================================== */
+
   const eventJsonLd = {
     "@context": "https://schema.org",
+
     "@type": "ExhibitionEvent",
+
     "@id": `${siteUrl}/#event`,
-    "name": event.name,
-    "alternateName": [event.shortName, `${event.editionLabel} ${event.name}`],
-    "description": `${event.descriptor}. ${event.brandLines.supporting}`,
-    "startDate": `${event.dates.start}T10:00:00+03:00`,
-    "endDate": `${event.dates.end}T18:00:00+03:00`,
-    "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
-    "eventStatus": "https://schema.org/EventScheduled",
-    "url": siteUrl,
-    "image": [`${siteUrl}/images/og/og-default.jpg`],
-    "location": {
+
+    name: event.name,
+
+    alternateName: [
+      event.shortName,
+      `${event.editionLabel} ${event.name}`,
+    ],
+
+    description: `${event.descriptor}. ${event.brandLines.supporting}`,
+
+    startDate: `${event.dates.start}T10:00:00+03:00`,
+
+    endDate: `${event.dates.end}T18:00:00+03:00`,
+
+    eventAttendanceMode:
+      "https://schema.org/OfflineEventAttendanceMode",
+
+    eventStatus:
+      "https://schema.org/EventScheduled",
+
+    url: siteUrl,
+
+    image: [
+      `${siteUrl}/images/og/og-default.jpg`,
+    ],
+
+    location: {
       "@type": "Place",
-      "name": event.venue.name,
-      "address": {
+
+      name: event.venue.name,
+
+      address: {
         "@type": "PostalAddress",
-        "streetAddress": event.venue.name,
-        "addressLocality": event.venue.city,
-        "addressRegion": event.venue.district,
-        "addressCountry": event.venue.countryCode,
+
+        streetAddress: event.venue.name,
+
+        addressLocality: event.venue.city,
+
+        addressRegion: event.venue.district,
+
+        addressCountry: event.venue.countryCode,
       },
     },
-    "organizer": event.organisers.map((o) => ({
+
+    organizer: event.organisers.map((organizer) => ({
       "@type": "Organization",
-      "name": o.name,
-      "url": o.url,
+
+      name: organizer.name,
+
+      url: organizer.url,
     })),
-    "offers": {
+
+    offers: {
       "@type": "Offer",
-      "name": "Free Trade Visitor Registration",
-      "price": "0",
-      "priceCurrency": "KES",
-      "availability": "https://schema.org/InStock",
-      "url": `${siteUrl}${event.cta.registerVisit}`,
+
+      name: "Free Trade Visitor Registration",
+
+      price: "0",
+
+      priceCurrency: "KES",
+
+      availability: "https://schema.org/InStock",
+
+      url: `${siteUrl}${event.cta.registerVisit}`,
     },
   };
 
@@ -205,25 +325,35 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body
-        className="min-h-full flex flex-col bg-white text-brand-dark font-sans"
+        className="flex min-h-full flex-col bg-white font-sans text-brand-dark"
         suppressHydrationWarning
       >
-        {/* Master Schema: Organization + Website + Sitelinks */}
+        {/* Organization + Website + Navigation */}
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(masterGraphSchema) }}
-        />
-        {/* Event Schema (sitewide, single source) */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(eventJsonLd) }}
+          dangerouslySetInnerHTML={{
+            __html: serializeJsonLd(masterGraphSchema),
+          }}
         />
 
-        {/* Initial First-Load Experience Preloader */}
+        {/* Official Event Structured Data */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: serializeJsonLd(eventJsonLd),
+          }}
+        />
+
+        {/* Initial Website Loader */}
         <InitialSiteLoader />
 
+        {/* Website Pages */}
         {children}
+
+        {/* Cookie Consent */}
         <CookieConsent />
+
+        {/* Website Analytics */}
         <Analytics />
       </body>
     </html>
