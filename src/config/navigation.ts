@@ -35,7 +35,7 @@ export const mainNav: NavItem[] = [
       { label: "Why Visit", href: "/visit", description: "Source products and meet suppliers." },
       { label: "Who Should Visit", href: "/who-should-visit", description: "Trade visitor qualifications." },
       { label: "Register to Visit", href: "/register-to-visit", description: "Get your free trade pass." },
-      { label: "Plan Your Visit", href: "/plan-your-visit", description: "Hotel, travel, and local guide." },
+      // { label: "Plan Your Visit", href: "/plan-your-visit", description: "Hotel, travel, and local guide." },
     ],
   },
   {

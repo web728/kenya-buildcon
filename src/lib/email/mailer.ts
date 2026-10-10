@@ -1,4 +1,13 @@
-import nodemailer, { type Transporter } from "nodemailer";
+
+import "server-only";
+
+import nodemailer, {
+  type Transporter,
+} from "nodemailer";
+
+/* ==========================================
+   ENVIRONMENT CONFIGURATION
+========================================== */
 
 const {
   MAIL_FROM_NAME = "Kenya Buildcon",
@@ -10,25 +19,64 @@ const {
   MAIL_REFRESH_TOKEN,
 } = process.env;
 
-let cachedTransporter: Transporter | null | undefined;
+/* ==========================================
+   TYPES
+========================================== */
 
-/**
- * Builds (and caches) a Nodemailer transporter. Prefers Gmail OAuth2 when
- * client credentials + refresh token are present, falling back to an App
- * Password. Returns null when neither is configured, so callers can skip
- * sending in local/dev environments without throwing.
- */
+type MailAttachment = {
+  filename: string;
+  content: string;
+  contentType?: string;
+};
+
+type SendMailOptions = {
+  to: string | string[];
+  subject: string;
+  html: string;
+  text?: string;
+  attachments?: MailAttachment[];
+};
+
+/* ==========================================
+   EMAIL NORMALIZATION
+========================================== */
+
+function normalizeEmail(email: string): string {
+  return email.trim().toLowerCase();
+}
+
+/* ==========================================
+   GMAIL TRANSPORTER
+
+   Priority:
+   1. Gmail OAuth2
+   2. Gmail App Password
+========================================== */
+
+let cachedTransporter:
+  | Transporter
+  | null
+  | undefined;
+
 export function getTransporter(): Transporter | null {
-  if (cachedTransporter !== undefined) return cachedTransporter;
-
-  if (!MAIL_USER) {
-    cachedTransporter = null;
+  if (cachedTransporter !== undefined) {
     return cachedTransporter;
   }
 
-  if (MAIL_CLIENT_ID && MAIL_CLIENT_SECRET && MAIL_REFRESH_TOKEN) {
+  if (!MAIL_USER) {
+    cachedTransporter = null;
+    return null;
+  }
+
+  // Gmail OAuth2
+  if (
+    MAIL_CLIENT_ID &&
+    MAIL_CLIENT_SECRET &&
+    MAIL_REFRESH_TOKEN
+  ) {
     cachedTransporter = nodemailer.createTransport({
       service: "gmail",
+
       auth: {
         type: "OAuth2",
         user: MAIL_USER,
@@ -37,51 +85,235 @@ export function getTransporter(): Transporter | null {
         refreshToken: MAIL_REFRESH_TOKEN,
       },
     });
+
     return cachedTransporter;
   }
 
+  // Gmail App Password
   if (MAIL_APP_PASSWORD) {
     cachedTransporter = nodemailer.createTransport({
       service: "gmail",
-      auth: { user: MAIL_USER, pass: MAIL_APP_PASSWORD },
+
+      auth: {
+        user: MAIL_USER,
+        pass: MAIL_APP_PASSWORD,
+      },
     });
+
     return cachedTransporter;
   }
 
   cachedTransporter = null;
-  return cachedTransporter;
+
+  return null;
 }
+
+/* ==========================================
+   EMAIL CONFIGURATION STATUS
+========================================== */
 
 export function isEmailConfigured(): boolean {
   return getTransporter() !== null;
 }
 
+/* ==========================================
+   SENDER ADDRESS
+========================================== */
+
 export function getFromAddress(): string {
-  return `"${MAIL_FROM_NAME}" <${MAIL_FROM_EMAIL || MAIL_USER}>`;
-}
+  const name = MAIL_FROM_NAME
+    .replace(/[\r\n"]/g, "")
+    .trim();
 
-let warnedNoRecipients = false;
+  const address =
+    MAIL_FROM_EMAIL || MAIL_USER;
 
-/** The two organiser inboxes that receive every lead (FORM_NOTIFICATION_EMAIL_1 / _2). */
-export function getNotificationRecipients(): string[] {
-  const recipients = [process.env.FORM_NOTIFICATION_EMAIL_1, process.env.FORM_NOTIFICATION_EMAIL_2]
-    .map((email) => email?.trim())
-    .filter((email): email is string => Boolean(email));
-  if (recipients.length === 0 && !warnedNoRecipients) {
-    warnedNoRecipients = true;
-    console.warn("FORM_NOTIFICATION_EMAIL_1/2 are not set — organiser lead notifications are disabled.");
+  if (!address) {
+    throw new Error(
+      "MAIL_FROM_EMAIL or MAIL_USER is required."
+    );
   }
-  return recipients;
+
+  return `"${name}" <${address}>`;
 }
 
-export async function sendMail(options: { to: string | string[]; subject: string; html: string }): Promise<void> {
-  const transporter = getTransporter();
-  if (!transporter) return; // Not configured — no-op in dev.
+/* ==========================================
+   ADMIN NOTIFICATION RECIPIENTS
 
-  await transporter.sendMail({
+   Uses existing environment variables:
+   FORM_NOTIFICATION_EMAIL_1
+   FORM_NOTIFICATION_EMAIL_2
+========================================== */
+
+export function getNotificationRecipients(): string[] {
+  const configuredRecipients = [
+    process.env.FORM_NOTIFICATION_EMAIL_1,
+    process.env.FORM_NOTIFICATION_EMAIL_2,
+  ];
+
+  const recipients = configuredRecipients
+    .filter(
+      (email): email is string =>
+        typeof email === "string" &&
+        email.trim().length > 0
+    )
+    .map((email) => email.trim());
+
+  // Remove duplicate email addresses.
+  const uniqueRecipients = Array.from(
+    new Map(
+      recipients.map((email) => [
+        normalizeEmail(email),
+        email,
+      ])
+    ).values()
+  );
+
+  return uniqueRecipients;
+}
+
+/* ==========================================
+   ACCEPTED RECIPIENT NORMALIZATION
+
+   Nodemailer may return strings or
+   address-like objects depending on
+   transport/type definitions.
+
+   TypeScript-safe implementation.
+========================================== */
+
+function getAcceptedEmails(
+  acceptedResult: unknown
+): Set<string> {
+  const accepted = new Set<string>();
+
+  if (!Array.isArray(acceptedResult)) {
+    return accepted;
+  }
+
+  // Convert to unknown[] to narrow each value safely.
+  const acceptedValues: unknown[] = acceptedResult;
+
+  for (const recipient of acceptedValues) {
+    if (typeof recipient === "string") {
+      accepted.add(normalizeEmail(recipient));
+      continue;
+    }
+
+    if (
+      recipient !== null &&
+      typeof recipient === "object" &&
+      "address" in recipient
+    ) {
+      const address = Reflect.get(
+        recipient,
+        "address"
+      );
+
+      if (typeof address === "string") {
+        accepted.add(normalizeEmail(address));
+      }
+    }
+  }
+
+  return accepted;
+}
+
+/* ==========================================
+   SEND EMAIL
+
+   Supports:
+   - HTML email
+   - Plain-text email
+   - Downloadable text attachments
+
+   Does not automatically send customer
+   acknowledgement emails.
+========================================== */
+
+export async function sendMail({
+  to,
+  subject,
+  html,
+  text,
+  attachments,
+}: SendMailOptions): Promise<void> {
+  const transporter = getTransporter();
+
+  if (!transporter) {
+    throw new Error(
+      "Email service is not configured. Check Gmail environment variables."
+    );
+  }
+
+  const recipients = (
+    Array.isArray(to) ? to : [to]
+  )
+    .map((email) => email.trim())
+    .filter(Boolean);
+
+  if (recipients.length === 0) {
+    throw new Error(
+      "No email recipients specified."
+    );
+  }
+
+  /* ========================================
+     SEND THROUGH GMAIL
+  ======================================== */
+
+  const result = await transporter.sendMail({
     from: getFromAddress(),
-    to: options.to,
-    subject: options.subject,
-    html: options.html,
+
+    to: recipients,
+
+    subject,
+
+    html,
+
+    ...(text
+      ? {
+          text,
+        }
+      : {}),
+
+    ...(attachments && attachments.length > 0
+      ? {
+          attachments: attachments.map(
+            (attachment) => ({
+              filename: attachment.filename,
+              content: attachment.content,
+
+              contentType:
+                attachment.contentType ||
+                "text/plain; charset=utf-8",
+            })
+          ),
+        }
+      : {}),
   });
+
+  /* ========================================
+     CHECK ACCEPTED RECIPIENTS
+
+     FIXED:
+     No unsafe .toLowerCase()
+     No unsafe .address access
+     No implicit-any callback.
+  ======================================== */
+
+  const accepted = getAcceptedEmails(
+    result.accepted
+  );
+
+  const missingRecipients = recipients.filter(
+    (email) =>
+      !accepted.has(normalizeEmail(email))
+  );
+
+  if (missingRecipients.length > 0) {
+    throw new Error(
+      `Email provider did not accept ${missingRecipients.length} recipient(s).`
+    );
+  }
 }

@@ -1,232 +1,574 @@
+
 "use client";
 
+import type { ReactNode } from "react";
 import Link from "next/link";
-import { motion, type Variants } from "framer-motion";
+
+import {
+  motion,
+  useReducedMotion,
+  type Variants,
+} from "framer-motion";
+
 import { event } from "@/config/event";
 import { Container } from "@/components/ui/Container";
-import { BenefitCard } from "@/components/ui/BenefitCard";
 
-const containerVariants: Variants = {
-  hidden: { opacity: 0 },
+/* ==========================================
+   MOTION
+========================================== */
+
+const EASE = [0.16, 1, 0.3, 1] as const;
+
+const parentVariants: Variants = {
+  hidden: {},
   visible: {
-    opacity: 1,
     transition: {
-      staggerChildren: 0.08,
-      delayChildren: 0.05,
+      staggerChildren: 0.065,
+      delayChildren: 0.045,
     },
   },
 };
 
-// Visitor benefits from the 4th Kenya Buildcon brochure ("Why Visit")
+const itemVariants: Variants = {
+  hidden: {
+    opacity: 0,
+    y: 16,
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.65,
+      ease: EASE,
+    },
+  },
+};
+
+function Reveal({
+  children,
+  className = "",
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
+  const reducedMotion = useReducedMotion();
+
+  return (
+    <motion.div
+      variants={parentVariants}
+      initial={reducedMotion ? false : "hidden"}
+      whileInView="visible"
+      viewport={{
+        once: true,
+        amount: 0.08,
+      }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+/* ==========================================
+   DATA
+   Official 2027 brochure: Why Visit, page 7
+========================================== */
+
 const VISIT_BENEFITS = [
   {
+    number: "01",
     title: "Gain Insights",
-    body: "Interactive sessions with industry leaders on advancements in construction technology, eco-friendly materials, and infrastructure development.",
-    badge: "Knowledge",
+    tag: "Industry Knowledge",
+    description:
+      "Explore developments in construction technology, eco-friendly materials and infrastructure through industry-focused sessions and discussions.",
   },
   {
+    number: "02",
     title: "Discover Innovations",
-    body: "Attend workshops and seminars led by industry experts, learning about emerging trends and best practices.",
-    badge: "Workshops",
+    tag: "Ideas & Best Practices",
+    description:
+      "Learn about emerging trends and best practices through workshops, seminars and knowledge-sharing opportunities.",
   },
   {
+    number: "03",
     title: "Network with Industry Leaders",
-    body: "Connect with professionals and decision-makers to discuss opportunities and challenges.",
-    badge: "Networking",
+    tag: "Professional Connections",
+    description:
+      "Meet industry professionals and decision-makers to discuss opportunities, challenges and developments in construction.",
   },
   {
+    number: "04",
     title: "Explore Solutions",
-    body: "See a wide range of products and services in architecture, building, construction, design and engineering — all under one roof.",
-    badge: "Sourcing",
+    tag: "Product Discovery",
+    description:
+      "Explore a wide range of building and construction products, technologies and services presented across the exhibition profile.",
   },
   {
+    number: "05",
     title: "Open Doors to Opportunities",
-    body: "Meet potential clients and partners, enabling growth in the East African market.",
-    badge: "Business Growth",
-  },
-  {
-    title: "Free Visitor Registration",
-    body: "Registration is free. Register online to secure your spot and receive updates on the event schedule, exhibitors, and special events.",
-    badge: "Free Entry",
+    tag: "Business Development",
+    description:
+      "Connect with potential clients, suppliers and business partners while exploring opportunities across the East African market.",
   },
 ];
 
-// Visitor categories (Kenya Buildcon visitor profile)
 const VISITOR_SEGMENTS = [
   {
+    number: "01",
     title: "Architects, Engineers & Consultants",
-    roles: "Architects and Planners, Structural & Civil Engineers, Consulting Engineers, Project Managers, Interior Designers",
+    roles:
+      "Architects and Planners, Structural & Civil Engineers, Consulting Engineers, Project Managers, Interior Designers",
   },
   {
+    number: "02",
     title: "Importers, Distributors & Suppliers",
-    roles: "Importers, Dealers and Distributors, Building Material Suppliers, Retailers",
+    roles:
+      "Importers, Dealers and Distributors, Building Material Suppliers, Retailers",
   },
   {
+    number: "03",
     title: "Developers & Investors",
-    roles: "Builders and Developers, Homeowners and Property Investors, Investors and Financiers, Hoteliers",
+    roles:
+      "Builders and Developers, Homeowners and Property Investors, Investors and Financiers, Hoteliers",
   },
   {
+    number: "04",
     title: "Contractors",
-    roles: "Building Contractors, Contractors and Subcontractors, Construction Industry Professionals",
+    roles:
+      "Building Contractors, Contractors and Subcontractors, Construction Industry Professionals",
   },
   {
+    number: "05",
     title: "Government & Institutions",
-    roles: "Government Agencies / Building Authorities, Universities, Technical & Research Institutes, Facility Managers",
+    roles:
+      "Government Agencies and Building Authorities, Universities, Technical and Research Institutes, Facility Managers",
   },
 ];
 
-export function VisitClientView() {
+/* ==========================================
+   SHARED UI
+========================================== */
+
+function ArrowIcon({
+  diagonal = false,
+}: {
+  diagonal?: boolean;
+}) {
   return (
-    <div className="relative overflow-hidden py-14 sm:py-20 text-brand-dark">
-      {/* Background Architectural Vector Grid */}
-      <div className="pointer-events-none absolute inset-0 -z-10 select-none opacity-[0.035]">
-        <svg className="h-full w-full" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <pattern id="visit-page-grid" width="36" height="36" patternUnits="userSpaceOnUse">
-              <path d="M 36 0 L 0 0 0 36" fill="none" stroke="#0b1720" strokeWidth="0.8" />
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#visit-page-grid)" />
-        </svg>
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="h-4 w-4 shrink-0"
+      aria-hidden="true"
+    >
+      {diagonal ? (
+        <path d="M6 18 18 6M8 6h10v10" />
+      ) : (
+        <path d="M5 12h14m-6-6 6 6-6 6" />
+      )}
+    </svg>
+  );
+}
+
+function Eyebrow({
+  children,
+  light = false,
+}: {
+  children: ReactNode;
+  light?: boolean;
+}) {
+  return (
+    <div className="flex items-center gap-2.5">
+      <span className="h-[2px] w-7 bg-[#BE202B]" />
+
+      <span
+        className={`text-[10px] font-extrabold uppercase tracking-[0.15em] ${
+          light ? "text-white/70" : "text-[#BE202B]"
+        }`}
+      >
+        {children}
+      </span>
+    </div>
+  );
+}
+
+/* ==========================================
+   BENEFIT CARD
+========================================== */
+
+function BenefitItem({
+  item,
+}: {
+  item: (typeof VISIT_BENEFITS)[number];
+}) {
+  const reducedMotion = useReducedMotion();
+
+  return (
+    <motion.article
+      variants={itemVariants}
+      whileHover={
+        reducedMotion
+          ? undefined
+          : {
+              y: -3,
+              transition: {
+                duration: 0.25,
+                ease: EASE,
+              },
+            }
+      }
+      className="group relative flex min-w-0 flex-col overflow-hidden rounded-lg border border-[#111111]/10 bg-white p-5 transition-[border-color,box-shadow] duration-300 hover:border-[#BE202B]/30 hover:shadow-[0_12px_30px_rgba(17,17,17,0.055)] sm:p-6"
+    >
+      <div className="flex items-start justify-between gap-3">
+        <span className="flex h-10 w-10 items-center justify-center rounded-md bg-[#BE202B]/[0.07] text-[13px] font-extrabold tabular-nums text-[#BE202B]">
+          {item.number}
+        </span>
+
+        <span className="h-[2px] w-8 bg-[#25B34B]" />
       </div>
 
-      <Container className="relative z-10 w-full">
-        {/* ========================================================= */}
-        {/* Header Block 1: Balanced Titles & Direct CTA              */}
-        {/* ========================================================= */}
-        <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between pb-8 border-b border-slate-200/80">
-          <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 rounded-full border border-brand-red/20 bg-brand-red/[0.06] px-4 py-1">
-              <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand-red opacity-75" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-brand-red" />
-              </span>
-              <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-brand-red">
-                Strategic Sourcing Platform
-              </span>
-            </div>
+      <div className="mt-5">
+        <p className="text-[10px] font-extrabold uppercase tracking-[0.12em] text-[#BE202B]">
+          {item.tag}
+        </p>
 
-            <h2 className="mt-4 text-2xl sm:text-4xl font-extrabold tracking-[-0.03em] leading-[1.15] text-brand-dark">
+        <h3 className="mt-2 text-[17px] font-extrabold leading-[1.35] tracking-[-0.025em] text-[#111111]">
+          {item.title}
+        </h3>
+
+        <p className="mt-3 text-[12px] leading-[1.85] text-[#666666] sm:text-[13px]">
+          {item.description}
+        </p>
+      </div>
+
+      <div className="mt-auto pt-5">
+        <Link
+          href={event.cta.registerVisit}
+          className="group/link inline-flex items-center gap-2 border-t border-[#111111]/10 pt-4 text-[11px] font-extrabold text-[#BE202B] transition-colors hover:text-[#111111]"
+        >
+          Register to Visit
+
+          <span className="transition-transform duration-300 group-hover/link:translate-x-1">
+            <ArrowIcon />
+          </span>
+        </Link>
+      </div>
+
+      <span
+        aria-hidden="true"
+        className="absolute inset-x-0 bottom-0 h-[2px] origin-left scale-x-0 bg-[#25B34B] transition-transform duration-500 group-hover:scale-x-100"
+      />
+    </motion.article>
+  );
+}
+
+/* ==========================================
+   WHY VISIT
+========================================== */
+
+function WhyVisitSection() {
+  return (
+    <section
+      aria-labelledby="why-visit-heading"
+      className="relative isolate overflow-hidden bg-white py-12 sm:py-14 lg:py-16"
+    >
+      {/* Architectural grid */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 opacity-[0.025]"
+        style={{
+          backgroundImage:
+            "linear-gradient(#111111 1px, transparent 1px), linear-gradient(90deg, #111111 1px, transparent 1px)",
+          backgroundSize: "80px 80px",
+        }}
+      />
+
+      <Container className="relative z-10">
+        <Reveal className="flex flex-col gap-5 border-b border-[#111111]/10 pb-6 md:flex-row md:items-end md:justify-between">
+          <motion.div
+            variants={itemVariants}
+            className="max-w-[760px]"
+          >
+            <Eyebrow>
+              The Visitor Experience
+            </Eyebrow>
+
+            <h2
+              id="why-visit-heading"
+              className="mt-3 text-[clamp(1.85rem,3vw,2.75rem)] font-extrabold leading-[1.16] tracking-[-0.04em] text-[#111111]"
+            >
               Why Visit{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-red via-brand-dark to-brand-green">
-                Kenya Buildcon 2027?
+              <span className="text-[#BE202B]">
+                Kenya Buildcon?
               </span>
             </h2>
 
-            <p className="mt-2.5 text-xs sm:text-sm leading-[1.7] text-slate-500 font-normal">
-              Explore products, services and innovations in architecture, building, construction, design and engineering, and meet manufacturers and suppliers face-to-face over three days.
+            <p className="mt-3 max-w-[700px] text-[13px] leading-[1.85] text-[#666666] sm:text-[14px]">
+              Kenya Buildcon offers a platform to
+              explore products and services in
+              architecture, building, construction,
+              design and engineering, while connecting
+              with professionals across the industry.
             </p>
-          </div>
+          </motion.div>
 
-          <div className="shrink-0">
+          <motion.div
+            variants={itemVariants}
+            className="shrink-0"
+          >
             <Link
               href={event.cta.registerVisit}
-              className="inline-flex items-center justify-center rounded-full bg-brand-red px-6 py-3 text-xs font-semibold uppercase tracking-wider text-white shadow-[0_4px_16px_rgba(200,38,45,0.25)] transition-all duration-300 hover:bg-brand-red-dark hover:shadow-[0_6px_22px_rgba(200,38,45,0.35)] hover:-translate-y-0.5 active:translate-y-0"
+              className="group inline-flex min-h-[44px] items-center justify-center gap-3 rounded-md bg-[#BE202B] px-5 py-3 text-[11px] font-extrabold uppercase tracking-[0.05em] text-white transition-colors hover:bg-[#A51B25]"
             >
-              Get Visitor Badge →
-            </Link>
-          </div>
-        </div>
+              Register to Visit
 
-        {/* ========================================================= */}
-        {/* Section 1: 6 Core Visitor Benefits (Spacious Grid)        */}
-        {/* ========================================================= */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-40px" }}
-          className="mt-8 sm:mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
-        >
-          {VISIT_BENEFITS.map((item, idx) => (
-            <BenefitCard
-              key={item.title}
-              title={item.title}
-              description={item.body}
-              badge={item.badge}
-              index={idx}
-              light={false}
-              cta={{ label: "Register free", href: event.cta.registerVisit }}
+              <span className="transition-transform duration-300 group-hover:translate-x-1">
+                <ArrowIcon />
+              </span>
+            </Link>
+          </motion.div>
+        </Reveal>
+
+        <Reveal className="mt-6 grid items-stretch gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {VISIT_BENEFITS.map((item) => (
+            <BenefitItem
+              key={item.number}
+              item={item}
             />
           ))}
-        </motion.div>
+        </Reveal>
 
-        {/* ========================================================= */}
-        {/* Section 2: Who Will You Meet Alongside You?               */}
-        {/* ========================================================= */}
-        <div className="mt-14 sm:mt-18 rounded-3xl border border-slate-200/80 bg-white p-6 sm:p-8 shadow-sm">
-          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between pb-5 border-b border-slate-100">
-            <div>
-              <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-brand-green">
-                Peer Networking
+        <Reveal className="mt-6 border-t border-[#111111]/10 pt-5">
+          <motion.div
+            variants={itemVariants}
+            className="flex flex-wrap items-center justify-between gap-3"
+          >
+            <p className="text-[12px] font-medium text-[#777777]">
+              Explore the exhibition&apos;s product
+              and technology scope.
+            </p>
+
+            <Link
+              href="/exhibition-profile"
+              className="group inline-flex items-center gap-2 text-[12px] font-extrabold text-[#BE202B]"
+            >
+              Browse Exhibition Profile
+              <span className="transition-transform duration-300 group-hover:translate-x-1">
+                <ArrowIcon />
               </span>
-              <h3 className="mt-1 text-base sm:text-lg font-bold tracking-tight text-brand-dark">
-                Meet The People Who Buy, Build, Specify &amp; Source
-              </h3>
-            </div>
+            </Link>
+          </motion.div>
+        </Reveal>
+      </Container>
+    </section>
+  );
+}
+
+/* ==========================================
+   VISITOR PROFILES
+========================================== */
+
+function VisitorProfileSection() {
+  return (
+    <section
+      aria-labelledby="visitor-profile-heading"
+      className="border-y border-[#111111]/10 bg-[#F8F8F8] py-12 sm:py-14 lg:py-16"
+    >
+      <Container>
+        <Reveal className="flex flex-col gap-5 border-b border-[#111111]/10 pb-6 md:flex-row md:items-end md:justify-between">
+          <motion.div
+            variants={itemVariants}
+            className="max-w-[760px]"
+          >
+            <Eyebrow>
+              Professional Visitor Profile
+            </Eyebrow>
+
+            <h2
+              id="visitor-profile-heading"
+              className="mt-3 text-[clamp(1.8rem,2.8vw,2.6rem)] font-extrabold leading-[1.18] tracking-[-0.04em] text-[#111111]"
+            >
+              Meet the People Who{" "}
+              <span className="text-[#BE202B]">
+                Buy, Build & Specify.
+              </span>
+            </h2>
+
+            <p className="mt-3 text-[13px] leading-[1.85] text-[#666666]">
+              The exhibition is designed for
+              construction professionals involved
+              in planning, specification, sourcing,
+              development, distribution and project
+              delivery across the built environment.
+            </p>
+          </motion.div>
+
+          <motion.div variants={itemVariants}>
             <Link
               href="/who-should-visit"
-              className="text-xs font-bold text-brand-red hover:underline"
+              className="group inline-flex items-center gap-2 text-[12px] font-extrabold text-[#BE202B]"
             >
-              Detailed Profile Breakdown →
+              Detailed Visitor Profile
+              <span className="transition-transform duration-300 group-hover:translate-x-1">
+                <ArrowIcon />
+              </span>
             </Link>
-          </div>
+          </motion.div>
+        </Reveal>
 
-          <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {VISITOR_SEGMENTS.map((seg) => (
-              <div
-                key={seg.title}
-                className="flex flex-col justify-between rounded-2xl border border-slate-100 bg-slate-50/70 p-5 transition-colors hover:border-brand-red/30 hover:bg-white"
-              >
-                <div>
-                  <h4 className="text-sm font-bold text-brand-dark">
-                    {seg.title}
-                  </h4>
-                  <p className="mt-2 text-xs leading-[1.65] text-slate-500 font-normal">
-                    {seg.roles}
-                  </p>
-                </div>
-
-                <Link
-                  href="/who-should-visit"
-                  className="mt-4 pt-3 border-t border-slate-200/60 flex items-center justify-between text-[11px] font-semibold text-brand-red hover:underline"
-                >
-                  <span>See visitor profile</span>
-                  <span aria-hidden="true">→</span>
-                </Link>
+        <Reveal className="mt-6 grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+          {VISITOR_SEGMENTS.map((segment) => (
+            <motion.article
+              key={segment.number}
+              variants={itemVariants}
+              className="group flex min-w-0 flex-col rounded-lg border border-[#111111]/10 bg-white p-5 transition-[border-color,box-shadow] duration-300 hover:border-[#25B34B]/30 hover:shadow-[0_10px_26px_rgba(17,17,17,0.04)] sm:p-6"
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] font-extrabold tabular-nums text-[#BE202B]">
+                  {segment.number}
+                </span>
+                <span className="h-[2px] w-7 bg-[#25B34B]" />
               </div>
-            ))}
-          </div>
-        </div>
 
-        {/* ========================================================= */}
-        {/* Bottom Action Ribbon                                      */}
-        {/* ========================================================= */}
-        <div className="mt-10 flex flex-col sm:flex-row items-center justify-between gap-4 rounded-2xl border border-brand-red/20 bg-gradient-to-r from-brand-red/[0.04] via-white to-brand-green/[0.04] p-5 sm:p-6 shadow-sm">
-          <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-brand-green/10 text-brand-green">
-              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
-            </div>
-            <div>
-              <h4 className="text-xs sm:text-sm font-bold text-brand-dark">
-                Free pre-registration is open for trade professionals
-              </h4>
-              <p className="text-[11px] text-slate-500 font-normal mt-0.5">
-                Join industry professionals from {event.dates.display} at {event.venue.fullLocation}.
+              <h3 className="mt-4 text-[16px] font-extrabold leading-[1.4] text-[#111111]">
+                {segment.title}
+              </h3>
+
+              <p className="mt-3 flex-1 text-[12px] leading-[1.85] text-[#666666]">
+                {segment.roles}
               </p>
-            </div>
-          </div>
 
-          <Link
-            href={event.cta.registerVisit}
-            className="shrink-0 inline-flex items-center justify-center rounded-full bg-brand-red px-6 py-2.5 text-xs font-semibold uppercase tracking-wider text-white shadow-md hover:bg-brand-red-dark transition-all duration-200"
-          >
-            Register to Visit
-          </Link>
-        </div>
+              <Link
+                href="/who-should-visit"
+                className="group/link mt-5 flex items-center justify-between gap-3 border-t border-[#111111]/10 pt-4 text-[11px] font-extrabold text-[#BE202B]"
+              >
+                Explore Visitor Profile
+
+                <span className="transition-transform duration-300 group-hover/link:translate-x-1">
+                  <ArrowIcon />
+                </span>
+              </Link>
+            </motion.article>
+          ))}
+        </Reveal>
       </Container>
+    </section>
+  );
+}
+
+/* ==========================================
+   VISITOR REGISTRATION CTA
+========================================== */
+
+function RegistrationSection() {
+  return (
+    <section
+      aria-labelledby="visit-registration-heading"
+      className="relative isolate overflow-hidden bg-[#111111] py-12 text-white sm:py-14"
+    >
+      <svg
+        aria-hidden="true"
+        viewBox="0 0 600 300"
+        fill="none"
+        className="pointer-events-none absolute bottom-0 right-0 h-full w-auto opacity-35"
+      >
+        <path
+          d="M110 300V110L310 25L510 110V300M180 300V150L310 95L440 150V300"
+          stroke="#BE202B"
+          strokeOpacity="0.65"
+          strokeWidth="1.2"
+        />
+        <path
+          d="M250 300V200H370V300M110 180H510"
+          stroke="#25B34B"
+          strokeOpacity="0.45"
+          strokeWidth="1"
+        />
+      </svg>
+
+      <Container className="relative z-10">
+        <Reveal className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+          <motion.div
+            variants={itemVariants}
+            className="max-w-[750px]"
+          >
+            <Eyebrow light>
+              Kenya Buildcon International Expo 2027
+            </Eyebrow>
+
+            <h2
+              id="visit-registration-heading"
+              className="mt-3 text-[clamp(1.85rem,2.9vw,2.7rem)] font-extrabold leading-[1.18] tracking-[-0.04em]"
+            >
+              Explore What&apos;s Next{" "}
+              <span className="text-white/75">
+                in Construction.
+              </span>
+            </h2>
+
+            <p className="mt-3 text-[13px] leading-[1.85] text-white/65">
+              Plan your visit for{" "}
+              {event.dates.display} at{" "}
+              {event.venue.name},{" "}
+              {event.venue.city},{" "}
+              {event.venue.country}.
+              Discover products, industry discussions
+              and opportunities to connect with
+              construction professionals.
+            </p>
+          </motion.div>
+
+          <motion.div
+            variants={itemVariants}
+            className="flex flex-wrap gap-3"
+          >
+            <Link
+              href={event.cta.registerVisit}
+              className="group inline-flex min-h-[44px] items-center justify-center gap-2 rounded-md bg-[#BE202B] px-5 py-3 text-[11px] font-extrabold uppercase tracking-[0.05em] text-white transition-colors hover:bg-[#A51B25]"
+            >
+              Register to Visit
+
+              <span className="transition-transform duration-300 group-hover:translate-x-1">
+                <ArrowIcon />
+              </span>
+            </Link>
+
+            <Link
+              href="/venue"
+              className="inline-flex min-h-[44px] items-center justify-center rounded-md border border-white/25 px-5 py-3 text-[11px] font-extrabold uppercase tracking-[0.05em] text-white transition-colors hover:border-white hover:bg-white hover:text-[#111111]"
+            >
+              Venue & Location
+            </Link>
+          </motion.div>
+        </Reveal>
+      </Container>
+
+      <div
+        aria-hidden="true"
+        className="absolute inset-x-0 bottom-0 flex h-[3px]"
+      >
+        <span className="w-[82%] bg-[#BE202B]" />
+        <span className="w-[13%] bg-[#25B34B]" />
+        <span className="flex-1 bg-white" />
+      </div>
+    </section>
+  );
+}
+
+/* ==========================================
+   MAIN COMPONENT
+========================================== */
+
+export function VisitClientView() {
+  return (
+    <div className="bg-white text-[#111111]">
+      <WhyVisitSection />
+      <VisitorProfileSection />
+      <RegistrationSection />
     </div>
   );
-}   
+}

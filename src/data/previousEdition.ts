@@ -1,10 +1,17 @@
 
 /**
- * Results of the previous Kenya Buildcon edition,
- * from the official Post Show Report
- * (The Sarit Expo Centre, Nairobi).
+ * Kenya Buildcon — Previous Edition Data
  *
- * Figures are published as reported.
+ * Historical exhibition statistics, feedback,
+ * participating companies and supporting associations
+ * from the project's previous-edition records.
+ *
+ * Important:
+ * These figures relate to the previous edition,
+ * NOT to confirmed results or participation for 2027.
+ *
+ * Historical claims should be checked against the
+ * official Post Show Report before publication.
  */
 
 /* ==========================================
@@ -18,7 +25,10 @@ export type ShowStat = {
 };
 
 /* ==========================================
-   HERO STATS - ANIMATED COUNTERS
+   HERO STATS — ANIMATED COUNTERS
+
+   Used by:
+   HeroStatsSection.tsx
 ========================================== */
 
 export const showStats: ShowStat[] = [
@@ -87,6 +97,12 @@ export const visitorFeedback = [
 
 /* ==========================================
    PAST PARTICIPANTS
+
+   Used by:
+   ExhibitorDirectoryPreviewSection.tsx
+
+   Historical companies, not confirmed
+   exhibitors for Kenya Buildcon 2027.
 ========================================== */
 
 export const pastParticipants: string[] = [
@@ -110,6 +126,10 @@ export const pastParticipants: string[] = [
 
 /* ==========================================
    SUPPORTING ASSOCIATIONS
+
+   Historical association data.
+   Do not imply current 2027 endorsement
+   without confirmation.
 ========================================== */
 
 export const supportingAssociations: string[] = [
@@ -124,6 +144,12 @@ export const supportingAssociations: string[] = [
 
 /* ==========================================
    KEY FEATURES
+
+   Original project feature titles and
+   descriptions preserved.
+
+   Event activities also broadly align with
+   the official 2027 brochure, page 3.
 ========================================== */
 
 export const keyFeatures = [

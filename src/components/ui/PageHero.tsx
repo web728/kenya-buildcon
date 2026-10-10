@@ -1,44 +1,240 @@
+
 "use client";
 
+import type { ReactNode } from "react";
 import Image from "next/image";
-import { motion, type Variants } from "framer-motion";
+import {
+  motion,
+  useReducedMotion,
+  type Variants,
+} from "framer-motion";
+
 import { event } from "@/config/event";
 import { Container } from "@/components/ui/Container";
 
+const BRAND = {
+  red: "#BE202B",
+  green: "#25B34B",
+  black: "#111111",
+  white: "#FFFFFF",
+};
+
+const EASE = [0.16, 1, 0.3, 1] as const;
+
 interface PageHeroProps {
-  /** First part of the title (Solid white) */
   title: string;
-  /** Second part of the title (Gradient highlighted text like Home Hero) */
   highlightTitle?: string;
   intro?: string;
   badgeText?: string;
-  image?: { src: string; alt: string };
-  children?: React.ReactNode;
+  image?: {
+    src: string;
+    alt: string;
+  };
+  children?: ReactNode;
 }
 
-const containerVariants: Variants = {
-  hidden: { opacity: 0 },
+const parentVariants: Variants = {
+  hidden: {},
   visible: {
-    opacity: 1,
     transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.1,
+      staggerChildren: 0.095,
+      delayChildren: 0.08,
     },
   },
 };
 
-const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 18, filter: "blur(4px)" },
+const revealVariants: Variants = {
+  hidden: {
+    opacity: 0,
+    y: 15,
+  },
   visible: {
     opacity: 1,
     y: 0,
-    filter: "blur(0px)",
     transition: {
-      duration: 0.8,
-      ease: [0.16, 1, 0.3, 1],
+      duration: 0.78,
+      ease: EASE,
     },
   },
 };
+
+function LocationIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.7"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="h-4 w-4 shrink-0"
+      aria-hidden="true"
+    >
+      <path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 0116 0Z" />
+      <circle cx="12" cy="10" r="2.5" />
+    </svg>
+  );
+}
+
+/* ==========================================
+   PREMIUM ARCHITECTURAL WIREFRAME
+========================================== */
+
+function ArchitecturalWireframe() {
+  const reduceMotion = useReducedMotion();
+
+  return (
+    <div
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-0 z-[1] overflow-hidden"
+    >
+      {/* Fine structural grid */}
+      <div
+        className="absolute inset-0 opacity-[0.055]"
+        style={{
+          backgroundImage:
+            "linear-gradient(#FFFFFF 1px,transparent 1px),linear-gradient(90deg,#FFFFFF 1px,transparent 1px)",
+          backgroundSize: "84px 84px",
+        }}
+      />
+
+      <svg
+        viewBox="0 0 1440 540"
+        preserveAspectRatio="xMidYMid slice"
+        fill="none"
+        className="absolute inset-0 h-full w-full"
+      >
+        {/* Architectural perspective guides */}
+        {Array.from({ length: 7 }).map((_, i) => (
+          <path
+            key={`guide-${i}`}
+            d={`M${130 + i * 210} 540 L${700 + i * 55} 0`}
+            stroke={BRAND.white}
+            strokeWidth="0.65"
+            strokeOpacity="0.045"
+          />
+        ))}
+
+        {/* Right side structural arcs */}
+        <motion.g
+          style={{
+            transformOrigin: "1330px 260px",
+          }}
+          animate={
+            reduceMotion
+              ? undefined
+              : { rotate: [0, 8, 0] }
+          }
+          transition={{
+            duration: 26,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        >
+          {[145, 210, 285, 365].map((r, index) => (
+            <circle
+              key={r}
+              cx="1330"
+              cy="260"
+              r={r}
+              stroke={
+                index % 2 === 0
+                  ? BRAND.red
+                  : BRAND.white
+              }
+              strokeOpacity={
+                index === 0 ? 0.3 : 0.11
+              }
+              strokeWidth="0.85"
+              strokeDasharray={
+                index % 2 === 0
+                  ? "8 15"
+                  : undefined
+              }
+            />
+          ))}
+        </motion.g>
+
+        {/* Main architectural contour ribbons */}
+        {Array.from({ length: 7 }).map((_, i) => {
+          const a = `M-100 ${320 + i * 17} C220 ${
+            255 + i * 10
+          } 495 ${430 - i * 6} 785 ${
+            320 + i * 8
+          } S1140 ${250 + i * 8} 1540 ${
+            320 + i * 8
+          }`;
+
+          const b = `M-100 ${333 + i * 17} C245 ${
+            275 + i * 10
+          } 510 ${410 - i * 6} 805 ${
+            333 + i * 8
+          } S1170 ${275 + i * 8} 1540 ${
+            333 + i * 8
+          }`;
+
+          return (
+            <motion.path
+              key={`ribbon-${i}`}
+              d={a}
+              stroke={
+                i % 3 === 0
+                  ? BRAND.red
+                  : i % 3 === 1
+                    ? BRAND.green
+                    : BRAND.white
+              }
+              strokeOpacity={
+                i % 3 === 2 ? 0.085 : 0.18
+              }
+              strokeWidth={i % 3 === 0 ? 1.1 : 0.75}
+              animate={
+                reduceMotion
+                  ? undefined
+                  : { d: [a, b, a] }
+              }
+              transition={{
+                duration: 24 + i * 2,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+            />
+          );
+        })}
+
+        {/* Technical node details */}
+        <circle
+          cx="1230"
+          cy="145"
+          r="4"
+          fill={BRAND.green}
+          fillOpacity="0.75"
+        />
+        <circle
+          cx="1230"
+          cy="145"
+          r="13"
+          stroke={BRAND.green}
+          strokeOpacity="0.35"
+        />
+        <path
+          d="M1230 145H1295M1230 145V80"
+          stroke={BRAND.white}
+          strokeOpacity="0.18"
+          strokeDasharray="4 7"
+        />
+      </svg>
+
+      {/* Structural edge markers */}
+      <div className="absolute bottom-8 left-6 hidden h-9 w-9 border-b border-l border-[#BE202B]/70 sm:block lg:left-10" />
+      <div className="absolute right-9 top-12 hidden h-2 w-2 rotate-45 bg-[#25B34B] lg:block" />
+    </div>
+  );
+}
+
+/* ==========================================
+   MAIN PAGE HERO
+========================================== */
 
 export function PageHero({
   title,
@@ -48,139 +244,151 @@ export function PageHero({
   image,
   children,
 }: PageHeroProps) {
+  const reduceMotion = useReducedMotion();
+
+  const imageSrc =
+    image?.src ??
+    "/images/home/kenya-buildcon-exhibition-hall.jpg";
+
+  const imageAlt =
+    image?.alt ??
+    `${event.name} exhibition hall`;
+
   return (
-  <section
-  className="relative flex min-h-[380px] lg:min-h-[460px] w-full items-center justify-center overflow-hidden bg-[#071118] pt-28 sm:pt-32 lg:pt-36 pb-12 text-white selection:bg-brand-red selection:text-white"
-  aria-label={title}
->
-      {/* Background Image Canvas with Soft Frosted Fog (Home Hero Match) */}
-      <div className="absolute inset-0 z-0 select-none overflow-hidden">
+    <section
+      aria-label={title}
+      className="relative isolate w-full overflow-hidden bg-[#111111] text-white selection:bg-[#BE202B] selection:text-white"
+    >
+      {/* PHOTOGRAPHIC FOUNDATION */}
+      <div className="absolute inset-0 z-0">
         <Image
-          src={image ? image.src : "/images/home/kenya-buildcon-exhibition-hall.jpg"}
-          alt={image ? image.alt : `${event.name} exhibition hall`}
+          src={imageSrc}
+          alt={imageAlt}
           fill
           priority
           sizes="100vw"
-          className="object-cover opacity-75 scale-100"
-          style={{ objectPosition: "center 45%" }}
+          className="object-cover object-center"
         />
 
-        {/* Translucent Frosted Fog Wash */}
-        <div className="absolute inset-0 bg-[#071118]/45 backdrop-blur-[3px]" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#071118]/90 via-transparent to-[#071118]/40" />
+        {/* Dark cinematic treatment */}
+        <div className="absolute inset-0 bg-[#111111]/75" />
+
+        {/* Left contrast layer */}
+        <div className="absolute inset-y-0 left-0 w-full bg-[#111111]/10 lg:w-[60%]" />
       </div>
 
-      {/* Static 3D Wireframe Wave Mesh & Radar Rings */}
-      <div className="pointer-events-none absolute inset-0 z-0 select-none overflow-hidden">
-        <svg
-          viewBox="0 0 1440 900"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-full w-full opacity-65"
-          preserveAspectRatio="xMidYMid slice"
-        >
-          <defs>
-            <linearGradient id="pageWaveBlueStatic" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#c8262d" stopOpacity="0.1" />
-              <stop offset="50%" stopColor="#c8262d" stopOpacity="0.8" />
-              <stop offset="85%" stopColor="#25b34b" stopOpacity="0.7" />
-              <stop offset="100%" stopColor="#c8262d" stopOpacity="0.05" />
-            </linearGradient>
-            <linearGradient id="pageWaveGreenStatic" x1="100%" y1="0%" x2="0%" y2="0%">
-              <stop offset="0%" stopColor="#25b34b" stopOpacity="0.1" />
-              <stop offset="50%" stopColor="#25b34b" stopOpacity="0.75" />
-              <stop offset="85%" stopColor="#c8262d" stopOpacity="0.65" />
-              <stop offset="100%" stopColor="#25b34b" stopOpacity="0.05" />
-            </linearGradient>
-          </defs>
+      {/* ANIMATED WIREFRAME */}
+      <ArchitecturalWireframe />
 
-          {/* Left Side Concentric Rings */}
-          <g opacity="0.4">
-            <circle cx="80" cy="620" r="150" stroke="#c8262d" strokeWidth="1" strokeDasharray="5 7" />
-            <circle cx="80" cy="620" r="230" stroke="#ffffff" strokeWidth="0.8" strokeOpacity="0.3" />
-            <circle cx="80" cy="620" r="320" stroke="#25b34b" strokeWidth="1" strokeDasharray="8 12" />
-          </g>
-
-          {/* Right Side Concentric Rings */}
-          <g opacity="0.4">
-            <circle cx="1360" cy="620" r="160" stroke="#25b34b" strokeWidth="1" strokeDasharray="6 8" />
-            <circle cx="1360" cy="620" r="250" stroke="#ffffff" strokeWidth="0.8" strokeOpacity="0.3" />
-            <circle cx="1360" cy="620" r="340" stroke="#c8262d" strokeWidth="1" strokeDasharray="10 14" />
-          </g>
-
-          {/* Static 3D Flowing Ribbon Lines */}
-          {Array.from({ length: 10 }).map((_, i) => (
-            <path
-              key={i}
-              d={`M-100,${520 + i * 16} C${240 + i * 14},${400 + i * 10} ${580 - i * 10},${680 - i * 8} ${920 + i * 8},${520 + i * 6} C${1200 - i * 8},${400 + i * 10} 1360,${610 - i * 6} 1600,${500 + i * 8}`}
-              stroke={i % 2 === 0 ? "url(#pageWaveBlueStatic)" : "url(#pageWaveGreenStatic)"}
-              strokeWidth={i % 3 === 0 ? "1.4" : "0.85"}
-              strokeOpacity={0.25 + (i / 10) * 0.45}
-              fill="none"
-            />
-          ))}
-        </svg>
-
-        {/* Ambient Fog Glow Points */}
-        <div className="absolute top-1/4 left-1/3 h-[320px] w-[320px] rounded-full bg-brand-red/20 blur-[130px] pointer-events-none" />
-        <div className="absolute bottom-1/3 right-1/3 h-[300px] w-[300px] rounded-full bg-brand-green/20 blur-[140px] pointer-events-none" />
-      </div>
-
-      {/* Main Content */}
-      <Container className="relative z-10 w-full py-16 sm:py-20">
+      <Container className="relative z-10">
         <motion.div
-          variants={containerVariants}
-          initial="hidden"
+          variants={parentVariants}
+          initial={reduceMotion ? false : "hidden"}
           animate="visible"
-          className="mx-auto flex max-w-4xl flex-col items-center text-center"
+          className="grid min-h-[340px] items-center gap-7 pb-11 pt-[125px] sm:min-h-[390px] sm:pb-12 sm:pt-[140px] lg:min-h-[420px] lg:grid-cols-[minmax(0,1fr)_240px] lg:gap-10 lg:pb-14 lg:pt-[145px]"
         >
-          {/* Top Series Context Badge (Pill Style with Glass Glow) */}
-          <motion.div variants={itemVariants}>
-            <div className="inline-flex items-center gap-2.5 rounded-full border border-white/20 bg-brand-dark/45 px-4 py-1.5 backdrop-blur-xl shadow-[0_0_20px_rgba(200,38,45,0.15)] transition-transform duration-300 hover:scale-[1.02]">
-              <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand-green opacity-75" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-brand-green" />
-              </span>
-              <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.22em] text-slate-200">
+          {/* LEFT TEXT */}
+          <div className="max-w-[840px]">
+            <motion.div
+              variants={revealVariants}
+              className="flex items-center gap-3"
+            >
+              <span className="h-[2px] w-8 bg-[#BE202B]" />
+
+              <span className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-white/70 sm:text-[11px]">
                 {badgeText}
               </span>
+            </motion.div>
+
+            {/* STRONG HEADING */}
+            <motion.h1
+              variants={revealVariants}
+              className="mt-5 max-w-[810px] text-[clamp(2.15rem,4.2vw,3.85rem)] font-extrabold leading-[1.12] tracking-[-0.042em] text-white"
+            >
+              <span className="block text-white">
+                {title}
+              </span>
+
+              {highlightTitle && (
+                <span className="mt-1 block text-[#E6E6E6]">
+                  {highlightTitle}
+                </span>
+              )}
+            </motion.h1>
+
+            {/* BRAND RULE */}
+            <motion.div
+              variants={revealVariants}
+              aria-hidden="true"
+              className="mt-5 flex items-center gap-1.5"
+            >
+              <span className="h-[3px] w-12 bg-[#BE202B]" />
+              <span className="h-[3px] w-5 bg-[#25B34B]" />
+              <span className="h-[3px] w-3 bg-white/60" />
+            </motion.div>
+
+            {/* DESCRIPTION */}
+            {intro && (
+              <motion.p
+                variants={revealVariants}
+                className="mt-5 max-w-[650px] text-[13px] leading-[1.85] text-[#D5D5D5] sm:text-[14px] lg:text-[15px]"
+              >
+                {intro}
+              </motion.p>
+            )}
+
+            {/* OPTIONAL CTAS */}
+            {children && (
+              <motion.div
+                variants={revealVariants}
+                className="mt-6 flex flex-wrap items-center gap-3"
+              >
+                {children}
+              </motion.div>
+            )}
+          </div>
+
+          {/* RIGHT EVENT INFO */}
+          <motion.div
+            variants={revealVariants}
+            className="hidden self-end lg:block"
+          >
+            <div className="border-l-2 border-[#BE202B] pl-5">
+              <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#D7D7D7]">
+                Kenya Buildcon
+              </span>
+
+              <span className="mt-2 block text-[16px] font-extrabold leading-[1.4] text-white">
+                {event.dates.display}
+              </span>
+
+              <div className="mt-3 flex items-start gap-2 text-[#D4D4D4]">
+                <span className="mt-0.5 text-[#25B34B]">
+                  <LocationIcon />
+                </span>
+
+                <span className="text-[12px] leading-[1.7]">
+                  {event.venue.name}
+                  <span className="block">
+                    {event.venue.city},{" "}
+                    {event.venue.country}
+                  </span>
+                </span>
+              </div>
             </div>
           </motion.div>
-
-          {/* Main Title (Identical Gradient Mixed Style as Home Hero) */}
-          <motion.h1
-            variants={itemVariants}
-            className="mt-6 text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight leading-[1.08] text-white drop-shadow-md"
-          >
-            {title}
-            {highlightTitle ? (
-              <span className="block mt-2 font-extrabold tracking-normal text-transparent bg-clip-text bg-gradient-to-r from-brand-red via-white to-brand-green">
-                {highlightTitle}
-              </span>
-            ) : null}
-          </motion.h1>
-
-          {/* Short Crisp Tagline */}
-          {intro && (
-            <motion.p
-              variants={itemVariants}
-              className="mt-6 max-w-xl text-sm sm:text-base leading-relaxed tracking-wide text-slate-100 font-normal drop-shadow"
-            >
-              {intro}
-            </motion.p>
-          )}
-
-          {/* Custom Action CTAs / Buttons (If Any) */}
-          {children && (
-            <motion.div
-              variants={itemVariants}
-              className="mt-8 flex flex-wrap items-center justify-center gap-4"
-            >
-              {children}
-            </motion.div>
-          )}
         </motion.div>
       </Container>
+
+      {/* BOTTOM BRAND LINE */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-x-0 bottom-0 z-20 flex h-[3px]"
+      >
+        <span className="w-[82%] bg-[#BE202B]" />
+        <span className="w-[13%] bg-[#25B34B]" />
+        <span className="flex-1 bg-white" />
+      </div>
     </section>
   );
 }

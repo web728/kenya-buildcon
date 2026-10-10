@@ -1,313 +1,720 @@
+
 "use client";
 
 import Link from "next/link";
-import { motion, type Variants } from "framer-motion";
+
+import {
+  motion,
+  useReducedMotion,
+  type Variants,
+} from "framer-motion";
+
 import { event } from "@/config/event";
 import { Container } from "@/components/ui/Container";
 import { StatCard } from "@/components/ui/StatCard";
-import { marketFacts, marketSources, opportunityCategories } from "@/data/marketFacts";
+
+import {
+  marketFacts,
+  marketSources,
+  opportunityCategories,
+} from "@/data/marketFacts";
+
+/* ==================================================
+   ANIMATION SETTINGS
+================================================== */
+
+const EASE = [0.22, 1, 0.36, 1] as const;
+
+const VIEWPORT = {
+  once: true,
+  margin: "0px 0px -55px 0px",
+} as const;
 
 const containerVariants: Variants = {
-  hidden: { opacity: 0 },
+  hidden: {},
   visible: {
-    opacity: 1,
     transition: {
-      staggerChildren: 0.08,
+      staggerChildren: 0.085,
       delayChildren: 0.05,
     },
   },
 };
 
-const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 16, filter: "blur(4px)" },
+const revealVariants: Variants = {
+  hidden: {
+    opacity: 0,
+    y: 19,
+  },
   visible: {
     opacity: 1,
     y: 0,
-    filter: "blur(0px)",
     transition: {
-      duration: 0.55,
-      ease: [0.16, 1, 0.3, 1],
+      duration: 0.75,
+      ease: EASE,
     },
   },
 };
 
-// Strategic growth pillars (Kenya Buildcon 2027 brochure; figures verified against KNBS)
+/* ==================================================
+   SHARED ELEMENTS
+================================================== */
+
+function ArrowIcon({
+  diagonal = false,
+}: {
+  diagonal?: boolean;
+}) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="h-4 w-4 shrink-0"
+      aria-hidden="true"
+    >
+      {diagonal ? (
+        <path d="M6 18 18 6M8 6h10v10" />
+      ) : (
+        <path d="M4 12h16m-7-7 7 7-7 7" />
+      )}
+    </svg>
+  );
+}
+
+function Eyebrow({
+  children,
+  light = false,
+}: {
+  children: React.ReactNode;
+  light?: boolean;
+}) {
+  return (
+    <div className="flex items-center gap-2.5">
+      <span className="h-[2px] w-6 bg-[#BE202B]" />
+
+      <span
+        className={`text-[10px] font-extrabold uppercase tracking-[0.16em] ${
+          light ? "text-[#F26B70]" : "text-[#BE202B]"
+        }`}
+      >
+        {children}
+      </span>
+    </div>
+  );
+}
+
+function RevealGroup({
+  children,
+  className = "",
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  const reduceMotion = useReducedMotion();
+
+  return (
+    <motion.div
+      variants={containerVariants}
+      initial={reduceMotion ? false : "hidden"}
+      whileInView="visible"
+      viewport={VIEWPORT}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+/* ==================================================
+   ARCHITECTURAL BACKGROUND
+================================================== */
+
+function MarketBackground({
+  dark = false,
+}: {
+  dark?: boolean;
+}) {
+  const reduceMotion = useReducedMotion();
+
+  return (
+    <div
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-0 overflow-hidden"
+    >
+      {/* Fine grid */}
+      <div
+        className={`absolute inset-0 ${
+          dark ? "opacity-[0.035]" : "opacity-[0.027]"
+        }`}
+        style={{
+          backgroundImage: dark
+            ? "linear-gradient(#FFFFFF 1px,transparent 1px),linear-gradient(90deg,#FFFFFF 1px,transparent 1px)"
+            : "linear-gradient(#111111 1px,transparent 1px),linear-gradient(90deg,#111111 1px,transparent 1px)",
+          backgroundSize: "78px 78px",
+        }}
+      />
+
+      {/* Architectural line motion */}
+      <svg
+        viewBox="0 0 1400 520"
+        preserveAspectRatio="xMidYMid slice"
+        fill="none"
+        className="absolute inset-0 h-full w-full"
+      >
+        {Array.from({ length: 5 }).map((_, index) => {
+          const a = `M-100 ${190 + index * 23} C250 ${
+            125 + index * 12
+          } 520 ${350 - index * 7} 820 ${
+            195 + index * 10
+          } S1160 ${285 + index * 9} 1500 ${
+            195 + index * 11
+          }`;
+
+          const b = `M-100 ${205 + index * 23} C260 ${
+            145 + index * 12
+          } 540 ${330 - index * 7} 840 ${
+            210 + index * 10
+          } S1180 ${265 + index * 9} 1500 ${
+            210 + index * 11
+          }`;
+
+          return (
+            <motion.path
+              key={index}
+              d={a}
+              stroke={
+                index % 3 === 0
+                  ? "#BE202B"
+                  : index % 3 === 1
+                    ? "#25B34B"
+                    : dark
+                      ? "#FFFFFF"
+                      : "#111111"
+              }
+              strokeWidth="0.85"
+              strokeOpacity={dark ? 0.13 : 0.07}
+              animate={
+                reduceMotion
+                  ? undefined
+                  : { d: [a, b, a] }
+              }
+              transition={{
+                duration: 25 + index * 2,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+            />
+          );
+        })}
+      </svg>
+    </div>
+  );
+}
+
+/* ==================================================
+   STRATEGIC PILLAR DATA
+
+   Existing market context preserved.
+================================================== */
+
 const STRATEGIC_PILLARS = [
   {
-    tag: "6.7% Growth · Q3 2025",
+    number: "01",
+    category: "Construction Growth",
     title: "Construction Sector Rebound",
-    body: "Kenya's construction sector grew 6.7% in the third quarter of 2025 (KNBS), driven by government investment in infrastructure and housing, higher cement consumption, and the resumption of road projects.",
-    icon: "M13 7h8m0 0v8m0-8l-8 8-4-4-6 6",
+    description:
+      "Kenya's construction sector recorded 6.7% growth in Q3 2025, according to KNBS. Infrastructure activity, housing investment and renewed project execution contribute to opportunities across construction supply chains.",
+    highlight: "6.7% · Q3 2025",
+    icon: "M3 17l6-6 4 4 8-9M15 6h6v6",
   },
   {
-    tag: "East African Community",
-    title: "Gateway to a Regional Market",
-    body: "Positioned within the East African Community, Kenya offers direct access to the wider regional market — making Nairobi a strategic base for businesses expanding their footprint in East Africa's construction landscape.",
-    icon: "M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z",
+    number: "02",
+    category: "Regional Connectivity",
+    title: "Gateway to East Africa",
+    description:
+      "Kenya's position within the East African Community supports regional business connections. Nairobi provides a strategic meeting point for manufacturers, distributors, contractors and buyers exploring nearby markets.",
+    highlight: "East African Community",
+    icon: "M12 22s8-4 8-11a8 8 0 10-16 0c0 7 8 11 8 11zM4 11h16M12 3c-3 4-3 12 0 16M12 3c3 4 3 12 0 16",
   },
   {
-    tag: "Vision 2030",
-    title: "Flagship Infrastructure Projects",
-    body: "Kenya's Vision 2030 blueprint includes ambitious projects like the Nairobi Expressway and Konza Technopolis, highlighting the country's commitment to modernising infrastructure and expanding urban development.",
-    icon: "M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4",
+    number: "03",
+    category: "Infrastructure Investment",
+    title: "Vision 2030 & Development",
+    description:
+      "Kenya's Vision 2030 development agenda provides long-term context for transport, infrastructure and urban development. Projects associated with this agenda illustrate demand for construction expertise and technology.",
+    highlight: "Vision 2030",
+    icon: "M3 21h18M5 21V7l7-4 7 4v14M9 10h.01M15 10h.01M9 14h.01M15 14h.01M10 21v-4h4v4",
   },
   {
-    tag: "Rapid Urbanisation",
-    title: "Soaring Demand for New Space",
-    body: "A rapidly urbanising population is driving demand for residential, commercial, and industrial spaces — and Nairobi brings together the contractors, developers, architects, and buyers who deliver them.",
-    icon: "M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z",
+    number: "04",
+    category: "Urban Development",
+    title: "Growing Demand for Space",
+    description:
+      "Urbanisation and changing business needs create opportunities in residential, commercial and industrial construction. These segments connect developers, designers, engineers and building-material suppliers.",
+    highlight: "Residential · Commercial",
+    icon: "M3 21h18M5 21V9l7-5 7 5v12M9 12h.01M15 12h.01M9 16h.01M15 16h.01M10 21v-3h4v3",
   },
 ];
 
-export function WhyKenyaClientView() {
+/* ==================================================
+   SECTION 1 — MARKET DATA
+================================================== */
+
+function MarketOverview() {
   return (
-    <div className="relative overflow-hidden py-12 sm:py-16 text-brand-dark">
-      {/* Background Subtle Architectural Pattern */}
-      <div className="pointer-events-none absolute inset-0 -z-10 select-none opacity-[0.035]">
-        <svg className="h-full w-full" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <pattern id="market-grid" width="36" height="36" patternUnits="userSpaceOnUse">
-              <path d="M 36 0 L 0 0 0 36" fill="none" stroke="#0b1720" strokeWidth="0.8" />
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#market-grid)" />
-        </svg>
-      </div>
+    <section
+      aria-labelledby="kenya-market-heading"
+      className="relative isolate overflow-hidden bg-white py-12 sm:py-14 lg:py-16"
+    >
+      <MarketBackground />
 
-      <Container className="relative z-10 w-full">
-        {/* ========================================================= */}
-        {/* Header Block 1: Verified Market Facts                     */}
-        {/* ========================================================= */}
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between pb-6 border-b border-slate-200/80">
-          <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 rounded-full border border-brand-red/20 bg-brand-red/[0.06] px-3.5 py-1">
-              <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand-red opacity-75" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-brand-red" />
-              </span>
-              <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-brand-red">
-                Verified Economic Indicators
-              </span>
-            </div>
+      <Container className="relative z-10">
+        <RevealGroup className="flex flex-col gap-5 border-b border-[#111111]/10 pb-6 md:flex-row md:items-end md:justify-between">
+          <motion.div
+            variants={revealVariants}
+            className="max-w-[740px]"
+          >
+            <Eyebrow>
+              Kenya Construction Market
+            </Eyebrow>
 
-            <h2 className="mt-3.5 text-2xl sm:text-4xl font-extrabold tracking-[-0.03em] leading-[1.12] text-brand-dark">
-              Key Market Data &amp;{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-red via-brand-dark to-brand-green">
-                Growth Benchmarks
+            <h2
+              id="kenya-market-heading"
+              className="mt-3 text-[clamp(1.85rem,3vw,2.8rem)] font-extrabold leading-[1.15] tracking-[-0.04em] text-[#111111]"
+            >
+              A Market Driven by{" "}
+              <span className="text-[#BE202B]">
+                Development.
               </span>
             </h2>
 
-            <p className="mt-2 text-xs sm:text-sm leading-relaxed text-slate-500 font-normal">
-              Official macroeconomic data reflecting steady demand for building materials, earthmoving machinery, and specialized architectural technologies.
+            <p className="mt-3 max-w-[650px] text-[13px] leading-[1.8] text-[#666666] sm:text-[14px]">
+              Explore economic indicators and market
+              information relevant to construction,
+              infrastructure investment and building
+              materials in Kenya.
             </p>
-          </div>
+          </motion.div>
 
-          <div className="shrink-0">
+          <motion.div variants={revealVariants}>
             <Link
               href={event.cta.bookStand}
-              className="inline-flex items-center justify-center rounded-full bg-brand-red px-6 py-2.5 text-xs font-semibold uppercase tracking-wider text-white shadow-[0_4px_16px_rgba(200,38,45,0.25)] transition-all duration-300 hover:bg-brand-red-dark hover:shadow-[0_6px_22px_rgba(200,38,45,0.35)] hover:-translate-y-0.5 active:translate-y-0"
+              className="group inline-flex min-h-[43px] items-center justify-center gap-3 rounded-md bg-[#BE202B] px-5 py-3 text-[11px] font-extrabold uppercase tracking-[0.05em] text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#A51B25] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#BE202B] focus-visible:ring-offset-2"
             >
-              Book Stand Space →
-            </Link>
-          </div>
-        </div>
+              Book Stand Space
 
-        {/* Dynamic Facts Grid */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-40px" }}
-          className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
-        >
+              <span className="transition-transform duration-300 group-hover:translate-x-1">
+                <ArrowIcon diagonal />
+              </span>
+            </Link>
+          </motion.div>
+        </RevealGroup>
+
+        {/* Existing market statistics component */}
+        <RevealGroup className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {marketFacts.map((fact) => (
-            <motion.div key={fact.id} variants={itemVariants}>
+            <motion.div
+              key={fact.id}
+              variants={revealVariants}
+              className="min-w-0 [&>*]:h-full"
+            >
               <StatCard fact={fact} />
             </motion.div>
           ))}
-        </motion.div>
+        </RevealGroup>
 
-        {/* ========================================================= */}
-        {/* Section 2: 4 Strategic Pillars (Brochure Match)           */}
-        {/* ========================================================= */}
-        <div className="mt-14 sm:mt-18">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between pb-5 border-b border-slate-200/80">
-            <div>
-              <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-brand-green">
-                Commercial Foundation
+        <div className="mt-5 flex flex-wrap items-center gap-2.5 border-t border-[#111111]/10 pt-4">
+          <span className="h-1.5 w-1.5 rounded-full bg-[#25B34B]" />
+
+          <p className="text-[11px] leading-[1.7] text-[#777777]">
+            Market indicators are based on the
+            referenced source publications.
+            Figures should be read with their
+            stated reporting periods.
+          </p>
+        </div>
+      </Container>
+    </section>
+  );
+}
+
+/* ==================================================
+   SECTION 2 — STRATEGIC ADVANTAGES
+================================================== */
+
+function StrategicAdvantages() {
+  const reduceMotion = useReducedMotion();
+
+  return (
+    <section
+      aria-labelledby="kenya-advantages-heading"
+      className="relative overflow-hidden border-y border-[#111111]/[0.07] bg-[#F8F8F8] py-12 sm:py-14 lg:py-16"
+    >
+      <Container>
+        <RevealGroup className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <motion.div variants={revealVariants}>
+            <Eyebrow>
+              Strategic Advantages
+            </Eyebrow>
+
+            <h2
+              id="kenya-advantages-heading"
+              className="mt-3 text-[clamp(1.8rem,2.8vw,2.65rem)] font-extrabold tracking-[-0.04em] text-[#111111]"
+            >
+              Why Businesses{" "}
+              <span className="text-[#BE202B]">
+                Choose Kenya.
               </span>
-              <h3 className="mt-1.5 text-xl sm:text-3xl font-extrabold tracking-tight text-brand-dark">
-                Why Nairobi &amp; Kenya?
-              </h3>
-            </div>
-            <p className="text-xs text-slate-500 max-w-md font-normal">
-              Kenya is a dynamic hub for construction and infrastructure in East Africa — the ideal location for the Kenya Buildcon Expo.
-            </p>
-          </div>
+            </h2>
+          </motion.div>
 
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-40px" }}
-            className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2"
+          <motion.p
+            variants={revealVariants}
+            className="max-w-[355px] text-[12px] leading-[1.75] text-[#777777] sm:text-[13px]"
           >
-            {STRATEGIC_PILLARS.map((pillar, idx) => (
-              <motion.div
-                key={pillar.title}
-                variants={itemVariants}
-                className="group relative flex flex-col justify-between rounded-2xl border border-slate-200/80 bg-white p-6 shadow-[0_2px_10px_rgb(0,0,0,0.02)] transition-all duration-300 hover:border-brand-red/40 hover:shadow-xl hover:-translate-y-1"
-              >
-                <div>
-                  <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-                    <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-brand-dark">
-                      {pillar.tag}
-                    </span>
+            Four factors shaping Kenya&apos;s
+            construction landscape and its
+            relevance to regional suppliers.
+          </motion.p>
+        </RevealGroup>
 
-                    <span className="text-[10px] font-mono font-bold text-slate-300 group-hover:text-brand-red transition-colors">
-                      0{idx + 1}
-                    </span>
-                  </div>
+        {/* 4 premium editorial cards */}
+        <RevealGroup className="mt-6 grid gap-3 md:grid-cols-2">
+          {STRATEGIC_PILLARS.map((pillar) => (
+            <motion.article
+              key={pillar.title}
+              variants={revealVariants}
+              whileHover={
+                reduceMotion
+                  ? undefined
+                  : {
+                      y: -4,
+                      transition: {
+                        duration: 0.35,
+                        ease: EASE,
+                      },
+                    }
+              }
+              className="group relative overflow-hidden rounded-lg border border-[#111111]/10 bg-white p-5 transition-[border-color,box-shadow] duration-300 hover:border-[#BE202B]/25 hover:shadow-[0_12px_32px_rgba(17,17,17,0.055)] sm:p-6"
+            >
+              {/* Top row */}
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <span className="flex h-10 w-10 items-center justify-center rounded-md border border-[#BE202B]/10 bg-[#BE202B]/[0.055] text-[#BE202B] transition-colors duration-300 group-hover:bg-[#BE202B] group-hover:text-white">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.7"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="h-5 w-5"
+                      aria-hidden="true"
+                    >
+                      <path d={pillar.icon} />
+                    </svg>
+                  </span>
 
-                  <h4 className="mt-4 text-base font-bold tracking-tight text-brand-dark group-hover:text-brand-red transition-colors">
-                    {pillar.title}
-                  </h4>
-
-                  <p className="mt-2 text-xs sm:text-sm leading-[1.7] text-slate-600 font-normal">
-                    {pillar.body}
-                  </p>
+                  <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#BE202B]">
+                    {pillar.category}
+                  </span>
                 </div>
 
+                <span className="text-[11px] font-bold tabular-nums text-[#BBBBBB]">
+                  {pillar.number}
+                </span>
+              </div>
 
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
+              <h3 className="mt-5 text-[17px] font-extrabold leading-[1.35] tracking-[-0.025em] text-[#111111] transition-colors duration-300 group-hover:text-[#BE202B] sm:text-[18px]">
+                {pillar.title}
+              </h3>
 
-        {/* ========================================================= */}
-        {/* Section 3: Exact 9 Opportunity Categories from Brochure   */}
-        {/* ========================================================= */}
-        <div className="mt-14 sm:mt-18 rounded-3xl border border-slate-200/80 bg-white p-6 sm:p-8 shadow-sm">
-          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between pb-5 border-b border-slate-100">
-            <div>
-              <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-brand-red">
-                Commercial Prospects
+              <p className="mt-2 max-w-[590px] text-[12px] leading-[1.85] text-[#666666] sm:text-[13px]">
+                {pillar.description}
+              </p>
+
+              <div className="mt-5 flex items-center gap-2.5 border-t border-[#111111]/10 pt-4">
+                <span className="h-1.5 w-1.5 bg-[#25B34B]" />
+
+                <span className="text-[11px] font-bold text-[#333333]">
+                  {pillar.highlight}
+                </span>
+              </div>
+
+              <span
+                aria-hidden="true"
+                className="absolute bottom-0 left-0 h-[2px] w-0 bg-[#BE202B] transition-[width] duration-500 group-hover:w-full"
+              />
+            </motion.article>
+          ))}
+        </RevealGroup>
+      </Container>
+    </section>
+  );
+}
+
+/* ==================================================
+   SECTION 3 — COMMERCIAL OPPORTUNITIES
+================================================== */
+
+function OpportunitySectors() {
+  const reduceMotion = useReducedMotion();
+
+  return (
+    <section
+      aria-labelledby="kenya-opportunities-heading"
+      className="relative overflow-hidden bg-white py-12 sm:py-14 lg:py-16"
+    >
+      <Container>
+        <RevealGroup className="flex flex-col gap-4 border-b border-[#111111]/10 pb-5 sm:flex-row sm:items-end sm:justify-between">
+          <motion.div variants={revealVariants}>
+            <Eyebrow>
+              Commercial Opportunities
+            </Eyebrow>
+
+            <h2
+              id="kenya-opportunities-heading"
+              className="mt-3 text-[clamp(1.8rem,2.8vw,2.6rem)] font-extrabold tracking-[-0.04em] text-[#111111]"
+            >
+              Opportunities Across{" "}
+              <span className="text-[#BE202B]">
+                Key Sectors.
               </span>
-              <h3 className="mt-1 text-lg sm:text-xl font-bold tracking-tight text-brand-dark">
-                Opportunities Across Active Sectors
+            </h2>
+          </motion.div>
+
+          <motion.p
+            variants={revealVariants}
+            className="max-w-[350px] text-[12px] leading-[1.75] text-[#777777] sm:text-[13px]"
+          >
+            Sectors relevant to construction
+            investment, development and the
+            building-material supply chain.
+          </motion.p>
+        </RevealGroup>
+
+        {/* Sector grid */}
+        <RevealGroup className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {opportunityCategories.map((category, index) => (
+            <motion.div
+              key={category}
+              variants={revealVariants}
+              whileHover={
+                reduceMotion
+                  ? undefined
+                  : {
+                      y: -3,
+                      transition: {
+                        duration: 0.3,
+                        ease: EASE,
+                      },
+                    }
+              }
+              className="group relative flex min-h-[76px] items-center gap-4 overflow-hidden rounded-lg border border-[#111111]/10 bg-[#FBFBFB] px-4 py-4 transition-[background-color,border-color,box-shadow] duration-300 hover:border-[#BE202B]/25 hover:bg-white hover:shadow-[0_10px_24px_rgba(0,0,0,0.045)]"
+            >
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-white text-[11px] font-bold tabular-nums text-[#BE202B] ring-1 ring-[#111111]/10 transition-colors duration-300 group-hover:bg-[#BE202B] group-hover:text-white">
+                {String(index + 1).padStart(2, "0")}
+              </span>
+
+              <h3 className="min-w-0 flex-1 text-[13px] font-bold leading-[1.55] text-[#252525]">
+                {category}
+              </h3>
+
+              <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#25B34B]" />
+            </motion.div>
+          ))}
+        </RevealGroup>
+
+        {/* Source references */}
+        <RevealGroup className="mt-8 border-t border-[#111111]/10 pt-5">
+          <motion.div variants={revealVariants}>
+            <div className="flex items-center gap-2.5">
+              <span className="h-[2px] w-5 bg-[#25B34B]" />
+
+              <h3 className="text-[11px] font-extrabold uppercase tracking-[0.12em] text-[#444444]">
+                Economic Data Sources
               </h3>
             </div>
-            <span className="text-xs text-slate-400">{opportunityCategories.length} Active Sectors</span>
-          </div>
 
-          <div className="mt-6 flex flex-wrap gap-2">
-            {opportunityCategories.map((cat) => (
-              <span
-                key={cat}
-                className="inline-flex items-center gap-2 rounded-xl border border-slate-200/80 bg-slate-50/80 px-3.5 py-2 text-xs font-semibold text-slate-700 transition-all hover:border-brand-red/40 hover:bg-white hover:text-brand-dark hover:shadow-sm"
-              >
-                <span className="h-1.5 w-1.5 rounded-full bg-brand-green" />
-                {cat}
-              </span>
-            ))}
-          </div>
+            <div className="mt-4 flex flex-wrap gap-x-6 gap-y-3">
+              {marketSources.map((source) => (
+                <div
+                  key={source.name}
+                  className="inline-flex items-center gap-2"
+                >
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#BE202B]" />
 
-          {/* Market Sources Strip */}
-          <div className="mt-8 pt-5 border-t border-slate-100">
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">
-              Verified Economic Reference Sources
-            </span>
-            <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-xs text-slate-500">
-              {marketSources.map((src) => (
-                <span key={src.name} className="inline-flex items-center gap-1.5">
-                  <span className="h-1 w-1 rounded-full bg-slate-300" />
-                  {src.url ? (
+                  {source.url ? (
                     <a
-                      href={src.url}
+                      href={source.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="font-medium hover:text-brand-red hover:underline"
+                      className="text-[12px] font-semibold text-[#666666] underline-offset-4 transition-colors duration-200 hover:text-[#BE202B] hover:underline"
                     >
-                      {src.name}
+                      {source.name}
                     </a>
                   ) : (
-                    <span className="font-medium text-slate-600">{src.name}</span>
+                    <span className="text-[12px] font-semibold text-[#666666]">
+                      {source.name}
+                    </span>
                   )}
-                </span>
+                </div>
               ))}
             </div>
-          </div>
-        </div>
 
-      {/* ========================================================= */}
-{/* High-Impact Expo Conversion Card (Replaces Weak Ribbon)    */}
-{/* ========================================================= */}
-<motion.div
-  initial={{ opacity: 0, y: 24 }}
-  whileInView={{ opacity: 1, y: 0 }}
-  viewport={{ once: true }}
-  transition={{ duration: 0.6 }}
-  className="relative mt-12 sm:mt-16 overflow-hidden rounded-3xl bg-[#071118] p-8 sm:p-12 text-white shadow-2xl shadow-black/25"
->
-  {/* Ambient Mesh Glows */}
-  <div className="pointer-events-none absolute -right-16 -top-16 h-72 w-72 rounded-full bg-brand-red/20 blur-[90px]" />
-  <div className="pointer-events-none absolute -bottom-16 -left-16 h-72 w-72 rounded-full bg-brand-green/20 blur-[90px]" />
-
-  {/* Subtle Blueprint Wireframe Grid Background */}
-  <div
-    aria-hidden="true"
-    className="pointer-events-none absolute inset-0 opacity-[0.05] [mask-image:radial-gradient(ellipse_at_center,#fff_30%,transparent_80%)]"
-    style={{
-      backgroundImage:
-        "linear-gradient(to right, #ffffff 1px, transparent 1px), linear-gradient(to bottom, #ffffff 1px, transparent 1px)",
-      backgroundSize: "32px 32px",
-    }}
-  />
-
-  <div className="relative z-10 flex flex-col items-center justify-between gap-8 lg:flex-row text-center lg:text-left">
-    {/* Left Column: Heading + Event Meta Pill */}
-    <div className="max-w-2xl">
-      {/* Event Date & Location Micro-Pill */}
-      <div className="inline-flex flex-wrap items-center justify-center lg:justify-start gap-2 rounded-full border border-white/15 bg-white/[0.06] px-3.5 py-1 text-xs font-medium text-slate-300 backdrop-blur-md">
-        <span className="flex h-2 w-2 rounded-full bg-brand-green animate-pulse" />
-        <span className="text-white font-semibold">{event.dates.display}</span>
-        <span className="text-white/30">•</span>
-        <span>{event.venue.name}, {event.venue.city}</span>
-      </div>
-
-      <h3 className="mt-4 text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight leading-tight text-white">
-        Position Your Brand in{" "}
-        <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-red via-white to-brand-green">
-          Kenya&apos;s Construction
-        </span>{" "}
-        Revolution
-      </h3>
-
-      <p className="mt-3 text-xs sm:text-sm text-slate-300/90 leading-relaxed max-w-xl">
-        Connect face-to-face with builders, developers, architects, government representatives, and regional distributors at Kenya&apos;s leading construction exhibition.
-      </p>
-    </div>
-
-    {/* Right Column: High-Conversion Dual CTAs */}
-    <div className="flex flex-col sm:flex-row items-center gap-3.5 shrink-0 w-full sm:w-auto">
-      <Link
-        href={event.cta.bookStand}
-        className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-brand-red px-7 py-3.5 text-xs sm:text-sm font-bold uppercase tracking-wider text-white shadow-[0_0_24px_rgba(200,38,45,0.4)] transition-all duration-300 hover:bg-brand-red-dark hover:shadow-[0_0_32px_rgba(200,38,45,0.55)] hover:-translate-y-0.5 active:translate-y-0"
-      >
-        <span>Book Your Stand</span>
-        <span>→</span>
-      </Link>
-
-      <Link
-        href={event.cta.registerVisit}
-        className="w-full sm:w-auto inline-flex items-center justify-center rounded-xl border border-white/20 bg-white/[0.08] px-7 py-3.5 text-xs sm:text-sm font-bold uppercase tracking-wider text-white backdrop-blur-md transition-all duration-300 hover:bg-white/15 hover:border-white/30 hover:-translate-y-0.5 active:translate-y-0"
-      >
-        Register to Visit
-      </Link>
-    </div>
-  </div>
-</motion.div>
+            <p className="mt-4 max-w-[850px] text-[11px] leading-[1.75] text-[#888888]">
+              Market information is provided for
+              industry context. Consult the
+              original publications for complete
+              methodology, reporting dates and
+              the latest revisions.
+            </p>
+          </motion.div>
+        </RevealGroup>
       </Container>
+    </section>
+  );
+}
+
+/* ==================================================
+   SECTION 4 — EXHIBITOR CTA
+================================================== */
+
+function MarketCta() {
+  const reduceMotion = useReducedMotion();
+
+  return (
+    <section
+      aria-labelledby="kenya-market-cta"
+      className="relative isolate overflow-hidden bg-[#111111] py-12 text-white sm:py-14 lg:py-16"
+    >
+      <MarketBackground dark />
+
+      <Container className="relative z-10">
+        <RevealGroup className="grid items-center gap-7 lg:grid-cols-[1fr_auto] lg:gap-10">
+          <motion.div
+            variants={revealVariants}
+            className="max-w-[740px]"
+          >
+            <Eyebrow light>
+              Expand Your Market Reach
+            </Eyebrow>
+
+            <h2
+              id="kenya-market-cta"
+              className="mt-4 text-[clamp(1.9rem,3vw,2.9rem)] font-extrabold leading-[1.2] tracking-[-0.045em] text-white"
+            >
+              Make Your Next Business{" "}
+              <span className="text-[#F26B70]">
+                Connection in Nairobi.
+              </span>
+            </h2>
+
+            <p className="mt-4 max-w-[650px] text-[13px] leading-[1.85] text-white/65 sm:text-[14px]">
+              Meet construction professionals,
+              suppliers, distributors and project
+              stakeholders at {event.name}.
+              Explore opportunities to introduce
+              your products and build business
+              relationships in Kenya.
+            </p>
+
+            <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-[11px] font-semibold text-white/55">
+              <span>{event.dates.display}</span>
+
+              <span className="hidden h-3 w-px bg-white/20 sm:block" />
+
+              <span>
+                {event.venue.name},{" "}
+                {event.venue.city}
+              </span>
+            </div>
+          </motion.div>
+
+          {/* Action buttons */}
+          <motion.div
+            variants={revealVariants}
+            className="flex flex-col gap-3 sm:flex-row lg:flex-col"
+          >
+            <motion.div
+              whileHover={
+                reduceMotion ? undefined : { y: -3 }
+              }
+              transition={{
+                duration: 0.25,
+                ease: EASE,
+              }}
+            >
+              <Link
+                href={event.cta.bookStand}
+                className="group inline-flex min-h-[46px] w-full items-center justify-between gap-5 rounded-md bg-[#BE202B] px-5 py-3 text-[11px] font-extrabold uppercase tracking-[0.05em] text-white transition-colors duration-300 hover:bg-[#A51B25] sm:min-w-[200px]"
+              >
+                Book a Stand
+
+                <span className="transition-transform duration-300 group-hover:translate-x-1">
+                  <ArrowIcon diagonal />
+                </span>
+              </Link>
+            </motion.div>
+
+            <Link
+              href={event.cta.registerVisit}
+              className="group inline-flex min-h-[46px] items-center justify-between gap-5 rounded-md border border-white/25 px-5 py-3 text-[11px] font-extrabold uppercase tracking-[0.05em] text-white transition-colors duration-300 hover:border-white hover:bg-white hover:text-[#111111]"
+            >
+              Register to Visit
+
+              <span className="transition-transform duration-300 group-hover:translate-x-1">
+                <ArrowIcon />
+              </span>
+            </Link>
+          </motion.div>
+        </RevealGroup>
+
+        <div className="mt-7 flex flex-wrap items-center justify-between gap-3 border-t border-white/10 pt-4">
+          <span className="text-[11px] text-white/45">
+            {event.editionLabel} · {event.venue.fullLocation}
+          </span>
+
+          <Link
+            href="/exhibition-profile"
+            className="group inline-flex items-center gap-2 text-[11px] font-bold text-white transition-colors hover:text-[#F26B70]"
+          >
+            Explore Exhibition Profile
+
+            <span className="transition-transform duration-300 group-hover:translate-x-1">
+              <ArrowIcon />
+            </span>
+          </Link>
+        </div>
+      </Container>
+
+      {/* Brand signature */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-x-0 bottom-0 flex h-[2px]"
+      >
+        <span className="w-[82%] bg-[#BE202B]" />
+        <span className="w-[13%] bg-[#25B34B]" />
+        <span className="flex-1 bg-white" />
+      </div>
+    </section>
+  );
+}
+
+/* ==================================================
+   MAIN WHY KENYA VIEW
+================================================== */
+
+export function WhyKenyaClientView() {
+  return (
+    <div className="bg-white text-[#111111] selection:bg-[#BE202B] selection:text-white">
+      <MarketOverview />
+      <StrategicAdvantages />
+      <OpportunitySectors />
+      <MarketCta />
     </div>
   );
 }

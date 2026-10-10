@@ -1,232 +1,525 @@
+
 "use client";
 
+import type { ReactNode } from "react";
 import Link from "next/link";
-import { motion, type Variants } from "framer-motion";
+
+import {
+  motion,
+  useReducedMotion,
+  type Variants,
+} from "framer-motion";
+
 import { event } from "@/config/event";
 import { Container } from "@/components/ui/Container";
 import { ContactForm } from "@/components/forms/ContactForm";
 
-const containerVariants: Variants = {
-  hidden: { opacity: 0 },
+/* ==========================================
+   MOTION
+========================================== */
+
+const EASE = [0.16, 1, 0.3, 1] as const;
+
+const parentVariants: Variants = {
+  hidden: {},
   visible: {
-    opacity: 1,
     transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.05,
+      staggerChildren: 0.075,
+      delayChildren: 0.04,
     },
   },
 };
 
 const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 16, filter: "blur(4px)" },
+  hidden: {
+    opacity: 0,
+    y: 18,
+  },
   visible: {
     opacity: 1,
     y: 0,
-    filter: "blur(0px)",
     transition: {
-      duration: 0.5,
-      ease: [0.16, 1, 0.3, 1],
+      duration: 0.7,
+      ease: EASE,
     },
   },
 };
 
-const CONTACT_PERSONS = [
-  {
-    company: "Futurex Group",
-    location: "New Delhi",
-    person: event.contact.futurex,
-    isBlue: true,
-  },
-  {
-    company: "ETSIPL",
-    location: "Navi Mumbai",
-    person: event.contact.etsipl,
-    isBlue: false,
-  },
-  {
-    company: "Futurex Group",
-    location: "New Delhi",
-    person: event.contact.sales,
-    isBlue: true,
-  },
-];
-
-export function ContactClientView() {
-  return (
-    <div className="relative overflow-hidden bg-slate-50/50 py-16 sm:py-24 text-brand-dark selection:bg-brand-red selection:text-white">
-      {/* Background Architectural Grid Pattern */}
-      <div className="pointer-events-none absolute inset-0 -z-10 select-none opacity-[0.03]">
-        <svg className="h-full w-full" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <pattern id="contact-page-grid" width="40" height="40" patternUnits="userSpaceOnUse">
-              <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#0b1720" strokeWidth="1" />
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#contact-page-grid)" />
-        </svg>
-      </div>
-
-      {/* Ambient Gradient Glows */}
-      <div className="pointer-events-none absolute -top-40 -left-40 -z-10 h-96 w-96 rounded-full bg-brand-red/10 blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-40 -right-40 -z-10 h-96 w-96 rounded-full bg-brand-green/10 blur-3xl" />
-
-      <Container className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Top Header Block */}
-        <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between pb-10 border-b border-slate-200/80">
-          <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2.5 rounded-full border border-brand-red/20 bg-brand-red/[0.06] px-4 py-1.5 backdrop-blur-md">
-              <span className="relative flex h-2.5 w-2.5">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand-red opacity-75" />
-                <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-brand-red" />
-              </span>
-              <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-brand-red">
-                Contact Directory
-              </span>
-            </div>
-
-            <h2 className="mt-4 text-3xl sm:text-5xl font-extrabold tracking-tight leading-[1.12] text-brand-dark">
-              Connect with Our{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-red via-brand-dark to-brand-green">
-                Team
-              </span>
-            </h2>
-
-            <p className="mt-3 text-sm sm:text-base leading-relaxed text-slate-600 font-normal">
-              For stand bookings, country pavilions, sponsorship, partnerships or general enquiries about Kenya Buildcon 2027.
-            </p>
-          </div>
-
-          {/* Schedule Badge Card */}
-          <div className="shrink-0 rounded-2xl border border-slate-200/90 bg-white/80 p-5 shadow-sm backdrop-blur-md text-left sm:text-right">
-            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 block">
-              Event Schedule
-            </span>
-            <span className="mt-1 text-sm sm:text-base font-extrabold text-brand-dark block">
-              {event.dates.display}
-            </span>
-            <span className="mt-0.5 text-xs text-slate-500 font-medium block">
-              {event.venue.fullLocation}
-            </span>
-          </div>
-        </div>
-
-        {/* Section 1: Contact Form (Now on Top) */}
-        <div className="mt-12 sm:mt-16 rounded-3xl border border-slate-200/90 bg-white p-8 sm:p-12 shadow-xl shadow-slate-200/50 max-w-4xl mx-auto">
-          <div className="text-center pb-8 border-b border-slate-100 max-w-xl mx-auto">
-            <h3 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-brand-dark">
-              Send Us a Message
-            </h3>
-            <p className="mt-2 text-xs sm:text-sm text-slate-500 font-normal leading-relaxed">
-              Fill out the enquiry form below and our team will get back to you shortly.
-            </p>
-          </div>
-
-          <div className="mt-8">
-            <ContactForm />
-          </div>
-        </div>
-
-        {/* Section 2: Direct Team Contact Cards (Below Form) */}
-        <div className="mt-16 sm:mt-20 max-w-5xl mx-auto">
-          <div className="text-center pb-6">
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-brand-red">
-              Direct Assistance
-            </span>
-            <h3 className="mt-1.5 text-xl sm:text-2xl font-extrabold tracking-tight text-brand-dark">
-              Or Speak Directly with Our Organising Team
-            </h3>
-          </div>
-
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-40px" }}
-            className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
-          >
-           {event.contactList.map((item) => {
-  const cleanPhone = item.phone.replace(/[^0-9+]/g, "");
-  const isFuturex = item.company === "Futurex Group";
+function Reveal({
+  children,
+  className = "",
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
+  const reducedMotion = useReducedMotion();
 
   return (
     <motion.div
-      key={item.email}
-      variants={itemVariants}
-      className="group relative flex flex-col justify-between rounded-3xl border border-slate-200/90 bg-white p-7 shadow-[0_4px_20px_rgba(0,0,0,0.03)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-brand-red/40 hover:shadow-xl"
+      variants={parentVariants}
+      initial={reducedMotion ? false : "hidden"}
+      whileInView="visible"
+      viewport={{
+        once: true,
+        amount: 0.08,
+      }}
+      className={className}
     >
-      <div>
-     
-
-        <h3 className="mt-5 text-xl font-bold tracking-tight text-brand-dark group-hover:text-brand-red transition-colors">
-          {item.name}
-        </h3>
-      </div>
-
-      <div className="mt-6 pt-5 border-t border-slate-100 flex flex-col gap-2.5 text-xs">
-        <a
-          href={`tel:${cleanPhone}`}
-          className="inline-flex items-center gap-3 rounded-xl border border-slate-200/80 bg-slate-50/60 px-4 py-2.5 font-semibold text-slate-700 transition-all hover:border-brand-green/50 hover:bg-white hover:text-brand-green hover:shadow-sm"
-        >
-          <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-emerald-50 text-brand-green">
-            <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-            </svg>
-          </span>
-          <span className="tabular-nums">{item.phone}</span>
-        </a>
-
-        <a
-          href={`mailto:${item.email}`}
-          className="inline-flex items-center gap-3 rounded-xl border border-slate-200/80 bg-slate-50/60 px-4 py-2.5 font-semibold text-slate-700 transition-all hover:border-brand-red/50 hover:bg-white hover:text-brand-red hover:shadow-sm"
-        >
-          <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-red-50 text-brand-red">
-            <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-            </svg>
-          </span>
-          <span className="truncate">{item.email}</span>
-        </a>
-      </div>
+      {children}
     </motion.div>
   );
-})}
+}
+
+/* ==========================================
+   ICONS
+========================================== */
+
+function ArrowIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="h-4 w-4 shrink-0"
+      aria-hidden="true"
+    >
+      <path d="M5 12h14m-6-6 6 6-6 6" />
+    </svg>
+  );
+}
+
+function PhoneIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.7"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="h-[18px] w-[18px]"
+      aria-hidden="true"
+    >
+      <path d="M5 3h4l2 5-2.5 2.2a15 15 0 005.3 5.3L16 13l5 2v4a2 2 0 01-2 2C10.2 21 3 13.8 3 5a2 2 0 012-2Z" />
+    </svg>
+  );
+}
+
+function MailIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.7"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="h-[18px] w-[18px]"
+      aria-hidden="true"
+    >
+      <rect
+        x="3"
+        y="5"
+        width="18"
+        height="14"
+        rx="2"
+      />
+      <path d="m3 7 9 6 9-6" />
+    </svg>
+  );
+}
+
+function Eyebrow({
+  children,
+  light = false,
+}: {
+  children: ReactNode;
+  light?: boolean;
+}) {
+  return (
+    <div className="flex items-center gap-2.5">
+      <span className="h-[2px] w-7 bg-[#BE202B]" />
+
+      <span
+        className={`text-[10px] font-extrabold uppercase tracking-[0.15em] ${
+          light
+            ? "text-white/70"
+            : "text-[#BE202B]"
+        }`}
+      >
+        {children}
+      </span>
+    </div>
+  );
+}
+
+/* ==========================================
+   CONTACT INTRO
+========================================== */
+
+function ContactIntro() {
+  return (
+    <section
+      aria-labelledby="contact-intro-heading"
+      className="relative overflow-hidden bg-white pt-12 sm:pt-14"
+    >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 opacity-[0.025]"
+        style={{
+          backgroundImage:
+            "linear-gradient(#111111 1px,transparent 1px),linear-gradient(90deg,#111111 1px,transparent 1px)",
+          backgroundSize: "80px 80px",
+        }}
+      />
+
+      <Container className="relative z-10">
+        <Reveal className="flex flex-col gap-6 border-b border-[#111111]/10 pb-7 md:flex-row md:items-end md:justify-between">
+          <motion.div
+            variants={itemVariants}
+            className="max-w-[750px]"
+          >
+            <Eyebrow>
+              Exhibition Enquiries
+            </Eyebrow>
+
+            <h2
+              id="contact-intro-heading"
+              className="mt-3 text-[clamp(1.85rem,3vw,2.75rem)] font-extrabold leading-[1.16] tracking-[-0.04em] text-[#111111]"
+            >
+              Connect With Our{" "}
+              <span className="text-[#BE202B]">
+                Organising Team.
+              </span>
+            </h2>
+
+            <p className="mt-3 max-w-[670px] text-[13px] leading-[1.85] text-[#666666] sm:text-[14px]">
+              Enquire about exhibition space,
+              sponsorships, partnerships,
+              country participation, visitor
+              information or event arrangements
+              for Kenya Buildcon 2027.
+            </p>
           </motion.div>
-        </div>
 
-        {/* Bottom Booking Action Ribbon */}
-        <div className="mt-14 flex flex-col sm:flex-row items-center justify-between gap-6 rounded-3xl border border-brand-red/20 bg-gradient-to-r from-brand-red/[0.05] via-white to-brand-green/[0.05] p-7 shadow-lg shadow-brand-red/5">
-          <div className="flex items-center gap-4">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-brand-green/10 text-brand-green shadow-inner">
-              <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
+          <motion.div
+            variants={itemVariants}
+            className="shrink-0 border-l-2 border-[#25B34B] pl-4"
+          >
+            <p className="text-[10px] font-extrabold uppercase tracking-[0.13em] text-[#BE202B]">
+              Event Details
+            </p>
+
+            <p className="mt-2 text-[15px] font-extrabold text-[#111111]">
+              {event.dates.display}
+            </p>
+
+            <p className="mt-1 text-[12px] leading-[1.7] text-[#777777]">
+              {event.venue.name}
+              <span className="block">
+                {event.venue.city}, Kenya
+              </span>
+            </p>
+          </motion.div>
+        </Reveal>
+      </Container>
+    </section>
+  );
+}
+
+/* ==========================================
+   ENQUIRY FORM
+   Existing ContactForm preserved.
+========================================== */
+
+function EnquiryFormSection() {
+  return (
+    <section
+      aria-labelledby="contact-form-heading"
+      className="bg-white py-10 sm:py-12 lg:py-14"
+    >
+      <Container>
+        <Reveal className="mx-auto max-w-[920px]">
+          <motion.div
+            variants={itemVariants}
+            className="overflow-hidden rounded-xl border border-[#111111]/10 bg-white shadow-[0_14px_45px_rgba(17,17,17,0.045)]"
+          >
+            <div className="flex h-[3px]">
+              <span className="w-[80%] bg-[#BE202B]" />
+              <span className="w-[15%] bg-[#25B34B]" />
+              <span className="flex-1 bg-[#111111]" />
             </div>
-            <div>
-              <h4 className="text-base sm:text-lg font-bold text-brand-dark">
-                Planning to participate as an exhibitor or trade delegate?
-              </h4>
-              <p className="text-xs sm:text-sm text-slate-500 font-normal mt-0.5">
-                Held from {event.dates.display} at {event.venue.name}, {event.venue.city}.
+
+            <div className="p-5 sm:p-8 lg:p-10">
+              <Eyebrow>
+                Direct Enquiry
+              </Eyebrow>
+
+              <h2
+                id="contact-form-heading"
+                className="mt-3 text-[clamp(1.65rem,2.7vw,2.4rem)] font-extrabold leading-[1.2] tracking-[-0.04em] text-[#111111]"
+              >
+                Send Us a{" "}
+                <span className="text-[#BE202B]">
+                  Message.
+                </span>
+              </h2>
+
+              <p className="mt-3 max-w-[650px] text-[13px] leading-[1.8] text-[#666666]">
+                Complete the enquiry form with
+                your contact details and message.
+                The organising team can review
+                your request and respond using
+                the information you provide.
               </p>
-            </div>
-          </div>
 
-          <div className="flex items-center gap-3 shrink-0 w-full sm:w-auto">
+              <div className="mt-7 border-t border-[#111111]/10 pt-7">
+                <ContactForm />
+              </div>
+            </div>
+          </motion.div>
+        </Reveal>
+      </Container>
+    </section>
+  );
+}
+
+/* ==========================================
+   ORGANISER CONTACT DIRECTORY
+========================================== */
+
+function OrganiserContactSection() {
+  return (
+    <section
+      aria-labelledby="contact-team-heading"
+      className="border-y border-[#111111]/10 bg-[#F8F8F8] py-12 sm:py-14 lg:py-16"
+    >
+      <Container>
+        <Reveal className="flex flex-col gap-4 border-b border-[#111111]/10 pb-6 md:flex-row md:items-end md:justify-between">
+          <motion.div
+            variants={itemVariants}
+            className="max-w-[730px]"
+          >
+            <Eyebrow>
+              Direct Organiser Contacts
+            </Eyebrow>
+
+            <h2
+              id="contact-team-heading"
+              className="mt-3 text-[clamp(1.75rem,2.8vw,2.55rem)] font-extrabold leading-[1.2] tracking-[-0.04em] text-[#111111]"
+            >
+              Speak Directly With{" "}
+              <span className="text-[#BE202B]">
+                Our Team.
+              </span>
+            </h2>
+
+            <p className="mt-3 text-[13px] leading-[1.8] text-[#666666]">
+              Contact the event organising
+              representatives using the
+              telephone numbers or email
+              addresses below.
+            </p>
+          </motion.div>
+        </Reveal>
+
+        <Reveal className="mt-6 grid items-stretch gap-3 md:grid-cols-2 lg:grid-cols-3">
+          {event.contactList.map((contact, index) => {
+            const cleanPhone =
+              contact.phone.replace(
+                /[^0-9+]/g,
+                ""
+              );
+
+            const isGreen = index % 3 === 1;
+
+            return (
+              <motion.article
+                key={contact.email}
+                variants={itemVariants}
+                className="group relative flex min-w-0 flex-col overflow-hidden rounded-lg border border-[#111111]/10 bg-white p-5 transition-[border-color,box-shadow] duration-300 hover:border-[#BE202B]/30 hover:shadow-[0_12px_30px_rgba(17,17,17,0.05)] sm:p-6"
+              >
+                <div className="flex items-center justify-between">
+                  <span
+                    className={`flex h-11 w-11 items-center justify-center rounded-md ${
+                      isGreen
+                        ? "bg-[#25B34B]/[0.08] text-[#1D9440]"
+                        : "bg-[#BE202B]/[0.07] text-[#BE202B]"
+                    }`}
+                  >
+                    <PhoneIcon />
+                  </span>
+
+                  <span className="h-[2px] w-7 bg-[#25B34B]" />
+                </div>
+
+                <h3 className="mt-5 break-words text-[17px] font-extrabold leading-[1.4] tracking-[-0.025em] text-[#111111]">
+                  {contact.name}
+                </h3>
+
+                <p className="mt-1 text-[11px] font-semibold text-[#888888]">
+                  {contact.company}
+                </p>
+
+                <div className="mt-auto flex flex-col gap-2 border-t border-[#111111]/10 pt-5">
+                  <a
+                    href={`tel:${cleanPhone}`}
+                    className="group/link flex min-w-0 items-center gap-3 rounded-md border border-[#111111]/[0.07] bg-[#FAFAFA] px-3 py-3 transition-colors hover:border-[#25B34B]/30 hover:bg-white"
+                    aria-label={`Call ${contact.name} at ${contact.phone}`}
+                  >
+                    <span className="shrink-0 text-[#1D9440]">
+                      <PhoneIcon />
+                    </span>
+
+                    <span className="min-w-0 flex-1 text-[12px] font-semibold tabular-nums text-[#555555] group-hover/link:text-[#111111]">
+                      {contact.phone}
+                    </span>
+
+                    <span className="shrink-0 text-[#BE202B]">
+                      <ArrowIcon />
+                    </span>
+                  </a>
+
+                  <a
+                    href={`mailto:${contact.email}`}
+                    className="group/link flex min-w-0 items-center gap-3 rounded-md border border-[#111111]/[0.07] bg-[#FAFAFA] px-3 py-3 transition-colors hover:border-[#BE202B]/30 hover:bg-white"
+                    aria-label={`Email ${contact.name} at ${contact.email}`}
+                  >
+                    <span className="shrink-0 text-[#BE202B]">
+                      <MailIcon />
+                    </span>
+
+                    <span className="min-w-0 flex-1 break-all text-[11px] font-semibold leading-[1.6] text-[#555555] group-hover/link:text-[#111111]">
+                      {contact.email}
+                    </span>
+
+                    <span className="shrink-0 text-[#BE202B]">
+                      <ArrowIcon />
+                    </span>
+                  </a>
+                </div>
+              </motion.article>
+            );
+          })}
+        </Reveal>
+      </Container>
+    </section>
+  );
+}
+
+/* ==========================================
+   BOOKING + VISITOR CTA
+========================================== */
+
+function ContactBookingSection() {
+  return (
+    <section
+      aria-labelledby="contact-booking-heading"
+      className="relative isolate overflow-hidden bg-[#111111] py-12 text-white sm:py-14"
+    >
+      <svg
+        aria-hidden="true"
+        viewBox="0 0 600 300"
+        fill="none"
+        className="pointer-events-none absolute bottom-0 right-0 h-full w-auto opacity-35"
+      >
+        <path
+          d="M110 300V110L310 25L510 110V300M180 300V150L310 95L440 150V300"
+          stroke="#BE202B"
+          strokeWidth="1.2"
+          strokeOpacity="0.65"
+        />
+
+        <path
+          d="M250 300V200H370V300M110 180H510"
+          stroke="#25B34B"
+          strokeWidth="1"
+          strokeOpacity="0.4"
+        />
+      </svg>
+
+      <Container className="relative z-10">
+        <Reveal className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+          <motion.div
+            variants={itemVariants}
+            className="max-w-[740px]"
+          >
+            <Eyebrow light>
+              Kenya Buildcon 2027
+            </Eyebrow>
+
+            <h2
+              id="contact-booking-heading"
+              className="mt-3 text-[clamp(1.85rem,2.9vw,2.7rem)] font-extrabold leading-[1.2] tracking-[-0.04em] text-white"
+            >
+              Be Part of{" "}
+              <span className="text-white/75">
+                the Exhibition.
+              </span>
+            </h2>
+
+            <p className="mt-3 text-[13px] leading-[1.85] text-white/65">
+              Connect with Kenya Buildcon
+              International Expo on{" "}
+              {event.dates.display} at{" "}
+              {event.venue.name},{" "}
+              {event.venue.city}.
+              Explore the opportunities to
+              exhibit or attend.
+            </p>
+          </motion.div>
+
+          <motion.div
+            variants={itemVariants}
+            className="flex flex-wrap gap-3"
+          >
             <Link
               href={event.cta.bookStand}
-              className="flex-1 sm:flex-none inline-flex items-center justify-center rounded-full bg-brand-red px-7 py-3 text-xs font-bold uppercase tracking-wider text-white shadow-md shadow-brand-red/20 hover:bg-brand-red-dark hover:shadow-lg transition-all duration-200"
+              className="group inline-flex min-h-[44px] items-center justify-center gap-3 rounded-md bg-[#BE202B] px-5 py-3 text-[11px] font-extrabold uppercase tracking-[0.05em] text-white transition-colors hover:bg-[#A51B25]"
             >
-              Book Stand Space
+              Book a Stand
+
+              <span className="transition-transform duration-300 group-hover:translate-x-1">
+                <ArrowIcon />
+              </span>
             </Link>
+
             <Link
               href={event.cta.registerVisit}
-              className="flex-1 sm:flex-none inline-flex items-center justify-center rounded-full border border-slate-300 bg-white px-6 py-3 text-xs font-bold text-slate-700 hover:border-brand-red hover:text-brand-red hover:bg-slate-50 transition-all duration-200"
+              className="inline-flex min-h-[44px] items-center justify-center rounded-md border border-white/25 px-5 py-3 text-[11px] font-extrabold uppercase tracking-[0.05em] text-white transition-colors hover:border-white hover:bg-white hover:text-[#111111]"
             >
-              Visitor Pass
+              Register to Visit
             </Link>
-          </div>
-        </div>
+          </motion.div>
+        </Reveal>
       </Container>
+
+      <div
+        aria-hidden="true"
+        className="absolute inset-x-0 bottom-0 flex h-[3px]"
+      >
+        <span className="w-[82%] bg-[#BE202B]" />
+        <span className="w-[13%] bg-[#25B34B]" />
+        <span className="flex-1 bg-white" />
+      </div>
+    </section>
+  );
+}
+
+/* ==========================================
+   MAIN COMPONENT
+========================================== */
+
+export function ContactClientView() {
+  return (
+    <div className="bg-white text-[#111111]">
+      <ContactIntro />
+      <EnquiryFormSection />
+      <OrganiserContactSection />
+      <ContactBookingSection />
     </div>
   );
 }

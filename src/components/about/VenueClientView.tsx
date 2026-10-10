@@ -1,339 +1,748 @@
+
 "use client";
 
+import type { ReactNode } from "react";
 import Link from "next/link";
-import { motion, type Variants } from "framer-motion";
+
+import {
+  motion,
+  useReducedMotion,
+  type Variants,
+} from "framer-motion";
+
 import { event } from "@/config/event";
 import { Container } from "@/components/ui/Container";
 
+/* ==================================================
+   DESIGN & MOTION SYSTEM
+================================================== */
+
+const EASE = [0.22, 1, 0.36, 1] as const;
+
+const VIEWPORT = {
+  once: true,
+  margin: "0px 0px -50px 0px",
+} as const;
+
 const containerVariants: Variants = {
-  hidden: { opacity: 0 },
+  hidden: {},
   visible: {
-    opacity: 1,
     transition: {
-      staggerChildren: 0.08,
-      delayChildren: 0.05,
+      staggerChildren: 0.09,
+      delayChildren: 0.06,
     },
   },
 };
 
-const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 16, filter: "blur(4px)" },
+const revealVariants: Variants = {
+  hidden: {
+    opacity: 0,
+    y: 18,
+  },
   visible: {
     opacity: 1,
     y: 0,
-    filter: "blur(0px)",
     transition: {
-      duration: 0.55,
-      ease: [0.16, 1, 0.3, 1],
+      duration: 0.75,
+      ease: EASE,
     },
   },
 };
 
-// Venue & connectivity highlights
+/* ==================================================
+   REUSABLE MOTION WRAPPER
+================================================== */
+
+function RevealGroup({
+  children,
+  className = "",
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
+  const reduceMotion = useReducedMotion();
+
+  return (
+    <motion.div
+      variants={containerVariants}
+      initial={reduceMotion ? false : "hidden"}
+      whileInView="visible"
+      viewport={VIEWPORT}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+/* ==================================================
+   SHARED UI ELEMENTS
+================================================== */
+
+function ArrowIcon({
+  diagonal = false,
+}: {
+  diagonal?: boolean;
+}) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="h-4 w-4 shrink-0"
+      aria-hidden="true"
+    >
+      {diagonal ? (
+        <path d="M6 18 18 6M8 6h10v10" />
+      ) : (
+        <path d="M4 12h16m-7-7 7 7-7 7" />
+      )}
+    </svg>
+  );
+}
+
+function LocationIcon({
+  className = "h-5 w-5",
+}: {
+  className?: string;
+}) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.7"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden="true"
+    >
+      <path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1116 0Z" />
+      <circle cx="12" cy="10" r="2.5" />
+    </svg>
+  );
+}
+
+function CalendarIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="h-5 w-5"
+      aria-hidden="true"
+    >
+      <rect x="3" y="5" width="18" height="16" rx="2" />
+      <path d="M7 3v4M17 3v4M3 10h18" />
+    </svg>
+  );
+}
+
+function ClockIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="h-5 w-5"
+      aria-hidden="true"
+    >
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 7v5l3 2" />
+    </svg>
+  );
+}
+
+function Eyebrow({
+  children,
+  light = false,
+}: {
+  children: ReactNode;
+  light?: boolean;
+}) {
+  return (
+    <div className="flex items-center gap-2.5">
+      <span className="h-[2px] w-7 bg-[#BE202B]" />
+
+      <span
+        className={`text-[10px] font-extrabold uppercase tracking-[0.15em] ${
+          light ? "text-[#F26B70]" : "text-[#BE202B]"
+        }`}
+      >
+        {children}
+      </span>
+    </div>
+  );
+}
+
+/* ==================================================
+   ARCHITECTURAL BACKGROUND
+================================================== */
+
+function VenueBackground({
+  dark = false,
+}: {
+  dark?: boolean;
+}) {
+  const reduceMotion = useReducedMotion();
+
+  return (
+    <div
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-0 overflow-hidden"
+    >
+      <div
+        className={`absolute inset-0 ${
+          dark ? "opacity-[0.03]" : "opacity-[0.025]"
+        }`}
+        style={{
+          backgroundImage: dark
+            ? "linear-gradient(#FFFFFF 1px,transparent 1px),linear-gradient(90deg,#FFFFFF 1px,transparent 1px)"
+            : "linear-gradient(#111111 1px,transparent 1px),linear-gradient(90deg,#111111 1px,transparent 1px)",
+          backgroundSize: "78px 78px",
+        }}
+      />
+
+      <svg
+        viewBox="0 0 1440 480"
+        preserveAspectRatio="xMidYMid slice"
+        fill="none"
+        className="absolute inset-0 h-full w-full"
+      >
+        <path
+          d="M1030 480V130L1240 35L1450 130V480"
+          stroke={dark ? "#FFFFFF" : "#111111"}
+          strokeOpacity="0.08"
+          strokeWidth="1"
+        />
+
+        <path
+          d="M1100 480V180L1240 115L1380 180V480"
+          stroke="#BE202B"
+          strokeOpacity={dark ? 0.22 : 0.12}
+          strokeWidth="1"
+        />
+
+        {Array.from({ length: 4 }).map((_, i) => {
+          const a = `M-100 ${320 + i * 22} C250 ${
+            250 + i * 12
+          } 520 ${415 - i * 8} 830 ${
+            325 + i * 10
+          } S1170 ${250 + i * 8} 1540 ${
+            325 + i * 10
+          }`;
+
+          const b = `M-100 ${335 + i * 22} C270 ${
+            270 + i * 12
+          } 540 ${395 - i * 8} 845 ${
+            340 + i * 10
+          } S1190 ${270 + i * 8} 1540 ${
+            340 + i * 10
+          }`;
+
+          return (
+            <motion.path
+              key={i}
+              d={a}
+              stroke={i % 2 === 0 ? "#BE202B" : "#25B34B"}
+              strokeWidth="0.8"
+              strokeOpacity={dark ? 0.13 : 0.07}
+              animate={
+                reduceMotion
+                  ? undefined
+                  : { d: [a, b, a] }
+              }
+              transition={{
+                duration: 25 + i * 3,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+            />
+          );
+        })}
+      </svg>
+    </div>
+  );
+}
+
+/* ==================================================
+   VENUE INFORMATION
+================================================== */
+
 const VENUE_ADVANTAGES = [
   {
-    num: "01",
-    tag: "Proven Show Venue",
-    title: "Home of Previous Editions",
-    desc: "The Sarit Expo Centre has hosted previous editions of Kenya Buildcon, welcoming 9,500+ trade visitors over three days at the last edition.",
-    icon: "M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z",
+    number: "01",
+    tag: "Previous Editions",
+    title: "Established Exhibition Venue",
+    description:
+      "The Sarit Expo Centre has hosted previous editions of Kenya Buildcon, providing a familiar setting for exhibitors, industry visitors and professional networking.",
+    icon: "M3 21h18M5 21V7l7-4 7 4v14M9 10h.01M15 10h.01M9 14h.01M15 14h.01M10 21v-4h4v4",
   },
   {
-    num: "02",
-    tag: "Commercial Capital",
-    title: "In the Heart of Nairobi",
-    desc: "Located in Westlands, Nairobi — Kenya's commercial capital and home to the country's leading contractors, developers, architects and trade headquarters.",
-    icon: "M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z",
+    number: "02",
+    tag: "Business District",
+    title: "Located in Westlands",
+    description:
+      "Situated in Westlands, Nairobi, the venue offers a convenient base for trade visitors meeting manufacturers, suppliers, contractors and construction professionals.",
+    icon: "M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1116 0ZM12 10h.01",
   },
   {
-    num: "03",
-    tag: "Exhibition Ready",
-    title: "Dedicated Exhibition Halls",
-    desc: "Exhibition halls with stands in a range of sizes, a registration desk at the main entrance, and conference space for seminars and the inaugural ceremony.",
-    icon: "M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4",
+    number: "03",
+    tag: "Exhibition Facilities",
+    title: "Dedicated Trade Show Space",
+    description:
+      "The venue supports exhibition stands, product displays and professional event activities, helping businesses present their products and connect with prospective partners.",
+    icon: "M3 21h18M5 21V5h14v16M9 9h2m2 0h2M9 13h2m2 0h2M10 21v-4h4v4",
   },
   {
-    num: "04",
-    tag: "Visitor Convenience",
-    title: "Easy City Access",
-    desc: "Reachable by taxi and ride-hailing services from across Nairobi and from Jomo Kenyatta International Airport, with business hotels nearby.",
-    icon: "M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z",
+    number: "04",
+    tag: "City Connectivity",
+    title: "Accessible Across Nairobi",
+    description:
+      "Visitors can plan journeys by taxi or ride-hailing services, while the wider Westlands area provides access to business accommodation and amenities.",
+    icon: "M3 17l2-7h14l2 7M5 17v3m14-3v3M5 10l2-5h10l2 5M3 17h18M7 14h.01M17 14h.01",
   },
 ];
 
-const VENUE_METRICS = [
-  { label: "Official Dates", value: event.dates.display, badge: event.editionLabel },
-  { label: "Venue Complex", value: event.venue.name, badge: "Established Center" },
-  { label: "City / Country", value: `${event.venue.city}, ${event.venue.country}`, badge: event.venue.district },
-  { label: "Event Format", value: event.format, badge: "3-Day Trade Show" },
-  { label: "Primary Industry", value: event.industry, badge: "50+ Categories" },
-  { label: "Opening Hours", value: event.dates.openingHours, badge: "Daily" },
-];
+/* ==================================================
+   SECTION 1 — VENUE & INTERACTIVE MAP
+================================================== */
 
-export function VenueClientView() {
+function VenueOverview() {
   return (
-    <div className="relative overflow-hidden py-12 sm:py-16 text-brand-dark">
-      {/* Background Architectural Vector Pattern */}
-      <div className="pointer-events-none absolute inset-0 -z-10 select-none opacity-[0.035]">
-        <svg className="h-full w-full" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <pattern id="venue-client-grid" width="36" height="36" patternUnits="userSpaceOnUse">
-              <path d="M 36 0 L 0 0 0 36" fill="none" stroke="#0b1720" strokeWidth="0.8" />
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#venue-client-grid)" />
-        </svg>
-      </div>
+    <section
+      aria-labelledby="venue-overview-heading"
+      className="relative isolate overflow-hidden bg-white py-12 sm:py-14 lg:py-16"
+    >
+      <VenueBackground />
 
-      <Container className="relative z-10 w-full">
-        {/* ========================================================= */}
-        {/* Section 1: Split Architecture (Briefing + Interactive Map)*/}
-        {/* ========================================================= */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-40px" }}
-          className="grid items-stretch gap-6 lg:grid-cols-12 lg:gap-8 pb-14 border-b border-slate-200/80"
-        >
-          {/* Left Column: Venue Briefing Card */}
+      <Container className="relative z-10">
+        <RevealGroup className="grid items-stretch gap-6 lg:grid-cols-12 lg:gap-8">
+          {/* VENUE INFORMATION */}
           <motion.div
-            variants={itemVariants}
-            className="flex flex-col justify-between rounded-3xl border border-slate-200/80 bg-white p-6 sm:p-8 lg:p-10 shadow-[0_4px_24px_rgb(0,0,0,0.02)] lg:col-span-6"
+            variants={revealVariants}
+            className="flex min-w-0 flex-col justify-between rounded-xl border border-[#111111]/10 bg-white p-6 shadow-[0_12px_36px_rgba(17,17,17,0.035)] sm:p-8 lg:col-span-6"
           >
             <div>
-              {/* Context Pill */}
-              <div className="inline-flex items-center gap-2 rounded-full border border-brand-red/20 bg-brand-red/[0.06] px-3.5 py-1">
-                <span className="relative flex h-2 w-2">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand-red opacity-75" />
-                  <span className="relative inline-flex h-2 w-2 rounded-full bg-brand-red" />
-                </span>
-                <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-brand-red">
-                  Official Trade Fair Complex
-                </span>
-              </div>
+              <Eyebrow>
+                Official Exhibition Destination
+              </Eyebrow>
 
-              {/* Title */}
-              <h2 className="mt-4 text-2xl sm:text-4xl font-extrabold tracking-[-0.03em] leading-[1.14] text-brand-dark">
-                {event.venue.name}
+              <h2
+                id="venue-overview-heading"
+                className="mt-4 text-[clamp(1.9rem,3vw,2.8rem)] font-extrabold leading-[1.16] tracking-[-0.045em] text-[#111111]"
+              >
+                The Sarit{" "}
+                <span className="text-[#BE202B]">
+                  Expo Centre.
+                </span>
               </h2>
 
-              <div className="mt-2 text-sm sm:text-base font-semibold text-transparent bg-clip-text bg-gradient-to-r from-brand-red to-brand-green">
-                {event.venue.district}, {event.venue.city} · {event.venue.country}
+              <div className="mt-3 flex items-center gap-2 text-[13px] font-semibold text-[#555555]">
+                <span className="text-[#BE202B]">
+                  <LocationIcon className="h-4 w-4" />
+                </span>
+
+                {event.venue.district},{" "}
+                {event.venue.city},{" "}
+                {event.venue.country}
               </div>
 
-              <p className="mt-4 text-xs sm:text-sm leading-[1.7] text-slate-600 font-normal">
-                {event.name} will be hosted at {event.venue.name} in Nairobi, Kenya&apos;s commercial capital. The venue offers a professional setting for product showcases, machinery displays, seminars, and B2B networking.
+              <p className="mt-5 max-w-[600px] text-[13px] leading-[1.85] text-[#666666] sm:text-[14px]">
+                {event.name} takes place at{" "}
+                <strong className="font-semibold text-[#111111]">
+                  {event.venue.name}
+                </strong>
+                , located in Nairobi&apos;s Westlands
+                district. The venue brings construction
+                businesses, suppliers, industry
+                professionals and trade visitors together
+                in a dedicated exhibition environment.
               </p>
 
-              {/* Quick Metadata Capsule */}
-              <div className="mt-6 grid grid-cols-2 gap-3">
-                <div className="rounded-xl border border-slate-100 bg-slate-50/70 p-3.5">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                    Show Dates
+              {/* QUICK EVENT INFORMATION */}
+              <div className="mt-6 grid gap-3 min-[420px]:grid-cols-2">
+                <div className="rounded-lg border border-[#111111]/10 bg-[#FAFAFA] p-4">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-md bg-[#BE202B]/[0.07] text-[#BE202B]">
+                    <CalendarIcon />
                   </span>
-                  <p className="mt-0.5 text-xs sm:text-sm font-bold text-brand-dark">
+
+                  <span className="mt-3 block text-[10px] font-bold uppercase tracking-[0.12em] text-[#777777]">
+                    Exhibition Dates
+                  </span>
+
+                  <span className="mt-1 block text-[13px] font-extrabold text-[#111111]">
                     {event.dates.display}
-                  </p>
-                </div>
-                <div className="rounded-xl border border-slate-100 bg-slate-50/70 p-3.5">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                    Location Center
                   </span>
-                  <p className="mt-0.5 text-xs sm:text-sm font-bold text-brand-dark">
-                    {event.venue.city}
-                  </p>
+                </div>
+
+                <div className="rounded-lg border border-[#111111]/10 bg-[#FAFAFA] p-4">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-md bg-[#25B34B]/[0.08] text-[#1D9440]">
+                    <ClockIcon />
+                  </span>
+
+                  <span className="mt-3 block text-[10px] font-bold uppercase tracking-[0.12em] text-[#777777]">
+                    Opening Hours
+                  </span>
+
+                  <span className="mt-1 block text-[13px] font-extrabold text-[#111111]">
+                    {event.dates.openingHours}
+                  </span>
                 </div>
               </div>
             </div>
 
-            {/* Actions Bar */}
-            <div className="mt-8 flex flex-wrap items-center gap-3 pt-5 border-t border-slate-100">
+            {/* ACTIONS */}
+            <div className="mt-7 flex flex-wrap gap-3 border-t border-[#111111]/10 pt-5">
               <Link
                 href="/plan-your-visit"
-                className="inline-flex items-center justify-center rounded-full bg-brand-red px-6 py-2.5 text-xs font-semibold uppercase tracking-wider text-white shadow-[0_4px_16px_rgba(200,38,45,0.25)] transition-all duration-300 hover:bg-brand-red-dark hover:shadow-[0_6px_22px_rgba(200,38,45,0.35)] hover:-translate-y-0.5 active:translate-y-0"
+                className="group inline-flex min-h-[44px] items-center justify-center gap-2.5 rounded-md bg-[#BE202B] px-5 py-3 text-[11px] font-extrabold uppercase tracking-[0.05em] text-white transition-colors duration-300 hover:bg-[#A61B25] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#BE202B] focus-visible:ring-offset-2"
               >
-                Plan Your Visit →
+                Plan Your Visit
+
+                <span className="transition-transform duration-300 group-hover:translate-x-1">
+                  <ArrowIcon />
+                </span>
               </Link>
+
               <a
                 href={event.venue.mapLinkUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-slate-50 px-5 py-2.5 text-xs font-semibold tracking-wide text-slate-700 transition-all duration-300 hover:border-slate-300 hover:bg-white hover:-translate-y-0.5"
+                className="group inline-flex min-h-[44px] items-center justify-center gap-2.5 rounded-md border border-[#111111]/20 bg-white px-5 py-3 text-[11px] font-extrabold uppercase tracking-[0.05em] text-[#111111] transition-colors duration-300 hover:border-[#BE202B] hover:text-[#BE202B]"
               >
-                Open in Google Maps ↗
+                Get Directions
+
+                <ArrowIcon diagonal />
               </a>
             </div>
           </motion.div>
 
-          {/* Right Column: Interactive Map Display */}
+          {/* INTERACTIVE GOOGLE MAP */}
           <motion.div
-            variants={itemVariants}
-            className="group relative overflow-hidden rounded-3xl border border-slate-200/80 bg-white p-2.5 shadow-[0_4px_24px_rgb(0,0,0,0.02)] lg:col-span-6"
+            variants={revealVariants}
+            className="relative min-w-0 rounded-xl border border-[#111111]/10 bg-white p-2 shadow-[0_12px_36px_rgba(17,17,17,0.035)] lg:col-span-6"
           >
-            <div className="relative h-[340px] sm:h-[400px] lg:h-full min-h-[340px] w-full overflow-hidden rounded-2xl bg-slate-100">
+            <div className="relative h-[340px] overflow-hidden rounded-lg bg-[#F1F1F1] sm:h-[420px] lg:h-full lg:min-h-[450px]">
               <iframe
-                title={`Map of ${event.venue.name}, ${event.venue.city}`}
+                title={`Google Maps location of ${event.venue.name}, ${event.venue.city}`}
                 src={event.venue.mapEmbedUrl}
-                className="h-full w-full border-0 transition-opacity duration-300 group-hover:opacity-95"
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
+                allowFullScreen
+                className="absolute inset-0 h-full w-full border-0"
               />
 
-              {/* Frosted Floating Overlay Tag */}
-              <div className="pointer-events-none absolute bottom-4 left-4 rounded-xl border border-white/60 bg-white/90 px-4 py-2.5 backdrop-blur-md shadow-lg shadow-black/5">
-                <p className="text-xs font-bold text-brand-dark">
-                  {event.venue.name}
-                </p>
-                <p className="text-[10px] font-medium text-slate-500">
-                  {event.venue.city}, {event.venue.country}
-                </p>
-              </div>
-            </div>
-          </motion.div>
-        </motion.div>
+              {/* NON-INTERACTIVE LOCATION LABEL */}
+              <div className="pointer-events-none absolute bottom-4 left-4 right-4 sm:right-auto">
+                <div className="flex items-start gap-3 rounded-lg border border-white/20 bg-[#111111]/95 px-4 py-3 text-white shadow-lg">
+                  <span className="mt-0.5 text-[#25B34B]">
+                    <LocationIcon />
+                  </span>
 
-        {/* ========================================================= */}
-        {/* Section 2: 4 Venue & Logistics Pillars                    */}
-        {/* ========================================================= */}
-        <div className="mt-14 sm:mt-18">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between pb-5 border-b border-slate-200/80">
-            <div>
-              <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-brand-green">
-                Infrastructure &amp; Access
-              </span>
-              <h3 className="mt-1.5 text-xl sm:text-3xl font-extrabold tracking-tight text-brand-dark">
-                Strategic Advantages of the Venue
-              </h3>
-            </div>
-            <p className="text-xs text-slate-500 max-w-md font-normal">
-              A proven venue in Kenya&apos;s commercial capital, convenient for exhibitors and trade visitors alike.
-            </p>
-          </div>
+                  <div>
+                    <span className="block text-[12px] font-extrabold">
+                      {event.venue.name}
+                    </span>
 
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-30px" }}
-            className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4"
-          >
-            {VENUE_ADVANTAGES.map((adv) => (
-              <motion.div
-                key={adv.num}
-                variants={itemVariants}
-                className="group relative flex flex-col justify-between rounded-2xl border border-slate-200/80 bg-white p-5 shadow-[0_2px_10px_rgb(0,0,0,0.02)] transition-all duration-300 hover:border-brand-red/40 hover:shadow-lg hover:-translate-y-1"
-              >
-                <div>
-                  <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-red/[0.08] text-brand-red group-hover:bg-brand-red group-hover:text-white transition-colors">
-                      <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d={adv.icon} />
-                      </svg>
-                    </div>
-                    <span className="text-[10px] font-mono font-bold text-slate-300 group-hover:text-slate-500 transition-colors">
-                      {adv.num}
+                    <span className="mt-1 block text-[11px] text-white/65">
+                      {event.venue.district},{" "}
+                      {event.venue.city}
                     </span>
                   </div>
-
-                  <span className="mt-3.5 inline-block text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                    {adv.tag}
-                  </span>
-
-                  <h4 className="mt-1 text-sm font-bold tracking-tight text-brand-dark group-hover:text-brand-red transition-colors">
-                    {adv.title}
-                  </h4>
-
-                  <p className="mt-1.5 text-[11px] leading-[1.6] text-slate-500 font-normal">
-                    {adv.desc}
-                  </p>
                 </div>
+              </div>
+            </div>
 
-
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-
-        {/* ========================================================= */}
-        {/* Section 3: Event Facts Matrix (Compact Grid)              */}
-        {/* ========================================================= */}
-        <div className="mt-14 sm:mt-18 rounded-3xl border border-slate-200/80 bg-white p-6 sm:p-8 shadow-sm">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between pb-5 border-b border-slate-100">
-            <div>
-              <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-brand-red">
-                Verified Event Details
+            {/* MAP CAPTION */}
+            <div className="flex items-center justify-between gap-3 px-2 pb-1 pt-3">
+              <span className="text-[10px] font-semibold text-[#777777]">
+                Official Venue Location
               </span>
-              <h3 className="mt-1 text-lg sm:text-xl font-bold tracking-tight text-brand-dark">
-                Location &amp; Event Reference
-              </h3>
-            </div>
 
-            <div className="flex items-center gap-2">
-              <Link
-                href="/exhibit"
-                className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-[11px] font-semibold text-brand-dark transition-all hover:border-brand-red hover:text-brand-red"
+              <a
+                href={event.venue.mapLinkUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group inline-flex items-center gap-1.5 text-[10px] font-bold text-[#BE202B] transition-colors hover:text-[#111111]"
               >
-                Why Exhibit →
-              </Link>
-              <Link
-                href={event.cta.bookStand}
-                className="inline-flex items-center justify-center rounded-full bg-brand-red px-5 py-2 text-[11px] font-semibold uppercase tracking-wider text-white shadow-sm hover:bg-brand-red-dark transition-all"
-              >
-                Book a Stand
-              </Link>
+                View Larger Map
+                <ArrowIcon diagonal />
+              </a>
             </div>
-          </div>
+          </motion.div>
+        </RevealGroup>
+      </Container>
+    </section>
+  );
+}
 
-          <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {VENUE_METRICS.map((metric) => (
-              <div
-                key={metric.label}
-                className="flex items-center justify-between rounded-xl border border-slate-100 bg-slate-50/60 p-4 transition-all hover:bg-white hover:border-slate-200 hover:shadow-sm"
-              >
-                <div>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                    {metric.label}
-                  </span>
-                  <p className="mt-0.5 text-xs sm:text-sm font-bold text-brand-dark">
-                    {metric.value}
-                  </p>
-                </div>
-                <span className="rounded-md border border-slate-200 bg-white px-2 py-0.5 text-[9px] font-semibold text-slate-600">
-                  {metric.badge}
+/* ==================================================
+   SECTION 2 — VENUE ADVANTAGES
+================================================== */
+
+function VenueAdvantages() {
+  const reduceMotion = useReducedMotion();
+
+  return (
+    <section
+      aria-labelledby="venue-advantages-heading"
+      className="border-y border-[#111111]/[0.07] bg-[#F8F8F8] py-12 sm:py-14 lg:py-16"
+    >
+      <Container>
+        <RevealGroup className="flex flex-col gap-4 border-b border-[#111111]/10 pb-6 sm:flex-row sm:items-end sm:justify-between">
+          <motion.div variants={revealVariants}>
+            <Eyebrow>
+              Infrastructure &amp; Accessibility
+            </Eyebrow>
+
+            <h2
+              id="venue-advantages-heading"
+              className="mt-3 text-[clamp(1.8rem,2.8vw,2.65rem)] font-extrabold leading-tight tracking-[-0.04em] text-[#111111]"
+            >
+              Why This{" "}
+              <span className="text-[#BE202B]">
+                Venue Works.
+              </span>
+            </h2>
+          </motion.div>
+
+          <motion.p
+            variants={revealVariants}
+            className="max-w-[350px] text-[12px] leading-[1.75] text-[#777777] sm:text-[13px]"
+          >
+            A professional exhibition setting in
+            Nairobi&apos;s commercial district,
+            serving exhibitors and visitors alike.
+          </motion.p>
+        </RevealGroup>
+
+        {/* ADVANTAGE CARDS */}
+        <RevealGroup className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {VENUE_ADVANTAGES.map((advantage) => (
+            <motion.article
+              key={advantage.number}
+              variants={revealVariants}
+              whileHover={
+                reduceMotion
+                  ? undefined
+                  : {
+                      y: -4,
+                      transition: {
+                        duration: 0.32,
+                        ease: EASE,
+                      },
+                    }
+              }
+              className="group relative flex min-h-[225px] flex-col overflow-hidden rounded-lg border border-[#111111]/10 bg-white p-5 transition-[border-color,box-shadow] duration-300 hover:border-[#BE202B]/30 hover:shadow-[0_14px_32px_rgba(17,17,17,0.065)]"
+            >
+              <div className="flex items-center justify-between">
+                <span className="flex h-10 w-10 items-center justify-center rounded-md bg-[#BE202B]/[0.07] text-[#BE202B] transition-colors duration-300 group-hover:bg-[#BE202B] group-hover:text-white">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.7"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="h-5 w-5"
+                    aria-hidden="true"
+                  >
+                    <path d={advantage.icon} />
+                  </svg>
+                </span>
+
+                <span className="text-[11px] font-bold tabular-nums text-[#BBBBBB]">
+                  {advantage.number}
                 </span>
               </div>
-            ))}
-          </div>
-        </div>
 
-        {/* Bottom Booking Action Ribbon */}
-        <div className="mt-10 flex flex-col sm:flex-row items-center justify-between gap-4 rounded-2xl border border-brand-red/20 bg-gradient-to-r from-brand-red/[0.04] via-white to-brand-green/[0.04] p-5 shadow-sm">
-          <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-brand-green/10 text-brand-green">
-              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
-            </div>
-            <div>
-              <h4 className="text-xs sm:text-sm font-bold text-brand-dark">
-                Reserve your stand at {event.venue.name}
-              </h4>
-              <p className="text-[11px] text-slate-500 font-normal">
-                Dates: {event.dates.display} · Allocation on a first-come, first-served basis.
+              <span className="mt-5 text-[10px] font-extrabold uppercase tracking-[0.12em] text-[#BE202B]">
+                {advantage.tag}
+              </span>
+
+              <h3 className="mt-1.5 text-[15px] font-extrabold leading-[1.45] tracking-[-0.02em] text-[#111111] transition-colors group-hover:text-[#BE202B]">
+                {advantage.title}
+              </h3>
+
+              <p className="mt-2 text-[12px] leading-[1.75] text-[#6A6A6A]">
+                {advantage.description}
               </p>
-            </div>
-          </div>
 
-          <Link
-            href={event.cta.bookStand}
-            className="shrink-0 inline-flex items-center justify-center rounded-full bg-brand-red px-6 py-2.5 text-xs font-semibold uppercase tracking-wider text-white shadow-md hover:bg-brand-red-dark transition-all duration-200"
-          >
-            Book Stand Space
-          </Link>
-        </div>
+              <span
+                aria-hidden="true"
+                className="absolute bottom-0 left-0 h-[2px] w-0 bg-[#BE202B] transition-[width] duration-500 group-hover:w-full"
+              />
+            </motion.article>
+          ))}
+        </RevealGroup>
       </Container>
+    </section>
+  );
+}
+
+/* ==================================================
+   SECTION 3 — EVENT INFORMATION
+================================================== */
+
+const EVENT_DETAILS = [
+  {
+    label: "Official Dates",
+    value: event.dates.display,
+  },
+  {
+    label: "Opening Hours",
+    value: event.dates.openingHours,
+  },
+  {
+    label: "Exhibition Venue",
+    value: event.venue.name,
+  },
+  {
+    label: "Venue District",
+    value: event.venue.district,
+  },
+  {
+    label: "Host City",
+    value: `${event.venue.city}, ${event.venue.country}`,
+  },
+  {
+    label: "Exhibition Format",
+    value: event.format,
+  },
+];
+
+function VenueEventDetails() {
+  return (
+    <section
+      aria-labelledby="venue-event-details-heading"
+      className="relative isolate overflow-hidden bg-[#111111] py-12 text-white sm:py-14 lg:py-16"
+    >
+      <VenueBackground dark />
+
+      <Container className="relative z-10">
+        <RevealGroup className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+          <motion.div variants={revealVariants}>
+            <Eyebrow light>
+              Official Exhibition Information
+            </Eyebrow>
+
+            <h2
+              id="venue-event-details-heading"
+              className="mt-3 text-[clamp(1.8rem,2.8vw,2.65rem)] font-extrabold tracking-[-0.04em] text-white"
+            >
+              Your Visit,{" "}
+              <span className="text-[#F26B70]">
+                At a Glance.
+              </span>
+            </h2>
+          </motion.div>
+
+          <motion.div
+            variants={revealVariants}
+            className="flex flex-wrap gap-2"
+          >
+            <Link
+              href="/plan-your-visit"
+              className="inline-flex min-h-[42px] items-center gap-2 rounded-md border border-white/25 px-4 py-2.5 text-[11px] font-bold text-white transition-colors hover:border-white hover:bg-white hover:text-[#111111]"
+            >
+              Plan Your Visit
+              <ArrowIcon diagonal />
+            </Link>
+
+            <Link
+              href={event.cta.registerVisit}
+              className="inline-flex min-h-[42px] items-center gap-2 rounded-md bg-[#BE202B] px-4 py-2.5 text-[11px] font-bold text-white transition-colors hover:bg-[#A61B25]"
+            >
+              Register to Visit
+              <ArrowIcon />
+            </Link>
+          </motion.div>
+        </RevealGroup>
+
+        {/* EVENT DETAILS MATRIX */}
+        <RevealGroup className="mt-6 grid gap-px overflow-hidden rounded-lg border border-white/15 bg-white/10 sm:grid-cols-2 lg:grid-cols-3">
+          {EVENT_DETAILS.map((detail) => (
+            <motion.div
+              key={detail.label}
+              variants={revealVariants}
+              className="group relative min-w-0 bg-[#191919] px-5 py-5 transition-colors duration-300 hover:bg-[#242424]"
+            >
+              <span className="block text-[10px] font-bold uppercase tracking-[0.13em] text-[#F26B70]">
+                {detail.label}
+              </span>
+
+              <p className="mt-2 text-[15px] font-extrabold leading-[1.5] tracking-[-0.02em] text-white sm:text-[16px]">
+                {detail.value}
+              </p>
+
+              <span className="mt-4 block h-[2px] w-7 bg-[#25B34B] transition-[width] duration-300 group-hover:w-12" />
+            </motion.div>
+          ))}
+        </RevealGroup>
+
+        {/* BOTTOM CTA */}
+        <RevealGroup className="mt-7 flex flex-col gap-5 border-t border-white/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
+          <motion.div variants={revealVariants}>
+            <p className="text-[14px] font-extrabold text-white">
+              Exhibit at {event.venue.name}
+            </p>
+
+            <p className="mt-1 text-[12px] leading-[1.75] text-white/60">
+              Connect with Kenya&apos;s building and
+              construction industry at{" "}
+              {event.name}.
+            </p>
+          </motion.div>
+
+          <motion.div variants={revealVariants}>
+            <Link
+              href={event.cta.bookStand}
+              className="group inline-flex min-h-[44px] items-center justify-center gap-3 rounded-md bg-[#BE202B] px-5 py-3 text-[11px] font-extrabold uppercase tracking-[0.06em] text-white transition-colors duration-300 hover:bg-[#A61B25]"
+            >
+              Book a Stand
+
+              <span className="transition-transform duration-300 group-hover:translate-x-1">
+                <ArrowIcon diagonal />
+              </span>
+            </Link>
+          </motion.div>
+        </RevealGroup>
+      </Container>
+
+      {/* BRAND SIGNATURE */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-x-0 bottom-0 flex h-[3px]"
+      >
+        <span className="w-[82%] bg-[#BE202B]" />
+        <span className="w-[13%] bg-[#25B34B]" />
+        <span className="flex-1 bg-white" />
+      </div>
+    </section>
+  );
+}
+
+/* ==================================================
+   MAIN VENUE CONTENT
+   PageHero stays in page.tsx
+================================================== */
+
+export function VenueClientView() {
+  return (
+    <div className="bg-white text-[#111111]">
+      <VenueOverview />
+      <VenueAdvantages />
+      <VenueEventDetails />
     </div>
   );
 }

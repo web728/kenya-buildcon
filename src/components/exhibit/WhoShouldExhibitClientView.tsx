@@ -1,35 +1,181 @@
+
 "use client";
 
+import type { ReactNode } from "react";
 import Link from "next/link";
-import { motion, type Variants } from "framer-motion";
+
+import {
+  motion,
+  useReducedMotion,
+  type Variants,
+} from "framer-motion";
+
 import { event } from "@/config/event";
 import { Container } from "@/components/ui/Container";
 
-const containerVariants: Variants = {
-  hidden: { opacity: 0 },
+/* ==========================================
+   BRAND & MOTION
+========================================== */
+
+const EASE = [0.16, 1, 0.3, 1] as const;
+
+const parentVariants: Variants = {
+  hidden: {},
   visible: {
-    opacity: 1,
     transition: {
-      staggerChildren: 0.06,
+      staggerChildren: 0.065,
       delayChildren: 0.04,
     },
   },
 };
 
 const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 16, filter: "blur(4px)" },
+  hidden: {
+    opacity: 0,
+    y: 16,
+  },
   visible: {
     opacity: 1,
     y: 0,
-    filter: "blur(0px)",
     transition: {
-      duration: 0.5,
-      ease: [0.16, 1, 0.3, 1],
+      duration: 0.68,
+      ease: EASE,
     },
   },
 };
 
-// Target exhibitor profiles (Kenya Buildcon brochure exhibitor profile)
+function Reveal({
+  children,
+  className = "",
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
+  const reduceMotion = useReducedMotion();
+
+  return (
+    <motion.div
+      variants={parentVariants}
+      initial={reduceMotion ? false : "hidden"}
+      whileInView="visible"
+      viewport={{
+        once: true,
+        amount: 0.08,
+      }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+/* ==========================================
+   SHARED UI
+========================================== */
+
+function ArrowIcon({
+  diagonal = false,
+}: {
+  diagonal?: boolean;
+}) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="h-4 w-4 shrink-0"
+      aria-hidden="true"
+    >
+      {diagonal ? (
+        <path d="M6 18 18 6M8 6h10v10" />
+      ) : (
+        <path d="M4 12h16m-7-7 7 7-7 7" />
+      )}
+    </svg>
+  );
+}
+
+function Eyebrow({
+  children,
+  light = false,
+}: {
+  children: ReactNode;
+  light?: boolean;
+}) {
+  return (
+    <div className="flex items-center gap-2.5">
+      <span className="h-[2px] w-7 bg-[#BE202B]" />
+
+      <span
+        className={`text-[10px] font-extrabold uppercase tracking-[0.15em] ${
+          light ? "text-white/75" : "text-[#BE202B]"
+        }`}
+      >
+        {children}
+      </span>
+    </div>
+  );
+}
+
+function ArchitecturalBackground({
+  dark = false,
+}: {
+  dark?: boolean;
+}) {
+  return (
+    <div
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-0 overflow-hidden"
+    >
+      <div
+        className={`absolute inset-0 ${
+          dark ? "opacity-[0.035]" : "opacity-[0.025]"
+        }`}
+        style={{
+          backgroundImage: dark
+            ? "linear-gradient(#FFFFFF 1px,transparent 1px),linear-gradient(90deg,#FFFFFF 1px,transparent 1px)"
+            : "linear-gradient(#111111 1px,transparent 1px),linear-gradient(90deg,#111111 1px,transparent 1px)",
+          backgroundSize: "76px 76px",
+        }}
+      />
+
+      <svg
+        viewBox="0 0 1400 500"
+        fill="none"
+        preserveAspectRatio="xMidYMid slice"
+        className="absolute inset-0 h-full w-full"
+      >
+        <path
+          d="M850 500V155L1100 45L1350 155V500"
+          stroke="#BE202B"
+          strokeOpacity={dark ? 0.18 : 0.09}
+          strokeWidth="1"
+        />
+        <path
+          d="M940 500V205L1100 135L1260 205V500"
+          stroke="#25B34B"
+          strokeOpacity={dark ? 0.14 : 0.075}
+          strokeWidth="1"
+        />
+        <path
+          d="M-100 385C290 265 475 430 810 325S1190 270 1510 365"
+          stroke={dark ? "#FFFFFF" : "#111111"}
+          strokeOpacity="0.075"
+          strokeWidth="0.8"
+        />
+      </svg>
+    </div>
+  );
+}
+
+/* ==========================================
+   EXHIBITOR PROFILES
+   Original 11 categories preserved
+========================================== */
+
 const EXHIBITOR_PROFILES = [
   {
     title: "Manufacturers",
@@ -99,150 +245,298 @@ const EXHIBITOR_PROFILES = [
   },
 ];
 
-export function WhoShouldExhibitClientView() {
+/* ==========================================
+   EXHIBITOR CARD
+========================================== */
+
+function ExhibitorProfileCard({
+  profile,
+  index,
+}: {
+  profile: (typeof EXHIBITOR_PROFILES)[number];
+  index: number;
+}) {
+  const reduceMotion = useReducedMotion();
+  const isGreen = index % 4 === 1;
+
   return (
-    <div className="relative overflow-hidden py-14 sm:py-20 text-brand-dark">
-      {/* Background Architectural Vector Grid */}
-      <div className="pointer-events-none absolute inset-0 -z-10 select-none opacity-[0.035]">
-        <svg className="h-full w-full" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <pattern id="who-exhibit-grid" width="36" height="36" patternUnits="userSpaceOnUse">
-              <path d="M 36 0 L 0 0 0 36" fill="none" stroke="#0b1720" strokeWidth="0.8" />
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#who-exhibit-grid)" />
-        </svg>
+    <motion.article
+      variants={itemVariants}
+      whileHover={
+        reduceMotion
+          ? undefined
+          : {
+              y: -4,
+              transition: {
+                duration: 0.3,
+                ease: EASE,
+              },
+            }
+      }
+      className="group relative flex h-full min-w-0 flex-col overflow-hidden rounded-lg border border-[#111111]/10 bg-white p-5 transition-[border-color,box-shadow] duration-300 hover:border-[#BE202B]/25 hover:shadow-[0_12px_30px_rgba(17,17,17,0.06)] sm:p-6"
+    >
+      {/* Icon, badge and index */}
+      <div className="flex items-center justify-between gap-3">
+        <span
+          className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-md transition-colors duration-300 ${
+            isGreen
+              ? "bg-[#25B34B]/[0.08] text-[#1D9440] group-hover:bg-[#25B34B] group-hover:text-white"
+              : "bg-[#BE202B]/[0.07] text-[#BE202B] group-hover:bg-[#BE202B] group-hover:text-white"
+          }`}
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.7"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="h-5 w-5"
+            aria-hidden="true"
+          >
+            <path d={profile.icon} />
+          </svg>
+        </span>
+
+        <span className="text-[11px] font-bold tabular-nums text-[#AAAAAA]">
+          {String(index + 1).padStart(2, "0")}
+        </span>
       </div>
 
-      <Container className="relative z-10 w-full">
-        {/* Top Header: Balanced Titles & CTA */}
-        <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between pb-8 border-b border-slate-200/80">
-          <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 rounded-full border border-brand-red/20 bg-brand-red/[0.06] px-4 py-1">
-              <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand-red opacity-75" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-brand-red" />
-              </span>
-              <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-brand-red">
-                Target Exhibitor Segments
-              </span>
-            </div>
+      <span className="mt-5 text-[10px] font-bold uppercase tracking-[0.12em] text-[#BE202B]">
+        {profile.badge}
+      </span>
 
-            <h2 className="mt-4 text-2xl sm:text-4xl font-extrabold tracking-[-0.03em] leading-[1.15] text-brand-dark">
-              Exhibitor Profile &amp;{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-red via-brand-dark to-brand-green">
-                Commercial Sectors
+      <h3 className="mt-2 text-[16px] font-extrabold leading-[1.35] tracking-[-0.025em] text-[#111111] sm:text-[17px]">
+        {profile.title}
+      </h3>
+
+      <p className="mt-2 flex-1 text-[12px] leading-[1.85] text-[#666666] sm:text-[13px]">
+        {profile.desc}
+      </p>
+
+      <div className="mt-5 border-t border-[#111111]/10 pt-3.5">
+        <Link
+          href={event.cta.bookStand}
+          className="group/link inline-flex items-center gap-2 text-[11px] font-extrabold text-[#BE202B] transition-colors hover:text-[#111111]"
+          aria-label={`Enquire about exhibiting as ${profile.title.toLowerCase()}`}
+        >
+          Enquire About Exhibiting
+
+          <span className="transition-transform duration-300 group-hover/link:translate-x-1">
+            <ArrowIcon diagonal />
+          </span>
+        </Link>
+      </div>
+
+      <span
+        aria-hidden="true"
+        className="absolute inset-x-0 bottom-0 h-[2px] origin-left scale-x-0 bg-[#25B34B] transition-transform duration-500 group-hover:scale-x-100"
+      />
+    </motion.article>
+  );
+}
+
+/* ==========================================
+   MAIN EXHIBITOR DIRECTORY
+========================================== */
+
+function ExhibitorDirectory() {
+  return (
+    <section
+      aria-labelledby="exhibitor-directory-heading"
+      className="relative isolate overflow-hidden bg-white py-12 sm:py-14 lg:py-16"
+    >
+      <ArchitecturalBackground />
+
+      <Container className="relative z-10">
+        <Reveal className="flex flex-col gap-5 border-b border-[#111111]/10 pb-6 md:flex-row md:items-end md:justify-between">
+          <motion.div
+            variants={itemVariants}
+            className="max-w-[740px]"
+          >
+            <Eyebrow>
+              Industry &amp; Exhibitor Profiles
+            </Eyebrow>
+
+            <h2
+              id="exhibitor-directory-heading"
+              className="mt-3 text-[clamp(1.8rem,3vw,2.7rem)] font-extrabold leading-[1.18] tracking-[-0.04em] text-[#111111]"
+            >
+              The Businesses That{" "}
+              <span className="text-[#BE202B]">
+                Belong Here.
               </span>
             </h2>
 
-            <p className="mt-2.5 text-xs sm:text-sm leading-[1.7] text-slate-500 font-normal">
-              Direct access to East Africa&apos;s decision-makers for manufacturers, international suppliers, and material producers across core profiles.
+            <p className="mt-3 max-w-[670px] text-[13px] leading-[1.8] text-[#666666] sm:text-[14px]">
+              Discover the manufacturer, supplier,
+              technology and distribution profiles
+              relevant to {event.name}. Connect
+              your products and services with a
+              construction-focused trade audience.
             </p>
-          </div>
+          </motion.div>
 
-          <div className="flex items-center gap-3 shrink-0">
+          <motion.div
+            variants={itemVariants}
+            className="flex flex-wrap gap-2.5"
+          >
             <Link
               href="/exhibition-profile"
-              className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-5 py-3 text-xs font-semibold text-slate-700 transition-all hover:border-brand-red hover:text-brand-red hover:-translate-y-0.5"
+              className="inline-flex min-h-[43px] items-center gap-2 rounded-md border border-[#111111]/20 bg-white px-4 py-2.5 text-[11px] font-bold text-[#111111] transition-colors hover:border-[#BE202B] hover:text-[#BE202B]"
             >
-              Exhibit Sectors →
+              Exhibition Profile
+              <ArrowIcon />
             </Link>
+
             <Link
               href={event.cta.bookStand}
-              className="inline-flex items-center justify-center rounded-full bg-brand-red px-6 py-3 text-xs font-semibold uppercase tracking-wider text-white shadow-[0_4px_16px_rgba(200,38,45,0.25)] transition-all duration-300 hover:bg-brand-red-dark hover:shadow-[0_6px_22px_rgba(200,38,45,0.35)] hover:-translate-y-0.5 active:translate-y-0"
+              className="inline-flex min-h-[43px] items-center gap-2 rounded-md bg-[#BE202B] px-4 py-2.5 text-[11px] font-bold text-white transition-colors hover:bg-[#A51B25]"
+            >
+              Book a Stand
+              <ArrowIcon diagonal />
+            </Link>
+          </motion.div>
+        </Reveal>
+
+        {/* All 11 original exhibitor profiles */}
+        <Reveal className="mt-6 grid items-stretch gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {EXHIBITOR_PROFILES.map((profile, index) => (
+            <ExhibitorProfileCard
+              key={profile.title}
+              profile={profile}
+              index={index}
+            />
+          ))}
+        </Reveal>
+
+        <Reveal className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-[#111111]/10 pt-5">
+          <motion.p
+            variants={itemVariants}
+            className="text-[11px] leading-[1.75] text-[#777777]"
+          >
+            The profiles above describe relevant
+            exhibitor categories, not a list of
+            confirmed participating companies.
+          </motion.p>
+
+          <motion.div variants={itemVariants}>
+            <Link
+              href="/exhibit"
+              className="group inline-flex items-center gap-2 text-[12px] font-extrabold text-[#BE202B] hover:text-[#111111]"
+            >
+              Explore Exhibitor Benefits
+
+              <span className="transition-transform duration-300 group-hover:translate-x-1">
+                <ArrowIcon />
+              </span>
+            </Link>
+          </motion.div>
+        </Reveal>
+      </Container>
+    </section>
+  );
+}
+
+/* ==========================================
+   CLOSING CTA
+========================================== */
+
+function ExhibitorCta() {
+  return (
+    <section
+      aria-labelledby="exhibitor-cta-heading"
+      className="relative isolate overflow-hidden bg-[#111111] py-12 text-white sm:py-14"
+    >
+      <ArchitecturalBackground dark />
+
+      <Container className="relative z-10">
+        <Reveal className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+          <motion.div
+            variants={itemVariants}
+            className="max-w-[750px]"
+          >
+            <Eyebrow light>
+              Exhibit at Kenya Buildcon 2027
+            </Eyebrow>
+
+            <h2
+              id="exhibitor-cta-heading"
+              className="mt-3 text-[clamp(1.8rem,2.8vw,2.65rem)] font-extrabold leading-[1.2] tracking-[-0.04em] text-white"
+            >
+              Put Your Products in{" "}
+              <span className="text-white/75">
+                Front of the Industry.
+              </span>
+            </h2>
+
+            <p className="mt-3 max-w-[670px] text-[13px] leading-[1.8] text-white/65 sm:text-[14px]">
+              Connect with construction buyers,
+              distributors, contractors and industry
+              professionals at {event.name}, hosted
+              at {event.venue.name} in{" "}
+              {event.venue.city}.
+            </p>
+
+            <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-[11px] font-semibold text-white/55">
+              <span>{event.dates.display}</span>
+
+              <span className="hidden h-3 w-px bg-white/20 sm:block" />
+
+              <span>
+                {event.venue.city},{" "}
+                {event.venue.country}
+              </span>
+            </div>
+          </motion.div>
+
+          <motion.div
+            variants={itemVariants}
+            className="flex shrink-0 flex-wrap gap-3"
+          >
+            <Link
+              href={event.cta.bookStand}
+              className="group inline-flex min-h-[45px] items-center justify-center gap-3 rounded-md bg-[#BE202B] px-5 py-3 text-[11px] font-extrabold uppercase tracking-[0.06em] text-white transition-colors hover:bg-[#A51B25]"
             >
               Book Exhibition Space
+
+              <span className="transition-transform duration-300 group-hover:translate-x-1">
+                <ArrowIcon diagonal />
+              </span>
             </Link>
-          </div>
-        </div>
 
-        {/* 11 Profiles Responsive Grid (Spacious, Zero-Chipku Layout) */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-40px" }}
-          className="mt-8 sm:mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
-        >
-          {EXHIBITOR_PROFILES.map((item, idx) => {
-            const isBlue = idx % 2 === 0;
-
-            return (
-              <motion.div
-                key={item.title}
-                variants={itemVariants}
-                className="group relative flex flex-col justify-between rounded-2xl border border-slate-200/80 bg-white/95 p-6 sm:p-7 shadow-[0_2px_12px_rgb(0,0,0,0.02)] backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-brand-red/40 hover:shadow-xl hover:shadow-brand-red/5"
-              >
-                <div>
-                  {/* Top Bar: Icon + Category Badge */}
-                  <div className="flex items-center justify-between pb-4 border-b border-slate-100">
-                    <div
-                      className={`flex h-11 w-11 items-center justify-center rounded-xl transition-colors ${
-                        isBlue
-                          ? "bg-brand-red/[0.08] text-brand-red group-hover:bg-brand-red group-hover:text-white"
-                          : "bg-brand-green/[0.08] text-brand-green group-hover:bg-brand-green group-hover:text-white"
-                      }`}
-                    >
-                      <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d={item.icon} />
-                      </svg>
-                    </div>
-
-                    <span className="rounded-full border border-slate-200/80 bg-slate-50 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.16em] text-slate-500">
-                      {item.badge}
-                    </span>
-                  </div>
-
-                  {/* Profile Title */}
-                  <h3 className="mt-5 text-base sm:text-lg font-bold tracking-tight text-brand-dark group-hover:text-brand-red transition-colors">
-                    {item.title}
-                  </h3>
-
-                  {/* Profile Scope Description */}
-                  <p className="mt-2.5 text-xs sm:text-[13px] leading-[1.75] text-slate-600 font-normal">
-                    {item.desc}
-                  </p>
-                </div>
-
-                {/* Bottom Status Ribbon */}
-                <Link
-                  href={event.cta.bookStand}
-                  className="mt-6 pt-3.5 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-brand-red hover:underline"
-                >
-                  <span>Apply to exhibit</span>
-                  <span aria-hidden="true" className="transition-transform group-hover:translate-x-1">→</span>
-                </Link>
-              </motion.div>
-            );
-          })}
-        </motion.div>
-
-        {/* Bottom Booking Action Ribbon */}
-        <div className="mt-12 flex flex-col sm:flex-row items-center justify-between gap-5 rounded-2xl border border-brand-red/20 bg-gradient-to-r from-brand-red/[0.04] via-white to-brand-green/[0.04] p-6 shadow-sm">
-          <div className="flex items-center gap-3.5">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-green/10 text-brand-green">
-              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
-            </div>
-            <div>
-              <h4 className="text-sm sm:text-base font-bold text-brand-dark">
-                Does your business fall under these sectors?
-              </h4>
-              <p className="text-xs text-slate-500 font-normal mt-0.5">
-                Reserve your stand position early for Kenya Buildcon 2027 — allocation is on a first-come, first-served basis.
-              </p>
-            </div>
-          </div>
-
-          <Link
-            href={event.cta.bookStand}
-            className="shrink-0 inline-flex items-center justify-center rounded-full bg-brand-red px-6 py-2.5 text-xs font-semibold uppercase tracking-wider text-white shadow-md hover:bg-brand-red-dark transition-all duration-200"
-          >
-            Apply to Exhibit Now
-          </Link>
-        </div>
+            <Link
+              href="/contact"
+              className="inline-flex min-h-[45px] items-center justify-center rounded-md border border-white/25 px-5 py-3 text-[11px] font-extrabold uppercase tracking-[0.06em] text-white transition-colors hover:border-white hover:bg-white hover:text-[#111111]"
+            >
+              Contact Organisers
+            </Link>
+          </motion.div>
+        </Reveal>
       </Container>
+
+      <div
+        aria-hidden="true"
+        className="absolute inset-x-0 bottom-0 flex h-[3px]"
+      >
+        <span className="w-[82%] bg-[#BE202B]" />
+        <span className="w-[13%] bg-[#25B34B]" />
+        <span className="flex-1 bg-white" />
+      </div>
+    </section>
+  );
+}
+
+/* ==========================================
+   MAIN CLIENT VIEW
+========================================== */
+
+export function WhoShouldExhibitClientView() {
+  return (
+    <div className="bg-white text-[#111111]">
+      <ExhibitorDirectory />
+      <ExhibitorCta />
     </div>
   );
 }
