@@ -1,131 +1,449 @@
+
 import { NextRequest, NextResponse } from "next/server";
+
 import { visitorRegistrationSchema } from "@/lib/validation/visitorRegistration";
 import { MIN_SUBMIT_MS } from "@/lib/validation/shared";
-import { connectToDatabase, safeDbErrorMessage } from "@/lib/db/mongodb";
+
+import {
+  connectToDatabase,
+  safeDbErrorMessage,
+} from "@/lib/db/mongodb";
+
 import { VisitorRegistration } from "@/models/VisitorRegistration";
 import { generateReferenceId } from "@/lib/utils/referenceId";
-import { isRateLimited, getClientIp } from "@/lib/utils/rateLimit";
-import { recaptchaGuard } from "@/lib/utils/recaptcha";
-import { appendLeadRow, isSheetsConfigured } from "@/lib/google/sheets";
-import { sendVisitorRegistrationEmails } from "@/lib/email/sendLeadEmails";
-import { isEmailConfigured } from "@/lib/email/mailer";
 
-export async function POST(req: NextRequest) {
-  const ip = getClientIp(req.headers);
-  if (isRateLimited(`visitor:${ip}`)) {
-    return NextResponse.json({ error: "Too many submissions. Please try again later." }, { status: 429 });
+import {
+  isRateLimited,
+  getClientIp,
+} from "@/lib/utils/rateLimit";
+
+import { recaptchaGuard } from "@/lib/utils/recaptcha";
+
+import {
+  appendLeadRow,
+  isSheetsConfigured,
+} from "@/lib/google/sheets";
+
+import { sendVisitorRegistrationEmails } from "@/lib/email/sendLeadEmails";
+
+import {
+  isEmailConfigured,
+  getNotificationRecipients,
+} from "@/lib/email/mailer";
+
+export const runtime = "nodejs";
+
+/* ==========================================
+   CONFIGURATION
+========================================== */
+
+const WEBSITE_NAME =
+  "Kenya Buildcon International Expo 2027";
+
+const FORM_NAME = "Visitor Registration Form";
+
+const SHEET_TAB = "Website Enquiries";
+
+/* ==========================================
+   FORMAT HELPERS
+========================================== */
+
+function formatDetail(value: unknown): string {
+  if (typeof value === "string") {
+    return value.trim() || "Not provided";
   }
 
+  if (typeof value === "number") {
+    return String(value);
+  }
+
+  if (typeof value === "boolean") {
+    return value ? "Yes" : "No";
+  }
+
+  if (Array.isArray(value)) {
+    return value.map(formatDetail).join(", ");
+  }
+
+  return "Not provided";
+}
+
+/* ==========================================
+   VISITOR REGISTRATION API
+========================================== */
+
+export async function POST(req: NextRequest) {
+  /* ========================================
+     1. RATE LIMIT
+  ======================================== */
+
+  const ip = getClientIp(req.headers);
+
+  if (isRateLimited(`visitor:${ip}`)) {
+    return NextResponse.json(
+      {
+        error:
+          "Too many submissions. Please try again later.",
+      },
+      { status: 429 }
+    );
+  }
+
+  /* ========================================
+     2. PARSE REQUEST BODY
+  ======================================== */
+
   let body: unknown;
+
   try {
     body = await req.json();
   } catch {
-    return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
+    return NextResponse.json(
+      {
+        error: "Invalid request body.",
+      },
+      { status: 400 }
+    );
   }
 
-  // 1. Verify Google reCAPTCHA v2 (enforced when RECAPTCHA_SECRET_KEY is set)
-  const recaptchaError = await recaptchaGuard(body, ip);
-  if (recaptchaError) return recaptchaError;
+  /* ========================================
+     3. VERIFY RECAPTCHA
+  ======================================== */
 
-  // 2. Validation
-  const parsed = visitorRegistrationSchema.safeParse(body);
+  const recaptchaError = await recaptchaGuard(
+    body,
+    ip
+  );
+
+  if (recaptchaError) {
+    return recaptchaError;
+  }
+
+  /* ========================================
+     4. VALIDATE FIELDS
+  ======================================== */
+
+  const parsed =
+    visitorRegistrationSchema.safeParse(body);
+
   if (!parsed.success) {
     return NextResponse.json(
-      { error: "Please check the highlighted fields.", issues: parsed.error.issues },
-      { status: 400 },
+      {
+        error:
+          "Please check the highlighted fields.",
+        issues: parsed.error.issues,
+      },
+      { status: 400 }
     );
   }
 
   const data = parsed.data;
 
-  // Bot Trap Check
-  if (data.website_hp || (data.startedAt && Date.now() - data.startedAt < MIN_SUBMIT_MS)) {
-    return NextResponse.json({ success: true, referenceId: generateReferenceId("KBVR") });
+  /* ========================================
+     5. BOT PROTECTION
+  ======================================== */
+
+  const hasHoneypot = Boolean(data.website_hp);
+
+  const submittedTooFast =
+    typeof data.startedAt === "number" &&
+    data.startedAt > 0 &&
+    Date.now() - data.startedAt < MIN_SUBMIT_MS;
+
+  if (hasHoneypot || submittedTooFast) {
+    return NextResponse.json({
+      success: true,
+      referenceId: generateReferenceId("KBVR"),
+    });
   }
+
+  /* ========================================
+     6. PREPARE DETAILS
+  ======================================== */
 
   const referenceId = generateReferenceId("KBVR");
 
-  // 3. MongoDB (Duplicate check & Durable Save)
-  let alreadyRegisteredId: string | null = null;
-  try {
-    const conn = await connectToDatabase();
-    if (!conn) throw new Error("Database connection unavailable");
+  const email = data.email.trim().toLowerCase();
 
-    const existing = await VisitorRegistration.findOne({ email: data.email }).lean();
+  const fullName = [
+    data.firstName,
+    data.lastName,
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .trim();
+
+  const landingPage =
+    data.landingPage || "/register-to-visit";
+
+  const userAgent =
+    req.headers.get("user-agent") ||
+    undefined;
+
+  const utmSource = data.utm?.source ?? "";
+  const utmMedium = data.utm?.medium ?? "";
+  const utmCampaign = data.utm?.campaign ?? "";
+
+  const productsInterested = Array.isArray(
+    data.productsInterested
+  )
+    ? data.productsInterested.join(", ")
+    : "";
+
+  /* ========================================
+     7. MONGODB ATLAS
+
+     Existing duplicate-email behaviour
+     preserved, with normalized email.
+  ======================================== */
+
+  let alreadyRegisteredId: string | null = null;
+
+  try {
+    const connection =
+      await connectToDatabase();
+
+    if (!connection) {
+      throw new Error(
+        "Database connection unavailable."
+      );
+    }
+
+    const existing =
+      await VisitorRegistration.findOne({
+        email,
+      }).lean();
+
     if (existing) {
-      alreadyRegisteredId = (existing as { referenceId: string }).referenceId;
+      const existingReference = (
+        existing as {
+          referenceId?: string;
+        }
+      ).referenceId;
+
+      alreadyRegisteredId =
+        existingReference || referenceId;
     } else {
       await VisitorRegistration.create({
-        
-            referenceId,
+        referenceId,
+
         firstName: data.firstName,
         lastName: data.lastName,
         designation: data.designation,
+
         company: data.company,
         country: data.country,
         city: data.city,
-        email: data.email,
+
+        email,
         mobile: data.mobile,
-        natureOfBusiness: data.natureOfBusiness,
-        productsInterested: data.productsInterested,
-        purchasingResponsibility: data.purchasingResponsibility,
-        purposeOfVisit: data.purposeOfVisit,
+
+        natureOfBusiness:
+          data.natureOfBusiness,
+
+        productsInterested:
+          data.productsInterested,
+
+        purchasingResponsibility:
+          data.purchasingResponsibility,
+
+        purposeOfVisit:
+          data.purposeOfVisit,
+
         utm: data.utm,
-        landingPage: data.landingPage,
-        userAgent: req.headers.get("user-agent") || undefined,
+        landingPage,
+        userAgent,
       });
     }
-  } catch (err) {
-    console.error("VisitorRegistration save failed:", safeDbErrorMessage(err));
+  } catch (error) {
+    console.error(
+      "VisitorRegistration MongoDB save failed:",
+      safeDbErrorMessage(error)
+    );
+
     return NextResponse.json(
-      { error: "We couldn't save your registration right now. Please try again in a moment." },
-      { status: 503 },
+      {
+        error:
+          "We couldn't save your registration right now. Please try again in a moment.",
+      },
+      { status: 503 }
     );
   }
 
-  // Agar user pehle se registered hai to duplicate row add nahi karenge
+  /* ========================================
+     8. EXISTING REGISTRATION
+
+     No duplicate Sheet row or admin email.
+  ======================================== */
+
   if (alreadyRegisteredId) {
-    return NextResponse.json({ success: true, referenceId: alreadyRegisteredId, alreadyRegistered: true });
+    return NextResponse.json({
+      success: true,
+      referenceId: alreadyRegisteredId,
+      alreadyRegistered: true,
+    });
   }
 
-  // 4. Same Google Sheet (Tab: "Visitor Registrations")
+  /* ========================================
+     9. GOOGLE SHEETS
+
+     Existing 25 columns remain unchanged.
+     Tab: Website Enquiries
+  ======================================== */
+
   if (isSheetsConfigured()) {
     try {
-      await appendLeadRow("Website Enquiries", {
-            referenceId,
+      const sheetMessage = [
+        `Website: ${WEBSITE_NAME}`,
+        `Form: ${FORM_NAME}`,
+
+        `Nature of Business: ${formatDetail(
+          data.natureOfBusiness
+        )}`,
+
+        `Products Interested: ${formatDetail(
+          data.productsInterested
+        )}`,
+
+        `Purchasing Responsibility: ${formatDetail(
+          data.purchasingResponsibility
+        )}`,
+
+        `Purpose of Visit: ${formatDetail(
+          data.purposeOfVisit
+        )}`,
+
+        `Page: ${landingPage}`,
+      ].join("\n");
+
+      await appendLeadRow(SHEET_TAB, {
+        referenceId,
+
+        // Form identity
         registerAs: "Visitor Registration",
-        name: `${data.firstName} ${data.lastName}`,
+        type: "Visitor Registration",
+
+        // Contact
+        name: fullName,
+        contactPerson: fullName,
+
         company: data.company,
+        companyName: data.company,
+
         designation: data.designation,
+
+        email,
+        phone: data.mobile,
+
+        // Location
         country: data.country,
         city: data.city,
-        email: data.email,
-        phone: data.mobile,
-        type: data.natureOfBusiness,
-        productInterest: Array.isArray(data.productsInterested) ? data.productsInterested.join(", ") : "",
-        message: data.purposeOfVisit,
-        utmSource: data.utm?.source ?? "",
-        utmMedium: data.utm?.medium ?? "",
-        utmCampaign: data.utm?.campaign ?? "",
-        landingPage: data.landingPage ?? "",
+
+        // Visitor interests
+        areaOfInterest: productsInterested,
+        productInterest: productsInterested,
+
+        // Other visitor-specific fields
+        message: sheetMessage,
+
+        // Tracking
+        utmSource,
+        utmMedium,
+        utmCampaign,
+        landingPage,
       });
-      await VisitorRegistration.updateOne({ referenceId }, { sheetsSyncStatus: "synced" });
-    } catch (err) {
-      console.error("Sheets sync failed", err);
-      await VisitorRegistration.updateOne({ referenceId }, { sheetsSyncStatus: "failed" }).catch(() => {});
+
+      await VisitorRegistration.updateOne(
+        { referenceId },
+        {
+          sheetsSyncStatus: "synced",
+        }
+      ).catch((error) => {
+        console.error(
+          "Visitor Sheets status update failed:",
+          error
+        );
+      });
+    } catch (error) {
+      console.error(
+        "Visitor Google Sheets sync failed:",
+        error
+      );
+
+      await VisitorRegistration.updateOne(
+        { referenceId },
+        {
+          sheetsSyncStatus: "failed",
+        }
+      ).catch(() => {});
     }
   }
 
-  // 5. Send Email to BOTH Organisers (Futurex & ETSIPL) + User Registration Pass Mail
+  /* ========================================
+     10. ADMIN-ONLY EMAIL
+
+     Uses your updated sendLeadEmails.ts.
+     No customer confirmation/pass email.
+  ======================================== */
+
   if (isEmailConfigured()) {
-    try {
-      await sendVisitorRegistrationEmails({ ...data, referenceId });
-      await VisitorRegistration.updateOne({ referenceId }, { emailStatus: "sent" });
-    } catch (err) {
-      console.error("Visitor registration email failed", err);
-      await VisitorRegistration.updateOne({ referenceId }, { emailStatus: "failed" }).catch(() => {});
+    const recipients = getNotificationRecipients();
+
+    if (recipients.length !== 2) {
+      console.error(
+        "Visitor notification requires exactly two admin recipients."
+      );
+
+      await VisitorRegistration.updateOne(
+        { referenceId },
+        {
+          emailStatus: "failed",
+        }
+      ).catch(() => {});
+    } else {
+      try {
+        await sendVisitorRegistrationEmails({
+          ...data,
+          email,
+          referenceId,
+        });
+
+        await VisitorRegistration.updateOne(
+          { referenceId },
+          {
+            emailStatus: "sent",
+          }
+        ).catch((error) => {
+          console.error(
+            "Visitor email status update failed:",
+            error
+          );
+        });
+      } catch (error) {
+        console.error(
+          "Visitor admin email failed:",
+          error
+        );
+
+        await VisitorRegistration.updateOne(
+          { referenceId },
+          {
+            emailStatus: "failed",
+          }
+        ).catch(() => {});
+      }
     }
   }
 
-  return NextResponse.json({ success: true, referenceId });
+  /* ========================================
+     11. SUCCESS
+
+     Internal reference ID is returned for
+     existing frontend success handling.
+  ======================================== */
+
+  return NextResponse.json({
+    success: true,
+    referenceId,
+  });
 }

@@ -58,15 +58,24 @@ function formatList(
     : "Not provided";
 }
 
+/**
+ * Sends internal notification to the two
+ * configured organisers only.
+ *
+ * No customer acknowledgement.
+ * No downloadable attachments.
+ * No visible reference ID.
+ */
 async function sendAdminNotification({
   formName,
   rows,
 }: NotificationOptions): Promise<void> {
-  const recipients = getNotificationRecipients();
+  const recipients =
+    getNotificationRecipients();
 
   if (recipients.length !== 2) {
     throw new Error(
-      "Exactly two admin notification email addresses must be configured."
+      "Exactly two unique admin notification recipients must be configured."
     );
   }
 
@@ -107,8 +116,7 @@ async function sendAdminNotification({
   await sendMail({
     to: recipients,
 
-    subject:
-      `[Kenya Buildcon 2027] ${formName}`,
+    subject: `[Kenya Buildcon 2027] ${formName}`,
 
     html: organiserNotificationEmail({
       heading: formName,
@@ -117,14 +125,7 @@ async function sendAdminNotification({
 
     text: plainText,
 
-    attachments: [
-      {
-        filename: "Enquiry-Details.txt",
-        content: plainText,
-        contentType:
-          "text/plain; charset=utf-8",
-      },
-    ],
+    // No attachments.
   });
 }
 
@@ -141,26 +142,74 @@ export async function sendExhibitorEnquiryEmails(
     formName: "Exhibitor Enquiry Form",
 
     rows: [
-      { label: "Company Name", value: data.companyName },
-      { label: "Country", value: data.country },
-      { label: "Company Type", value: data.companyType },
-      { label: "First Name", value: data.firstName },
-      { label: "Last Name", value: data.lastName },
-      { label: "Designation", value: data.designation },
-      { label: "Email", value: data.email },
-      { label: "Mobile / WhatsApp", value: data.mobile },
-      { label: "Product Category", value: data.productCategory },
       {
-        label: "Preferred Participation",
-        value: data.preferredParticipation,
+        label: "Company Name",
+        value: data.companyName,
       },
-      { label: "Required Area", value: data.requiredArea },
+      {
+        label: "Country",
+        value: data.country,
+      },
+      {
+        label: "City",
+        value: data.city,
+      },
+      {
+        label: "Company Website",
+        value: data.website,
+      },
+      {
+        label: "Company Type",
+        value: data.companyType,
+      },
+      {
+        label: "First Name",
+        value: data.firstName,
+      },
+      {
+        label: "Last Name",
+        value: data.lastName,
+      },
+      {
+        label: "Designation",
+        value: data.designation,
+      },
+      {
+        label: "Email",
+        value: data.email,
+      },
+      {
+        label: "Mobile / WhatsApp",
+        value: data.mobile,
+      },
+      {
+        label: "Product Category",
+        value: data.productCategory,
+      },
       {
         label: "Products / Services",
         value: data.productsServices,
       },
-      { label: "Message", value: data.message },
-      { label: "Consent", value: data.consent === true },
+      {
+        label: "Preferred Participation",
+        value: data.preferredParticipation,
+      },
+      {
+        label: "Required Area",
+        value: data.requiredArea,
+      },
+      {
+        label: "Existing Business in Kenya",
+        value: data.existingBusinessInKenya,
+      },
+      {
+        label: "Looking for Distributor",
+        value: data.lookingForDistributor,
+      },
+      {
+        label: "Message",
+        value: data.message,
+      },
     ],
   });
 }
@@ -178,21 +227,47 @@ export async function sendVisitorRegistrationEmails(
     formName: "Visitor Registration Form",
 
     rows: [
-      { label: "First Name", value: data.firstName },
-      { label: "Last Name", value: data.lastName },
-      { label: "Company", value: data.company },
-      { label: "Designation", value: data.designation },
-      { label: "Country", value: data.country },
-      { label: "City", value: data.city },
-      { label: "Email", value: data.email },
-      { label: "Mobile / WhatsApp", value: data.mobile },
+      {
+        label: "First Name",
+        value: data.firstName,
+      },
+      {
+        label: "Last Name",
+        value: data.lastName,
+      },
+      {
+        label: "Company",
+        value: data.company,
+      },
+      {
+        label: "Designation",
+        value: data.designation,
+      },
+      {
+        label: "Country",
+        value: data.country,
+      },
+      {
+        label: "City",
+        value: data.city,
+      },
+      {
+        label: "Email",
+        value: data.email,
+      },
+      {
+        label: "Mobile / WhatsApp",
+        value: data.mobile,
+      },
       {
         label: "Nature of Business",
         value: data.natureOfBusiness,
       },
       {
         label: "Products Interested",
-        value: formatList(data.productsInterested),
+        value: formatList(
+          data.productsInterested
+        ),
       },
       {
         label: "Purchasing Responsibility",
@@ -202,7 +277,6 @@ export async function sendVisitorRegistrationEmails(
         label: "Purpose of Visit",
         value: data.purposeOfVisit,
       },
-      { label: "Consent", value: data.consent === true },
     ],
   });
 }
@@ -220,17 +294,38 @@ export async function sendContactEnquiryEmails(
     formName: "Contact Enquiry Form",
 
     rows: [
-      { label: "Full Name", value: data.name },
+      {
+        label: "Full Name",
+        value: data.name,
+      },
       {
         label: "Company / Organisation",
         value: data.company,
       },
-      { label: "Country", value: data.country },
-      { label: "Email", value: data.email },
-      { label: "Mobile / WhatsApp", value: data.mobile },
-      { label: "Area of Interest", value: data.interest },
-      { label: "Message", value: data.message },
-      { label: "Consent", value: data.consent === true },
+      {
+        label: "Designation",
+        value: data.designation,
+      },
+      {
+        label: "Country",
+        value: data.country,
+      },
+      {
+        label: "Email",
+        value: data.email,
+      },
+      {
+        label: "Mobile / WhatsApp",
+        value: data.mobile,
+      },
+      {
+        label: "Area of Interest",
+        value: data.interest,
+      },
+      {
+        label: "Message",
+        value: data.message,
+      },
     ],
   });
 }
@@ -256,19 +351,46 @@ export async function sendPartnerEnquiryEmails(
         label: "Organisation Type",
         value: data.organisationType,
       },
-      { label: "Country", value: data.country },
+      {
+        label: "Country",
+        value: data.country,
+      },
+      {
+        label: "Organisation Website",
+        value: data.website,
+      },
       {
         label: "Contact Person",
         value: data.contactPerson,
       },
-      { label: "Email", value: data.email },
-      { label: "Phone", value: data.phone },
+      {
+        label: "Designation",
+        value: data.designation,
+      },
+      {
+        label: "Email",
+        value: data.email,
+      },
+      {
+        label: "Phone",
+        value: data.phone,
+      },
+      {
+        label: "Approximate Membership",
+        value: data.approximateMembership,
+      },
+      {
+        label: "Industry Represented",
+        value: data.industryRepresented,
+      },
       {
         label: "Nature of Enquiry",
         value: data.natureOfEnquiry,
       },
-      { label: "Message", value: data.message },
-      { label: "Consent", value: data.consent === true },
+      {
+        label: "Message",
+        value: data.message,
+      },
     ],
   });
 }
@@ -286,15 +408,26 @@ export async function sendBrochureDownloadEmails(
     formName: "Brochure Download Form",
 
     rows: [
-      { label: "Full Name", value: data.name },
+      {
+        label: "Full Name",
+        value: data.name,
+      },
       {
         label: "Company / Organisation",
         value: data.company,
       },
-      { label: "Country", value: data.country },
-      { label: "Email", value: data.email },
-      { label: "Mobile / WhatsApp", value: data.mobile },
-      { label: "Consent", value: data.consent === true },
+      {
+        label: "Country",
+        value: data.country,
+      },
+      {
+        label: "Email",
+        value: data.email,
+      },
+      {
+        label: "Mobile / WhatsApp",
+        value: data.mobile,
+      },
     ],
   });
 }

@@ -8,7 +8,7 @@ import { Container } from "@/components/ui/Container";
 import { GalleryGrid } from "@/components/sections/GalleryGrid";
 
 import { getPublishedGalleryItems } from "@/lib/data/gallery";
-import { getLocalExpoGalleryItems } from "@/lib/data/localExpoGallery";
+import { getLocalExpoGalleryItems } from "@/data/localExpoGallery";
 
 /* ==========================================
    RENDERING CONFIGURATION
