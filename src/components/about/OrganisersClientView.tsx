@@ -231,19 +231,7 @@ function OrganiserCard({
     >
       {/* Organisation branding */}
       <div className="border-b border-[#111111]/10 p-5 sm:p-6">
-        <div className="flex items-start justify-between gap-4">
-          <span
-            className={`text-[10px] font-extrabold uppercase tracking-[0.14em] ${
-              isFuturex ? "text-[#BE202B]" : "text-[#1D9440]"
-            }`}
-          >
-            Joint Organiser · 0{index + 1}
-          </span>
-
-          <span className="text-[10px] font-bold text-[#AAAAAA]">
-            {organiser.credential}
-          </span>
-        </div>
+      
 
         <div className="mt-5 flex flex-wrap items-center justify-between gap-4">
           <a
@@ -371,7 +359,7 @@ function OrganisersOverview() {
             className="max-w-[780px]"
           >
             <SmallLabel>
-              Joint Global Organisers
+              Meet The Organisers
             </SmallLabel>
 
             <h2
@@ -385,7 +373,7 @@ function OrganisersOverview() {
             </h2>
 
             <p className="mt-3 max-w-[680px] text-[13px] leading-[1.8] text-[#666666] sm:text-[14px]">
-              {event.name} is jointly organised by
+              {event.name} is organised by
               Futurex Trade Fair &amp; Events and
               Exhibitions &amp; Trade Services India
               (ETSIPL), bringing exhibition
@@ -454,46 +442,53 @@ function ContactIcon({
   );
 }
 
+
+
+
 function OrganiserContacts() {
   const reduceMotion = useReducedMotion();
 
   return (
     <section
       aria-labelledby="organisers-contact-heading"
-      className="border-y border-[#111111]/[0.07] bg-[#F8F8F8] py-12 sm:py-14 lg:py-16"
+      className="relative overflow-hidden border-y border-[#111111]/[0.07] bg-[#F8F8F8] py-12 sm:py-14"
     >
       <Container>
-        <Reveal className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-          <motion.div variants={itemVariants}>
+        {/* CENTERED SECTION HEADING */}
+        <Reveal className="mx-auto flex max-w-[760px] flex-col items-center text-center">
+          <motion.div
+            variants={itemVariants}
+            className="flex flex-col items-center"
+          >
             <SmallLabel>
               Official Contact Directory
             </SmallLabel>
 
             <h2
               id="organisers-contact-heading"
-              className="mt-3 text-[clamp(1.75rem,2.8vw,2.55rem)] font-extrabold tracking-[-0.04em] text-[#111111]"
+              className="mt-3 text-[clamp(1.8rem,3vw,2.6rem)] font-extrabold leading-[1.2] tracking-[-0.04em] text-[#111111]"
             >
               Connect With the{" "}
               <span className="text-[#BE202B]">
                 Organising Team.
               </span>
             </h2>
-          </motion.div>
 
-          <motion.p
-            variants={itemVariants}
-            className="max-w-[360px] text-[12px] leading-[1.75] text-[#777777] sm:text-[13px]"
-          >
-            Contact the event representatives for
-            exhibition participation, stand bookings
-            and general enquiries.
-          </motion.p>
+            <p className="mt-3 max-w-[570px] text-[12px] leading-[1.8] text-[#777777] sm:text-[13px]">
+              Get in touch with our official representatives
+              for exhibition participation, stand bookings
+              and general enquiries.
+            </p>
+          </motion.div>
         </Reveal>
 
-        {/* Actual contact list from central config */}
-        <Reveal className="mt-6 grid items-stretch gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {/* CENTERED PREMIUM CONTACT CARDS */}
+        <Reveal className="mx-auto mt-8 flex max-w-[1120px] flex-wrap items-start justify-center gap-4">
           {event.contactList.map((desk) => {
-            const dialPhone = desk.phone.replace(/[^0-9+]/g, "");
+            const dialPhone = desk.phone.replace(
+              /[^0-9+]/g,
+              ""
+            );
 
             return (
               <motion.article
@@ -503,39 +498,78 @@ function OrganiserContacts() {
                   reduceMotion
                     ? undefined
                     : {
-                        y: -3,
+                        y: -5,
                         transition: {
                           duration: 0.3,
                           ease: EASE,
                         },
                       }
                 }
-                className="group flex min-w-0 flex-col rounded-lg border border-[#111111]/10 bg-white p-4 transition-[border-color,box-shadow] duration-300 hover:border-[#BE202B]/25 hover:shadow-[0_10px_28px_rgba(17,17,17,0.05)]"
+                className="group relative flex w-full min-w-0 flex-col items-center overflow-hidden rounded-xl border border-[#111111]/[0.08] bg-white px-5 py-5 text-center shadow-[0_5px_22px_rgba(17,17,17,0.035)] transition-[border-color,box-shadow] duration-300 hover:border-[#BE202B]/25 hover:shadow-[0_16px_38px_rgba(17,17,17,0.09)] sm:w-[calc(50%-8px)] lg:w-[calc(33.333%-11px)]"
               >
-                <span className="text-[10px] font-extrabold uppercase tracking-[0.11em] text-[#BE202B]">
-                  Official Representative
-                </span>
+                {/* RED TOP ACCENT */}
+                <span
+                  aria-hidden="true"
+                  className="absolute inset-x-0 top-0 h-[3px] bg-[#BE202B]"
+                />
 
-                <h3 className="mt-2 text-[15px] font-extrabold leading-[1.4] text-[#111111]">
+                {/* CONTACT AVATAR ICON */}
+                <div className="mb-3 flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-[#BE202B]/10 bg-[#BE202B]/[0.06] text-[#BE202B] transition-colors duration-300 group-hover:bg-[#BE202B] group-hover:text-white">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.7"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="h-6 w-6"
+                    aria-hidden="true"
+                  >
+                    <circle cx="12" cy="8" r="4" />
+                    <path d="M4.5 21a7.5 7.5 0 0 1 15 0" />
+                  </svg>
+                </div>
+
+               
+
+                {/* CONTACT NAME */}
+                <h3 className="mt-1.5 break-words text-[17px] font-extrabold leading-[1.35] tracking-[-0.025em] text-[#111111]">
                   {desk.name}
                 </h3>
 
-                <div className="mt-auto space-y-2 pt-5">
+                {/* SMALL DIVIDER */}
+                <span
+                  aria-hidden="true"
+                  className="mt-3 h-px w-10 bg-[#BE202B]/25"
+                />
+
+                {/* CONTACT DETAILS */}
+                <div className="mt-3 flex w-full min-w-0 flex-col gap-2">
+                  {/* PHONE */}
                   <a
                     href={`tel:${dialPhone}`}
-                    className="flex min-w-0 items-center gap-2.5 rounded-md border border-[#111111]/[0.07] bg-[#FAFAFA] px-3 py-2.5 text-[11px] font-semibold text-[#555555] transition-colors hover:border-[#25B34B]/40 hover:text-[#1D9440]"
+                    aria-label={`Call ${desk.name}`}
+                    className="flex min-h-[42px] min-w-0 items-center justify-center gap-2.5 rounded-lg border border-[#111111]/[0.07] bg-[#FAFAFA] px-3 py-2 text-[12px] font-semibold leading-[1.5] text-[#444444] transition-all duration-200 hover:border-[#25B34B]/30 hover:bg-[#F4FBF6] hover:text-[#1D9440] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#BE202B]"
                   >
-                    <ContactIcon type="phone" />
+                    <span className="shrink-0 text-[#BE202B]">
+                      <ContactIcon type="phone" />
+                    </span>
+
                     <span className="min-w-0 break-words">
                       {desk.phone}
                     </span>
                   </a>
 
+                  {/* EMAIL */}
                   <a
                     href={`mailto:${desk.email}`}
-                    className="flex min-w-0 items-center gap-2.5 rounded-md border border-[#111111]/[0.07] bg-[#FAFAFA] px-3 py-2.5 text-[11px] font-semibold text-[#555555] transition-colors hover:border-[#BE202B]/40 hover:text-[#BE202B]"
+                    aria-label={`Email ${desk.name}`}
+                    className="flex min-h-[42px] min-w-0 items-center justify-center gap-2.5 rounded-lg border border-[#111111]/[0.07] bg-[#FAFAFA] px-3 py-2 text-[11px] font-semibold leading-[1.5] text-[#555555] transition-all duration-200 hover:border-[#BE202B]/30 hover:bg-[#FFF8F8] hover:text-[#BE202B] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#BE202B]"
                   >
-                    <ContactIcon type="email" />
+                    <span className="shrink-0 text-[#BE202B]">
+                      <ContactIcon type="email" />
+                    </span>
+
                     <span className="min-w-0 break-all">
                       {desk.email}
                     </span>
@@ -544,54 +578,13 @@ function OrganiserContacts() {
               </motion.article>
             );
           })}
-
-          {/* Fourth CTA card */}
-          <motion.div
-            variants={itemVariants}
-            className="relative flex flex-col justify-between overflow-hidden rounded-lg bg-[#111111] p-5 text-white"
-          >
-            <div
-              aria-hidden="true"
-              className="absolute -right-10 -top-12 h-32 w-32 rounded-full border border-[#BE202B]/30"
-            />
-
-            <div className="relative">
-              <span className="text-[10px] font-extrabold uppercase tracking-[0.12em] text-[#F26B70]">
-                Exhibition Participation
-              </span>
-
-              <h3 className="mt-3 max-w-[220px] text-[19px] font-extrabold leading-[1.3] tracking-[-0.025em]">
-                Bring Your Brand to Nairobi.
-              </h3>
-
-              <p className="mt-3 text-[12px] leading-[1.75] text-white/65">
-                Enquire about stand space and
-                participation opportunities.
-              </p>
-            </div>
-
-            <div className="relative mt-6 flex flex-col gap-2">
-              <Link
-                href={event.cta.bookStand}
-                className="group inline-flex min-h-[40px] items-center justify-between gap-3 rounded-md bg-[#BE202B] px-4 py-2.5 text-[11px] font-bold text-white transition-colors hover:bg-[#A51B25]"
-              >
-                Book Stand Space
-                <ArrowIcon diagonal />
-              </Link>
-
-              <Link
-                href="/contact"
-                className="inline-flex min-h-[40px] items-center justify-center rounded-md border border-white/20 px-4 py-2.5 text-[11px] font-bold text-white transition-colors hover:bg-white hover:text-[#111111]"
-              >
-                General Helpdesk
-              </Link>
-            </div>
-          </motion.div>
         </Reveal>
       </Container>
     </section>
   );
 }
+
+
 
 /* ==========================================
    CLOSING CTA

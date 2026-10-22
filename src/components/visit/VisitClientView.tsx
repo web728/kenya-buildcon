@@ -223,13 +223,7 @@ function BenefitItem({
       }
       className="group relative flex min-w-0 flex-col overflow-hidden rounded-lg border border-[#111111]/10 bg-white p-5 transition-[border-color,box-shadow] duration-300 hover:border-[#BE202B]/30 hover:shadow-[0_12px_30px_rgba(17,17,17,0.055)] sm:p-6"
     >
-      <div className="flex items-start justify-between gap-3">
-        <span className="flex h-10 w-10 items-center justify-center rounded-md bg-[#BE202B]/[0.07] text-[13px] font-extrabold tabular-nums text-[#BE202B]">
-          {item.number}
-        </span>
-
-        <span className="h-[2px] w-8 bg-[#25B34B]" />
-      </div>
+    
 
       <div className="mt-5">
         <p className="text-[10px] font-extrabold uppercase tracking-[0.12em] text-[#BE202B]">
@@ -341,28 +335,7 @@ function WhyVisitSection() {
             />
           ))}
         </Reveal>
-
-        <Reveal className="mt-6 border-t border-[#111111]/10 pt-5">
-          <motion.div
-            variants={itemVariants}
-            className="flex flex-wrap items-center justify-between gap-3"
-          >
-            <p className="text-[12px] font-medium text-[#777777]">
-              Explore the exhibition&apos;s product
-              and technology scope.
-            </p>
-
-            <Link
-              href="/exhibition-profile"
-              className="group inline-flex items-center gap-2 text-[12px] font-extrabold text-[#BE202B]"
-            >
-              Browse Exhibition Profile
-              <span className="transition-transform duration-300 group-hover:translate-x-1">
-                <ArrowIcon />
-              </span>
-            </Link>
-          </motion.div>
-        </Reveal>
+ 
       </Container>
     </section>
   );
@@ -427,12 +400,7 @@ function VisitorProfileSection() {
               variants={itemVariants}
               className="group flex min-w-0 flex-col rounded-lg border border-[#111111]/10 bg-white p-5 transition-[border-color,box-shadow] duration-300 hover:border-[#25B34B]/30 hover:shadow-[0_10px_26px_rgba(17,17,17,0.04)] sm:p-6"
             >
-              <div className="flex items-center justify-between">
-                <span className="text-[11px] font-extrabold tabular-nums text-[#BE202B]">
-                  {segment.number}
-                </span>
-                <span className="h-[2px] w-7 bg-[#25B34B]" />
-              </div>
+              
 
               <h3 className="mt-4 text-[16px] font-extrabold leading-[1.4] text-[#111111]">
                 {segment.title}

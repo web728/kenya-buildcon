@@ -325,17 +325,7 @@ function MarketOverview() {
             </motion.div>
           ))}
         </RevealGroup>
-
-        <div className="mt-5 flex flex-wrap items-center gap-2.5 border-t border-[#111111]/10 pt-4">
-          <span className="h-1.5 w-1.5 rounded-full bg-[#25B34B]" />
-
-          <p className="text-[11px] leading-[1.7] text-[#777777]">
-            Market indicators are based on the
-            referenced source publications.
-            Figures should be read with their
-            stated reporting periods.
-          </p>
-        </div>
+ 
       </Container>
     </section>
   );
@@ -422,10 +412,7 @@ function StrategicAdvantages() {
                     {pillar.category}
                   </span>
                 </div>
-
-                <span className="text-[11px] font-bold tabular-nums text-[#BBBBBB]">
-                  {pillar.number}
-                </span>
+ 
               </div>
 
               <h3 className="mt-5 text-[17px] font-extrabold leading-[1.35] tracking-[-0.025em] text-[#111111] transition-colors duration-300 group-hover:text-[#BE202B] sm:text-[18px]">
@@ -515,9 +502,7 @@ function OpportunitySectors() {
               }
               className="group relative flex min-h-[76px] items-center gap-4 overflow-hidden rounded-lg border border-[#111111]/10 bg-[#FBFBFB] px-4 py-4 transition-[background-color,border-color,box-shadow] duration-300 hover:border-[#BE202B]/25 hover:bg-white hover:shadow-[0_10px_24px_rgba(0,0,0,0.045)]"
             >
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-white text-[11px] font-bold tabular-nums text-[#BE202B] ring-1 ring-[#111111]/10 transition-colors duration-300 group-hover:bg-[#BE202B] group-hover:text-white">
-                {String(index + 1).padStart(2, "0")}
-              </span>
+            
 
               <h3 className="min-w-0 flex-1 text-[13px] font-bold leading-[1.55] text-[#252525]">
                 {category}
@@ -528,52 +513,7 @@ function OpportunitySectors() {
           ))}
         </RevealGroup>
 
-        {/* Source references */}
-        <RevealGroup className="mt-8 border-t border-[#111111]/10 pt-5">
-          <motion.div variants={revealVariants}>
-            <div className="flex items-center gap-2.5">
-              <span className="h-[2px] w-5 bg-[#25B34B]" />
-
-              <h3 className="text-[11px] font-extrabold uppercase tracking-[0.12em] text-[#444444]">
-                Economic Data Sources
-              </h3>
-            </div>
-
-            <div className="mt-4 flex flex-wrap gap-x-6 gap-y-3">
-              {marketSources.map((source) => (
-                <div
-                  key={source.name}
-                  className="inline-flex items-center gap-2"
-                >
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#BE202B]" />
-
-                  {source.url ? (
-                    <a
-                      href={source.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-[12px] font-semibold text-[#666666] underline-offset-4 transition-colors duration-200 hover:text-[#BE202B] hover:underline"
-                    >
-                      {source.name}
-                    </a>
-                  ) : (
-                    <span className="text-[12px] font-semibold text-[#666666]">
-                      {source.name}
-                    </span>
-                  )}
-                </div>
-              ))}
-            </div>
-
-            <p className="mt-4 max-w-[850px] text-[11px] leading-[1.75] text-[#888888]">
-              Market information is provided for
-              industry context. Consult the
-              original publications for complete
-              methodology, reporting dates and
-              the latest revisions.
-            </p>
-          </motion.div>
-        </RevealGroup>
+   
       </Container>
     </section>
   );

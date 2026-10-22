@@ -392,10 +392,7 @@ function VisitorCard({
             </h3>
           </div>
         </div>
-
-        <span className="shrink-0 text-[12px] font-black tracking-[0.1em] text-[#111111]/25">
-          {pillar.num}
-        </span>
+ 
       </div>
 
       {/* Audience tags */}
@@ -475,11 +472,9 @@ export function WhoWillYouMeetSection() {
                 Visitor Demographics
               </span>
 
-              <span className="hidden h-1 w-1 rounded-full bg-[#111111]/25 sm:block" />
+             
 
-              <span className="hidden text-[10px] font-semibold uppercase tracking-[0.12em] text-[#777777] sm:block">
-                5 Trade Buyer Groups
-              </span>
+             
             </div>
 
             <h2
@@ -561,9 +556,7 @@ export function WhoWillYouMeetSection() {
             Meet Your Target Audience
           </span>
 
-          <span className="text-[10px] font-bold tracking-[0.11em] text-[#BE202B]">
-            01 — 05
-          </span>
+        
         </div>
 
         {/* VISITOR CARDS — BALANCED 3+2 GRID */}

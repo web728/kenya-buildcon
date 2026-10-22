@@ -297,10 +297,7 @@ function ExhibitorProfileCard({
             <path d={profile.icon} />
           </svg>
         </span>
-
-        <span className="text-[11px] font-bold tabular-nums text-[#AAAAAA]">
-          {String(index + 1).padStart(2, "0")}
-        </span>
+ 
       </div>
 
       <span className="mt-5 text-[10px] font-bold uppercase tracking-[0.12em] text-[#BE202B]">

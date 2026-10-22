@@ -285,13 +285,7 @@ function SectorOverview() {
               variants={itemVariants}
               className="group relative flex min-h-[170px] flex-col rounded-lg border border-[#111111]/10 bg-white p-5 transition-[border-color,box-shadow] duration-300 hover:border-[#BE202B]/30 hover:shadow-[0_12px_30px_rgba(17,17,17,0.06)]"
             >
-              <div className="flex items-center justify-between">
-                <span className="flex h-9 w-9 items-center justify-center rounded-md bg-[#BE202B]/[0.07] text-[12px] font-extrabold text-[#BE202B]">
-                  {group.number}
-                </span>
-
-                <span className="h-[2px] w-7 bg-[#25B34B]" />
-              </div>
+             
 
               <h3 className="mt-4 text-[16px] font-extrabold leading-[1.4] text-[#111111]">
                 {group.title}
@@ -367,9 +361,7 @@ function ProductShowcase() {
               variants={itemVariants}
               className="group flex min-h-[52px] items-center gap-3 rounded-md border border-[#111111]/[0.08] bg-white px-3.5 py-3 transition-[border-color,box-shadow] duration-300 hover:border-[#BE202B]/25 hover:shadow-[0_6px_18px_rgba(17,17,17,0.04)]"
             >
-              <span className="text-[10px] font-extrabold tabular-nums text-[#BE202B]">
-                {String(index + 1).padStart(2, "0")}
-              </span>
+            
 
               <span className="text-[11px] font-semibold leading-[1.5] text-[#444444]">
                 {product}
@@ -378,11 +370,7 @@ function ProductShowcase() {
           ))}
         </Reveal>
 
-        <p className="mt-5 text-[11px] leading-[1.7] text-[#888888]">
-          Product entries are consolidated from the
-          official Kenya Buildcon 2027 brochure;
-          repeated items in the brochure appear once.
-        </p>
+      
       </Container>
     </section>
   );

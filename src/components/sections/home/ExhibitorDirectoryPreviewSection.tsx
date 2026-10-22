@@ -260,30 +260,14 @@ function PastParticipantCard({
         }`}
       />
 
-      {/* Editorial number */}
-      <div className="flex items-center justify-between gap-4">
-        <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#8A8A8A]">
-          Participating Brand
-        </span>
-
-        <span className="text-[11px] font-black tabular-nums tracking-[0.08em] text-[#111111]/30">
-          {String(index + 1).padStart(2, "0")}
-        </span>
-      </div>
+    
 
       {/* Company name: actual information gets focus */}
       <h3 className="mt-5 break-words text-[17px] font-extrabold leading-[1.35] tracking-[-0.025em] text-[#111111] transition-colors duration-300 group-hover:text-[#BE202B] sm:text-[18px]">
         {name}
       </h3>
 
-      {/* Quiet editorial footer, no meaningless symbols */}
-      <div className="mt-5 flex items-center gap-3 border-t border-[#111111]/[0.08] pt-3.5">
-        <span className="h-[2px] w-5 bg-[#BE202B]" />
-
-        <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#777777]">
-          Previous Edition
-        </span>
-      </div>
+     
     </motion.li>
   );
 }
@@ -556,15 +540,7 @@ export function ExhibitorDirectoryPreviewSection({
             </h3>
           </div>
 
-          <div className="flex items-center gap-3">
-            <span className="h-px w-7 bg-[#BE202B]" />
-
-            <span className="text-[10px] font-bold uppercase tracking-[0.1em] text-[#777777]">
-              {hasCurrentExhibitors
-                ? `${featuredExhibitors.length} Featured Companies`
-                : `${pastParticipants.length} Companies Listed`}
-            </span>
-          </div>
+        
         </motion.div>
 
         {/* ==================================

@@ -1,4 +1,3 @@
-
 export interface SectorItem {
   name: string;
   slug: string;
@@ -6,16 +5,13 @@ export interface SectorItem {
 }
 
 /**
- * Source:
- * 4th Kenya Buildcon International Expo 2027 brochure,
- * page 6 — Exhibitor Profile.
+ * Source: 4th Kenya Buildcon International Expo 2027 brochure,
+ * page 6 — Exhibitor Profile (provided image).
  *
- * Sector groups are website navigation categories.
- * Product labels follow the brochure wording.
- *
- * Duplicated brochure entries are included only once.
+ * Sector groups are website navigation categories, not separate
+ * brochure headings. Product labels retain the brochure wording.
+ * Repeated brochure entries appear only once.
  */
-
 export const exhibitionSectors: SectorItem[] = [
   {
     name: "Building Materials",
@@ -161,16 +157,10 @@ export const exhibitionSectors: SectorItem[] = [
   },
 ];
 
-/**
- * Derived only from the official exhibitor profile.
- * Do not use these values as confirmed exhibitor counts.
- */
-
+/** Directory taxonomy statistics, not confirmed exhibitor counts. */
 export const exhibitionProfileStats = {
   sectorGroups: exhibitionSectors.length,
   productCategories: new Set(
-    exhibitionSectors.flatMap(
-      (sector) => sector.subcategories
-    )
+    exhibitionSectors.flatMap((sector) => sector.subcategories)
   ).size,
 };

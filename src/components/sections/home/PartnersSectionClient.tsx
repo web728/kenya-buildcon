@@ -486,47 +486,7 @@ export function PartnersSectionClient({
             </Link>
           </motion.div>
         )}
-
-        {/* =====================================
-            MINIMAL PARTNERSHIP FOOTER
-        ===================================== */}
-
-        <motion.div
-          initial={
-            reduceMotion
-              ? false
-              : { opacity: 0, y: 12 }
-          }
-          whileInView={{
-            opacity: 1,
-            y: 0,
-          }}
-          viewport={viewport}
-          transition={{
-            duration: 0.7,
-            ease: EASE,
-          }}
-          className="mt-9 flex flex-col items-start justify-between gap-4 border-t border-[#111111]/10 pt-6 sm:flex-row sm:items-center"
-        >
-          <p className="max-w-[660px] text-[13px] leading-[1.7] text-[#666666]">
-            Interested in becoming a supporting
-            organisation or media partner?
-          </p>
-
-          <Link
-            href="/contact"
-            className="group inline-flex items-center gap-2 text-[11px] font-extrabold uppercase tracking-[0.1em] text-[#BE202B] transition-colors hover:text-[#111111]"
-          >
-            Partner With Us
-
-            <span
-              aria-hidden="true"
-              className="text-lg transition-transform duration-300 group-hover:translate-x-1"
-            >
-              ↗
-            </span>
-          </Link>
-        </motion.div>
+ 
       </Container>
     </section>
   );

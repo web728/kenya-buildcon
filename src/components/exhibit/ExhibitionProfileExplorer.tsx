@@ -456,14 +456,7 @@ export function ExhibitionProfileExplorer() {
                       )}
                     </span>
 
-                    <span className="text-[11px] font-extrabold tabular-nums text-[#BBBBBB]">
-                      {String(
-                        exhibitionSectors.findIndex(
-                          (item) =>
-                            item.slug === sector.slug
-                        ) + 1
-                      ).padStart(2, "0")}
-                    </span>
+                   
                   </div>
 
                   {/* SECTOR TITLE */}
@@ -471,10 +464,7 @@ export function ExhibitionProfileExplorer() {
                     {sector.name}
                   </h3>
 
-                  <p className="mt-1.5 text-[10px] font-bold uppercase tracking-[0.11em] text-[#888888]">
-                    {sector.subcategories.length}{" "}
-                    Product Categories
-                  </p>
+                   
 
                   {/* PRODUCT CATEGORIES */}
                   <ul className="mt-4 flex flex-1 flex-wrap content-start gap-1.5">

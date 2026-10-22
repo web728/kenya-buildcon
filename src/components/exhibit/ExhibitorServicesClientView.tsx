@@ -311,9 +311,7 @@ function ServiceCard({
           </svg>
         </span>
 
-        <span className="text-[11px] font-bold tabular-nums text-[#AAAAAA]">
-          {service.number}
-        </span>
+        
       </div>
 
       <div className="mt-5">

@@ -329,9 +329,7 @@ function BenefitCard({
           </svg>
         </div>
 
-        <span className="text-[11px] font-black tracking-[0.15em] text-white/30">
-          {item.num} / 05
-        </span>
+    
       </div>
 
       <div className="flex-1">
@@ -391,9 +389,7 @@ function ProfileCard({
       }
       className="group relative flex min-w-0 items-start gap-4 rounded-xl border border-white/[0.12] bg-[#1B1B1B]/95 p-5 transition-colors duration-300 hover:border-[#BE202B]/50 hover:bg-[#222222] sm:p-6"
     >
-      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-[#BE202B]/20 bg-[#BE202B]/10 text-[12px] font-black tracking-[0.05em] text-[#F26B70] transition-colors group-hover:bg-[#BE202B] group-hover:text-white">
-        {String(index + 1).padStart(2, "0")}
-      </span>
+     
 
       <div className="min-w-0">
         <h3 className="text-[15px] font-bold leading-[1.4] tracking-[-0.02em] text-white sm:text-[16px]">

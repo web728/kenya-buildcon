@@ -561,9 +561,7 @@ function VenueAdvantages() {
                   </svg>
                 </span>
 
-                <span className="text-[11px] font-bold tabular-nums text-[#BBBBBB]">
-                  {advantage.number}
-                </span>
+              
               </div>
 
               <span className="mt-5 text-[10px] font-extrabold uppercase tracking-[0.12em] text-[#BE202B]">

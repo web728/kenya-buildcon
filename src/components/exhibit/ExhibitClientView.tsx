@@ -12,7 +12,7 @@ import {
 
 import { event } from "@/config/event";
 import { Container } from "@/components/ui/Container";
-
+import { exhibitionSectors } from "@/data/exhibitionProfile";
 /* ==========================================
    DESIGN & MOTION
 ========================================== */
@@ -359,9 +359,7 @@ function ExhibitBenefits() {
                   </svg>
                 </span>
 
-                <span className="text-[11px] font-bold tabular-nums text-[#BBBBBB]">
-                  {benefit.number}
-                </span>
+               
               </div>
 
               <span className="mt-5 text-[10px] font-bold uppercase tracking-[0.12em] text-[#BE202B]">
@@ -402,78 +400,130 @@ function ExhibitBenefits() {
   );
 }
 
+
 /* ==========================================
    SECTION 2 — WHO SHOULD EXHIBIT
 ========================================== */
 
 function ExhibitorProfiles() {
+  const reduceMotion = useReducedMotion();
+
   return (
     <section
       aria-labelledby="exhibitor-profiles-heading"
-      className="border-y border-[#111111]/[0.07] bg-[#F8F8F8] py-12 sm:py-14"
+      className="relative overflow-hidden border-y border-[#111111]/[0.07] bg-[#F8F8F8] py-12 sm:py-14 lg:py-16"
     >
       <Container>
-        <Reveal className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-          <motion.div variants={itemVariants}>
+        {/* CENTERED SECTION HEADING */}
+        <Reveal className="mx-auto flex max-w-[760px] flex-col items-center text-center">
+          <motion.div
+            variants={itemVariants}
+            className="flex flex-col items-center"
+          >
             <Eyebrow>
               Industry Participation
             </Eyebrow>
 
             <h2
               id="exhibitor-profiles-heading"
-              className="mt-3 text-[clamp(1.8rem,2.8vw,2.6rem)] font-extrabold tracking-[-0.04em] text-[#111111]"
+              className="mt-3 text-[clamp(1.8rem,3vw,2.7rem)] font-extrabold leading-[1.2] tracking-[-0.04em] text-[#111111]"
             >
               Who Should{" "}
               <span className="text-[#BE202B]">
                 Exhibit?
               </span>
             </h2>
-          </motion.div>
 
-          <motion.div
-            variants={itemVariants}
-            className="max-w-[350px]"
-          >
-            <p className="text-[12px] leading-[1.8] text-[#777777] sm:text-[13px]">
-              Relevant business profiles across
-              building materials, equipment,
-              engineering and construction technology.
+            <p className="mt-3 max-w-[580px] text-[12px] leading-[1.8] text-[#777777] sm:text-[13px]">
+              Explore opportunities for manufacturers,
+              suppliers and solution providers across
+              the building, construction and
+              infrastructure industries.
             </p>
           </motion.div>
         </Reveal>
 
-        <Reveal className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {EXHIBITOR_CATEGORIES.map((category, index) => (
-            <motion.div
-              key={category}
+        {/* PREMIUM SECTOR CARDS */}
+        <Reveal className="mx-auto mt-8 grid max-w-[1200px] grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {exhibitionSectors.map((sector, index) => (
+            <motion.article
+              key={sector.slug}
               variants={itemVariants}
-              className="group flex min-h-[80px] items-center gap-3 rounded-lg border border-[#111111]/10 bg-white p-4 transition-[border-color,box-shadow] duration-300 hover:border-[#BE202B]/25 hover:shadow-[0_8px_24px_rgba(17,17,17,0.045)]"
+              whileHover={
+                reduceMotion
+                  ? undefined
+                  : {
+                      y: -4,
+                      transition: {
+                        duration: 0.3,
+                        ease: EASE,
+                      },
+                    }
+              }
+              className="group relative flex min-w-0 flex-col overflow-hidden rounded-xl border border-[#111111]/[0.08] bg-white p-5 shadow-[0_4px_20px_rgba(17,17,17,0.025)] transition-[border-color,box-shadow] duration-300 hover:border-[#BE202B]/30 hover:shadow-[0_14px_35px_rgba(17,17,17,0.065)]"
             >
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-[#BE202B]/[0.06] text-[11px] font-extrabold tabular-nums text-[#BE202B] transition-colors group-hover:bg-[#BE202B] group-hover:text-white">
-                {String(index + 1).padStart(2, "0")}
-              </span>
+              {/* TOP ACCENT */}
+              <span
+                aria-hidden="true"
+                className="absolute inset-x-0 top-0 h-[2px] bg-[#BE202B] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+              />
 
-              <h3 className="text-[12px] font-bold leading-[1.6] text-[#333333] sm:text-[13px]">
-                {category}
+              {/* NUMBER & CATEGORY COUNT */}
+              <div className="flex items-center justify-between gap-3">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#BE202B]/[0.07] text-[12px] font-extrabold tabular-nums text-[#BE202B] transition-colors duration-300 group-hover:bg-[#BE202B] group-hover:text-white">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+
+                <span className="text-[10px] font-bold uppercase tracking-[0.08em] text-[#999999]">
+                  {sector.subcategories.length} Categories
+                </span>
+              </div>
+
+              {/* SECTOR NAME */}
+              <h3 className="mt-4 text-[15px] font-extrabold leading-[1.45] tracking-[-0.02em] text-[#222222] transition-colors duration-300 group-hover:text-[#BE202B]">
+                {sector.name}
               </h3>
-            </motion.div>
+
+              {/* SECTOR DESCRIPTION */}
+              <p className="mt-2 line-clamp-2 text-[11px] leading-[1.7] text-[#777777]">
+                {sector.subcategories.join(" • ")}
+              </p>
+
+              {/* LINK */}
+              <div className="mt-auto pt-4">
+                <Link
+                  href={`/who-should-exhibit#${sector.slug}`}
+                  aria-label={`Explore ${sector.name}`}
+                  className="inline-flex items-center gap-2 text-[11px] font-extrabold text-[#BE202B] transition-colors hover:text-[#111111]"
+                >
+                  Explore Sector
+
+                  <span className="transition-transform duration-300 group-hover:translate-x-1">
+                    <ArrowIcon />
+                  </span>
+                </Link>
+              </div>
+            </motion.article>
           ))}
         </Reveal>
 
-        <Reveal className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-[#111111]/10 pt-5">
+        {/* CENTERED FOOTER CTA */}
+        <Reveal className="mx-auto mt-8 flex max-w-[760px] flex-col items-center gap-4 border-t border-[#111111]/10 pt-6 text-center">
           <motion.p
             variants={itemVariants}
             className="text-[12px] leading-[1.7] text-[#777777]"
           >
-            Explore the complete industry and product profile.
+            Discover the complete range of exhibition
+            sectors and product categories.
           </motion.p>
 
           <motion.div variants={itemVariants}>
             <Link
               href="/who-should-exhibit"
-              className="group inline-flex items-center gap-2 text-[12px] font-extrabold text-[#BE202B] hover:text-[#111111]"
+              className="group inline-flex min-h-[44px] items-center justify-center gap-3 rounded-md bg-[#BE202B] px-6 py-3 text-[11px] font-extrabold uppercase tracking-[0.05em] text-white transition-colors duration-300 hover:bg-[#A51B25]"
             >
-              View Exhibitor Profile
+              View Complete Exhibitor Profile
+
               <span className="transition-transform duration-300 group-hover:translate-x-1">
                 <ArrowIcon />
               </span>
@@ -484,6 +534,7 @@ function ExhibitorProfiles() {
     </section>
   );
 }
+
 
 /* ==========================================
    SECTION 3 — EXHIBITION SPACE
@@ -560,10 +611,7 @@ function ParticipationOptions() {
                 <span className="text-[10px] font-extrabold uppercase tracking-[0.1em] text-white/55">
                   {option.tag}
                 </span>
-
-                <span className="text-[12px] font-bold tabular-nums text-[#25B34B]">
-                  {option.number}
-                </span>
+ 
               </div>
 
               <h3 className="mt-5 text-[17px] font-extrabold leading-[1.3] tracking-[-0.02em] text-white">
@@ -679,7 +727,7 @@ export function ExhibitClientView() {
   return (
     <div className="bg-white text-[#111111]">
       <ExhibitBenefits />
-      <ExhibitorProfiles />
+      {/* <ExhibitorProfiles /> */}
       <ParticipationOptions />
       <ExhibitClosing />
     </div>

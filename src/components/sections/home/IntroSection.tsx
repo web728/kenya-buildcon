@@ -343,12 +343,12 @@ export function IntroSection() {
             <span className="h-px w-8 bg-[#111111]/20" />
 
             <span className="text-[10px] font-bold tracking-[0.12em] text-[#BE202B]">
-              2027 / 04
+              2027 
             </span>
           </motion.div>
         </motion.div>
 
-        {/* MAIN EDITORIAL GRID */}
+        {/* MAIN EDITORIAL GRID */} 
         <motion.div
           variants={sectionVariants}
           {...scrollProps}
@@ -431,9 +431,7 @@ export function IntroSection() {
 
               {/* EDITION LABEL */}
               <div className="flex items-center gap-3">
-                <span className="flex h-7 w-7 items-center justify-center rounded-sm bg-[#BE202B] text-[10px] font-black text-white">
-                  04
-                </span>
+           
 
                 <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#111111]">
                   4th International Edition
@@ -590,19 +588,7 @@ export function IntroSection() {
           </motion.div>
         </motion.div>
 
-        {/* BOTTOM EDITORIAL DETAIL */}
-        <div
-          aria-hidden="true"
-          className="mt-9 flex flex-wrap items-center justify-between gap-3 border-t border-[#111111]/[0.07] pt-5"
-        >
-          <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#888888]">
-            Kenya Buildcon / International Expo
-          </span>
-
-          <span className="text-[10px] font-bold tracking-[0.1em] text-[#BE202B]">
-            2027
-          </span>
-        </div>
+      
 
       </Container>
     </section>

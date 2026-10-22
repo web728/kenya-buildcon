@@ -135,7 +135,7 @@ function StatsBackground() {
         style={{
           backgroundImage:
             "linear-gradient(#FFFFFF 1px, transparent 1px), linear-gradient(90deg, #FFFFFF 1px, transparent 1px)",
-          backgroundSize: "72px 72px",
+          backgroundSize: "92px 92px",
         }}
       />
 
@@ -361,13 +361,7 @@ export function HeroStatsSection() {
           ))}
         </motion.div>
 
-        {/* Footer */}
-        <div className="flex items-center justify-center border-t border-white/10 py-3.5">
-          <span className="flex items-center gap-2.5 text-[10px] font-medium uppercase tracking-[0.1em] text-white/45">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#25B34B]" />
-            Official Post Show Report
-          </span>
-        </div>
+       
       </Container>
 
       {/* Bottom brand line */}

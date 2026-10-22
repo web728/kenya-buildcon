@@ -405,22 +405,7 @@ function MarketFactCard({ fact, index }: { fact: MarketFact; index: number }) {
       />
 
       <div>
-        {/* CARD TOP */}
-        <div className="flex items-start justify-between gap-3 border-b border-white/10 pb-4">
-          <div className="min-w-0">
-            <span className="block text-[9px] font-bold uppercase tracking-[0.16em] text-[#F26B70]">
-              Market Indicator
-            </span>
-
-            <span className="mt-1 block text-[11px] font-semibold leading-[1.45] tracking-[0.02em] text-white/55">
-              {fact.period || "Official Metric"}
-            </span>
-          </div>
-
-          <span className="text-[11px] font-bold tracking-[0.1em] text-white/35">
-            {String(index + 1).padStart(2, "0")}
-          </span>
-        </div>
+       
 
         {/* ANIMATED METRIC */}
         <div className="mt-5 text-[clamp(2rem,3vw,3.35rem)] font-black leading-[1.05] tracking-[-0.052em] text-white">
@@ -440,41 +425,7 @@ function MarketFactCard({ fact, index }: { fact: MarketFact; index: number }) {
         )}
       </div>
 
-      {/* SOURCE FOOTER */}
-      <div className="mt-6 flex items-center justify-between gap-3 border-t border-white/10 pt-4">
-        <div className="min-w-0">
-          <span className="mb-1 block text-[9px] font-semibold uppercase tracking-[0.12em] text-white/35">
-            Data Source
-          </span>
-
-          {fact.sourceUrl ? (
-            <a
-              href={fact.sourceUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block truncate text-[11px] font-semibold text-white/75 underline decoration-white/25 underline-offset-4 transition-colors duration-300 hover:text-[#F26B70]"
-              title={fact.sourceName}
-            >
-              {fact.sourceName}
-            </a>
-          ) : (
-            <span
-              className="block truncate text-[11px] font-semibold text-white/75"
-              title={fact.sourceName}
-            >
-              {fact.sourceName}
-            </span>
-          )}
-        </div>
-
-        {/* SOURCE MARKER */}
-        <span className="flex shrink-0 items-center gap-2">
-          <span className="h-1.5 w-1.5 rounded-full bg-[#25B34B]" />
-          <span className="text-[9px] font-bold uppercase tracking-[0.07em] text-white/45">
-            Source
-          </span>
-        </span>
-      </div>
+     
 
       {/* Bottom hover line */}
       <span
@@ -657,9 +608,7 @@ export function WhyKenyaSection() {
             Market Intelligence
           </span>
 
-          <span className="text-[10px] font-semibold tracking-[0.1em] text-[#F26B70]">
-            KE / CONSTRUCTION
-          </span>
+       
         </div>
 
         {/* ==================================

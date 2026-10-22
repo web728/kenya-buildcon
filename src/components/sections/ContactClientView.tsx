@@ -353,16 +353,14 @@ function OrganiserContactSection() {
                     <PhoneIcon />
                   </span>
 
-                  <span className="h-[2px] w-7 bg-[#25B34B]" />
+                 
                 </div>
 
                 <h3 className="mt-5 break-words text-[17px] font-extrabold leading-[1.4] tracking-[-0.025em] text-[#111111]">
                   {contact.name}
                 </h3>
 
-                <p className="mt-1 text-[11px] font-semibold text-[#888888]">
-                  {contact.company}
-                </p>
+               
 
                 <div className="mt-auto flex flex-col gap-2 border-t border-[#111111]/10 pt-5">
                   <a

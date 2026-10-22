@@ -455,11 +455,7 @@ function SectorCard({
             />
           </svg>
         </div>
-
-        {/* Editorial card index */}
-        <span className="text-[11px] font-black tracking-[0.12em] text-[#111111]/25">
-          {String(index + 1).padStart(2, "0")}
-        </span>
+ 
       </div>
 
       {/* Card content */}
@@ -541,11 +537,9 @@ export function ExhibitionProfileSection() {
                 What&apos;s On Display
               </span>
 
-              <span className="hidden h-1 w-1 rounded-full bg-[#111111]/25 sm:block" />
+           
 
-              <span className="hidden text-[10px] font-semibold uppercase tracking-[0.12em] text-[#777777] sm:block">
-                Industry Sectors
-              </span>
+            
             </div>
 
             {/* Main heading */}
@@ -638,9 +632,7 @@ export function ExhibitionProfileSection() {
               Explore by Industry
             </span>
 
-            <span className="text-[10px] font-bold tracking-[0.1em] text-[#BE202B]">
-              04 / SECTOR GROUPS
-            </span>
+          
           </div>
 
           {/* Scrollable tabs on mobile */}
@@ -710,10 +702,7 @@ export function ExhibitionProfileSection() {
               {currentGroup.label}
             </h3>
           </div>
-
-          <span className="text-[10px] font-semibold uppercase tracking-[0.1em] text-[#777777]">
-            {String(currentGroup.sectors.length).padStart(2, "0")} Sectors
-          </span>
+ 
         </div>
 
         {/* ==================================
@@ -845,19 +834,7 @@ export function ExhibitionProfileSection() {
           />
         </motion.div>
 
-        {/* SECTION FOOTER DETAIL */}
-        <div
-          aria-hidden="true"
-          className="mt-8 flex flex-wrap items-center justify-between gap-3 border-t border-[#111111]/[0.07] pt-5"
-        >
-          <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#888888]">
-            Kenya Buildcon / Exhibition Profile
-          </span>
-
-          <span className="text-[10px] font-bold tracking-[0.1em] text-[#BE202B]">
-            2027 / 04
-          </span>
-        </div>
+      
       </Container>
     </section>
   );

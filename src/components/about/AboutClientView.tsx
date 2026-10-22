@@ -499,9 +499,7 @@ function FeaturesSection() {
                   </svg>
                 </div>
 
-                <span className="text-[10px] font-bold tabular-nums text-[#B8B8B8]">
-                  {String(index + 1).padStart(2, "0")}
-                </span>
+              
               </div>
 
               <h3 className="mt-4 text-[14px] font-extrabold leading-[1.45] tracking-[-0.02em] text-[#111111] transition-colors duration-300 group-hover:text-[#BE202B]">

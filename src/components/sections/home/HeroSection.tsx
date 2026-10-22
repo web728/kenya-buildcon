@@ -444,23 +444,7 @@ export function HeroSection() {
               </Button>
             </motion.div>
 
-            {/* Small bottom branding */}
-            <motion.div
-              variants={itemVariants}
-              className="mt-3 flex flex-wrap items-center gap-2.5"
-            >
-              <span className="h-1.5 w-1.5 rounded-full bg-[#25B34B]" />
-
-              <span className="text-[9px] font-bold uppercase tracking-[0.1em] text-[#888888]">
-                {event.format}
-              </span>
-
-              <span className="h-px w-5 bg-[#111111]/15" />
-
-              <span className="text-[9px] font-bold tracking-[0.12em] text-[#BE202B]">
-                KE / {event.edition}
-              </span>
-            </motion.div>
+          
           </div>
 
           {/* ==================================
@@ -552,16 +536,7 @@ export function HeroSection() {
                       </p>
                     </div>
 
-                    <div className="flex items-center gap-3">
-                      <span className="h-8 w-px bg-white/20" />
-
-                      <span className="text-[22px] font-black tracking-[-0.06em] text-white">
-                        {event.edition.slice(-2)}
-                        <span className="text-[#F26B70]">
-                          .
-                        </span>
-                      </span>
-                    </div>
+                  
                   </div>
                 </div>
               </div>

@@ -217,10 +217,7 @@ function VisitorGroupCard({
             <DefaultGroupIcon />
           )}
         </div>
-
-        <span className="text-[11px] font-extrabold tabular-nums tracking-[0.08em] text-[#AAAAAA]">
-          {String(index + 1).padStart(2, "0")}
-        </span>
+ 
       </div>
 
       {/* Group name */}
@@ -405,13 +402,7 @@ function VisitorObjectivesSection() {
               variants={itemVariants}
               className="group relative flex flex-col rounded-lg border border-[#111111]/10 bg-white p-5 transition-[border-color,box-shadow] duration-300 hover:border-[#BE202B]/25 hover:shadow-[0_10px_28px_rgba(17,17,17,0.04)] sm:p-6"
             >
-              <div className="flex items-center justify-between">
-                <span className="flex h-10 w-10 items-center justify-center rounded-md bg-[#BE202B]/[0.07] text-[12px] font-extrabold text-[#BE202B]">
-                  {item.number}
-                </span>
-
-                <span className="h-[2px] w-7 bg-[#25B34B]" />
-              </div>
+            
 
               <h3 className="mt-5 text-[16px] font-extrabold leading-[1.4] text-[#111111]">
                 {item.title}
