@@ -28,12 +28,12 @@ export const metadata: Metadata = {
   keywords: [
     "Kenya Buildcon 2027",
     "Kenya Buildcon International Expo",
-    "Kenya construction exhibition",
+    "Kenya Building & construction exhibition",
     "Nairobi building and construction expo",
     "Building materials exhibition Kenya",
-    "Construction trade show Nairobi",
-    "Kenya construction industry",
-    "East Africa construction exhibition",
+    "Building & Construction trade show Nairobi",
+    "Kenya Building & construction industry",
+    "East Africa Building & construction exhibition",
     "Kenya Buildcon Expo dates",
     "Sarit Expo Centre Nairobi",
   ],
@@ -141,10 +141,12 @@ export default function AboutPage() {
 
       {/* COMMON HERO — USED ACROSS INNER PAGES */}
       <PageHero
-        title="Building the Future,"
-        highlightTitle="Together."
-        badgeText={`ABOUT THE EXPO · ${event.editionLabel}`}
-        intro={`${event.name} brings together manufacturers, suppliers, construction professionals and industry decision-makers to discover innovations, exchange expertise and build business partnerships across Kenya and East Africa.`}
+      
+title="About Kenya Buildcon"
+highlightTitle="International Expo"
+badgeText="ABOUT THE EXPO"
+intro="A B2B trade exhibition connecting manufacturers, suppliers and construction professionals with buyers and business opportunities across Kenya and East Africa."
+
         image={{
           src: "/images/home/kenya-buildcon-inauguration.jpg",
           alt: "Opening ceremony at a previous Kenya Buildcon International Expo trade exhibition in Nairobi, Kenya",

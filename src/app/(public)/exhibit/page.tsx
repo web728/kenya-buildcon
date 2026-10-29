@@ -12,7 +12,7 @@ const PAGE_TITLE =
   "Why Exhibit at Kenya Buildcon 2027 | Book Exhibition Space";
 
 const PAGE_DESCRIPTION =
-  "Exhibit at Kenya Buildcon International Expo 2027 in Nairobi, 9–11 June. Connect with construction buyers, explore stand options and showcase building products across East Africa.";
+  "Exhibit at Kenya Buildcon International Expo 2027 in Nairobi, 9–11 June. Connect with building & construction buyers, explore stand options and showcase building products across East Africa.";
 
 export const metadata: Metadata = {
   ...pageMetadata({
@@ -25,11 +25,11 @@ export const metadata: Metadata = {
     "Exhibit at Kenya Buildcon 2027",
     "Kenya Buildcon exhibition stand",
     "Book exhibition stand Nairobi",
-    "Kenya construction trade show exhibitors",
-    "Construction exhibition Kenya 2027",
+    "Kenya Building & construction trade show exhibitors",
+    "Building & Construction exhibition Kenya 2027",
     "Building materials expo Nairobi",
-    "East Africa construction exhibition",
-    "Sarit Expo Centre construction expo",
+    "East Africa Building & construction exhibition",
+    "Sarit Expo Centre Building & construction expo",
     "Kenya Buildcon exhibitor benefits",
     "Kenya Buildcon stand booking",
   ],
@@ -72,7 +72,7 @@ function getExhibitStructuredData() {
         about: [
           {
             "@type": "Thing",
-            name: "Construction exhibition participation",
+            name: "Building & Construction exhibition participation",
           },
           {
             "@type": "Thing",
@@ -119,13 +119,15 @@ export default function ExhibitPage() {
       )}
 
       <PageHero
-        title="Why Exhibit at"
-        highlightTitle="Kenya Buildcon 2027?"
-        badgeText={`EXHIBITOR OPPORTUNITIES · ${event.editionLabel}`}
-        intro="Connect with construction professionals, introduce your products, generate business leads and explore opportunities across Kenya and East Africa."
+       
+title="Why Exhibit at"
+highlightTitle="Kenya Buildcon International Expo 2027?"
+badgeText="WHY EXHIBIT"
+intro="Showcase your products and services, meet potential buyers and build business connections with professionals from the building and construction industry across Kenya and East Africa."
+
         image={{
           src: "/images/sectors/exhibitor-stand.jpg",
-          alt: "Trade visitors meeting exhibitors and exploring construction products at a Kenya Buildcon exhibition stand",
+          alt: "Trade visitors meeting exhibitors and exploring building & construction products at a Kenya Buildcon exhibition stand",
         }}
       />
 

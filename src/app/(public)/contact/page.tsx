@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     "Kenya Buildcon organisers",
     "Kenya Buildcon exhibition enquiries",
     "Kenya Buildcon stand booking contact",
-    "Construction exhibition Nairobi contact",
+    "Building & Construction exhibition Nairobi contact",
     "Kenya Buildcon sponsorship enquiry",
     "Kenya Buildcon international participation",
     "Kenya Buildcon visitor support",
@@ -123,10 +123,12 @@ export default function ContactPage() {
       )}
 
       <PageHero
-        title="Let's Connect"
-        highlightTitle="& Build Together."
-        badgeText={`CONTACT THE ORGANISERS · ${event.editionLabel}`}
-        intro="Speak with the Kenya Buildcon organising team about exhibition stands, sponsorships, partnerships, international participation and visitor enquiries."
+      
+title="Get in Touch with"
+highlightTitle="Our Organising Team."
+badgeText="CONTACT US"
+intro="Contact the Kenya Buildcon International Expo 2027 organising team for enquiries about exhibition space, sponsorship, partnerships, exhibitor participation and visitor information."
+
         image={{
           src: "/images/home/kenya-buildcon-exhibition-hall.jpg",
           alt: "Building and construction exhibition stands at Kenya Buildcon International Expo in Nairobi",

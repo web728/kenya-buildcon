@@ -422,7 +422,7 @@ function IndustryAudience() {
             </p>
 
             <Link
-              href="/who-should-visit"
+              href="/visitor-profile"
               className="mt-5 inline-flex items-center gap-2 text-[12px] font-extrabold text-[#BE202B] hover:text-[#111111]"
             >
               Explore Visitor Profile

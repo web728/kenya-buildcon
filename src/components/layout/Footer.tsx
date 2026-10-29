@@ -421,7 +421,7 @@ export function Footer() {
                 Joint Organisers
               </span>
               <span className="mt-1 block text-[12px] font-semibold text-white/75">
-                Futurex &amp; ETSIPL
+                Futurex Group &amp; ETSIPL
               </span>
             </div>
 

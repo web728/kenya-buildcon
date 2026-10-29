@@ -4,9 +4,9 @@ export type VisitorGroup = {
   roles: string[];
 };
 
-/**
- * Visitor profile, grouped from the official Kenya Buildcon "Visitor's Profile"
- * list (kenyabuildcon.com) and the brochure's attendee description.
+/** Target visitor groups for Kenya Buildcon International Expo 2027.
+ * Based on the 2027 brochure's Visitor Profile (page 7), with overlapping roles consolidated.
+ * These describe the intended audience, not confirmed attendee registrations.
  */
 export const visitorGroups: VisitorGroup[] = [
   {
@@ -14,86 +14,65 @@ export const visitorGroups: VisitorGroup[] = [
     name: "Contractors & Builders",
     roles: [
       "Building Contractors",
-      "Contractors and Subcontractors",
-      "Builders and Developers",
+      "Civil Contractors",
+      "Subcontractors",
+      "Builders",
       "Construction Industry Professionals",
-      "Safety and Security Professionals",
+      "Safety & Security Professionals",
     ],
   },
   {
     slug: "developers-project-owners",
     name: "Developers & Property Investors",
     roles: [
-      "Builders and Developers",
-      "Homeowners and Property Investors",
-      "Investors and Financiers",
-      "Hoteliers",
-      "Hospitality Industry Professionals",
-      "Facility Managers",
+      "Real Estate & Property Developers",
+      "Property Investors",
+      "Investors & Financiers",
+      "Hotel & Hospitality Professionals",
+      "Property Owners",
     ],
   },
   {
     slug: "architects-engineers-consultants",
     name: "Architects, Engineers & Consultants",
     roles: [
-      "Architects and Planners",
-      "Engineers",
+      "Architects & Planners",
       "Structural & Civil Engineers",
       "Consulting Engineers",
-      "Project Managers and Consultants",
+      "Project Managers & Consultants",
       "Interior Design Professionals",
-      "Urban Planners and Designers",
+      "Urban Planners & Designers",
       "Energy Efficiency Experts",
     ],
   },
   {
     slug: "trade-distribution",
-    name: "Trade & Distribution",
+    name: "Trade & Distribution Professionals",
     roles: [
       "Importers",
-      "Dealers and Distributors",
+      "Dealers & Distributors",
       "Building Material Suppliers",
       "Retailers",
     ],
   },
   {
     slug: "procurement",
-    name: "Procurement & Sourcing",
+    name: "Procurement & Facility Professionals",
     roles: [
-      "Sourcing Professionals from Hospitality & Health Facilities",
-      "Project Managers and Consultants",
+      "Procurement & Sourcing Professionals",
+      "Buyers from Hospitality & Healthcare Facilities",
       "Facility Managers",
+      "Building Product Buyers",
     ],
   },
   {
     slug: "industrial-institutional",
-    name: "Government, Academic & Institutional",
+    name: "Government, Academic & Institutional Visitors",
     roles: [
-      "Government Agencies / Building Authorities",
-      "Academics and Researchers",
-      "Universities, Technical & Research Institutes",
+      "Government Agencies & Building Authorities",
+      "Academics & Researchers",
+      "Universities & Technical Institutes",
+      "Research Institutions",
     ],
   },
-];
-
-/** Exhibitor profile, from the brochure ("Exhibitors") and the Exhibitor Profile page. */
-export const whoShouldExhibit: string[] = [
-  "Building Materials & Construction Companies",
-  "Engineering Services Firms",
-  "Heavy Machinery Manufacturers",
-  "Architectural & Interior Design Companies",
-  "Green Building Solution Providers",
-  "Infrastructure Technology Providers",
-  "Manufacturers & Exporters",
-  "Importers & Distributors",
-  "Cement, Steel & Structural Product Suppliers",
-  "Doors, Windows & Glass Companies",
-  "Tiles, Sanitaryware & Bathroom Brands",
-  "Electrical, Lighting & Cable Companies",
-  "HVAC, Lifts & Elevator Companies",
-  "Solar & Renewable Energy Companies",
-  "Fire, Safety & Security Companies",
-  "Construction Chemicals & Paint Brands",
-  "Prefab & Modular Construction Companies",
-  "Construction Technology & Software Providers",
 ];

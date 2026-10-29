@@ -152,37 +152,38 @@ export const supportingAssociations: string[] = [
    the official 2027 brochure, page 3.
 ========================================== */
 
+
 export const keyFeatures = [
   {
     title: "Networking",
-    desc: "Connect with key players, investors, and decision-makers across the construction industry.",
+    desc: "Meet manufacturers, suppliers, buyers and industry professionals from the building and construction sector.",
   },
   {
     title: "Knowledge Sharing",
-    desc: "Learn from expert-led workshops and seminars that dive into current trends and challenges.",
+    desc: "Exchange industry knowledge and learn about current developments, challenges and opportunities in construction.",
   },
   {
     title: "Technical Workshops",
-    desc: "Interactive sessions with industry leaders on advancements in construction technology, eco-friendly materials, and infrastructure development.",
+    desc: "Attend technical sessions covering construction methods, building materials and new technologies.",
   },
   {
     title: "Seminars & Panels",
-    desc: "Insightful seminars and panel discussions on the opportunities and challenges shaping Kenya's construction sector.",
+    desc: "Hear from industry professionals on key topics related to construction, infrastructure and market developments.",
   },
   {
     title: "VIP Lounge",
-    desc: "Access to networking zones and VIP areas where professionals can meet, discuss, and plan future collaborations.",
+    desc: "A dedicated space for invited guests and industry representatives to meet and hold business discussions.",
   },
   {
     title: "Government Engagement",
-    desc: "A dedicated space for government to engage in high-level discussions and explore business ventures.",
+    desc: "Opportunities for industry representatives to connect with government officials and discuss construction-related projects and developments.",
   },
   {
     title: "Business Development",
-    desc: "Facilitate partnerships, expand market reach, and unlock new business opportunities in East Africa.",
+    desc: "Meet potential customers, explore new markets and build business relationships in Kenya and East Africa.",
   },
   {
-    title: "Showcasing Innovation",
-    desc: "Discover and showcase new technologies, sustainable solutions, and cutting-edge designs.",
+    title: "Product Showcase",
+    desc: "Explore building materials, construction equipment, technologies and other products presented by exhibitors.",
   },
 ];

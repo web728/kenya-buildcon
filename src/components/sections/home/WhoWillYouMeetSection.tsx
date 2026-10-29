@@ -418,7 +418,7 @@ function VisitorCard({
 
       {/* Card footer */}
       <Link
-        href="/who-should-visit"
+        href="/visitor-profile"
         className="mt-7 flex items-center justify-between gap-3 border-t border-[#111111]/[0.08] pt-4 text-[11px] font-bold uppercase tracking-[0.07em] text-[#BE202B] transition-colors duration-300 hover:text-[#111111]"
       >
         <span>Explore Visitor Profile</span>
@@ -521,7 +521,7 @@ export function WhoWillYouMeetSection() {
             className="flex shrink-0 flex-wrap items-center gap-3"
           >
             <Link
-              href="/who-should-visit"
+              href="/visitor-profile"
               className="group inline-flex min-h-[46px] items-center justify-center gap-3 rounded-md border border-[#111111]/20 bg-white px-5 py-3 text-[11px] font-bold uppercase tracking-[0.07em] text-[#111111] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#111111] sm:text-[12px]"
             >
               Visitor Guide

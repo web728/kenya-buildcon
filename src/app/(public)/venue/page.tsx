@@ -148,10 +148,12 @@ export default function VenuePage() {
 
       {/* SHARED PAGE HERO */}
       <PageHero
-        title="Official Exhibition"
-        highlightTitle="Venue & Location."
-        badgeText={`KENYA BUILDCON · ${event.editionLabel}`}
-        intro={`Visit ${event.name} at ${event.venue.name}, ${event.venue.district}, ${event.venue.city}. Discover venue information, directions and everything you need to plan your visit.`}
+      
+title="Visit Us at"
+highlightTitle="The Sarit Expo Centre."
+badgeText="VENUE & LOCATION"
+intro="Located in Westlands, Nairobi, The Sarit Expo Centre will host Kenya Buildcon International Expo 2027. Find venue details, directions and useful information to plan your visit."
+
         image={{
           src: "/images/home/kenya-buildcon-exhibition-hall.jpg",
           alt: `Exhibition hall at a previous ${event.name} exhibition in ${event.venue.city}, Kenya`,

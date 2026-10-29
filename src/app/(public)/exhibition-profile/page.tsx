@@ -14,7 +14,7 @@ const PAGE_TITLE =
   "Exhibition Profile & Product Categories | Kenya Buildcon 2027";
 
 const PAGE_DESCRIPTION =
-  "Explore 15 construction sectors and 50+ product categories at Kenya Buildcon International Expo 2027 in Nairobi, from building materials and machinery to MEP, interiors and technology.";
+  "Explore Building & Construction sectors and 50+ product categories at Kenya Buildcon International Expo 2027 in Nairobi, from building materials and machinery to MEP, interiors and technology.";
 
 export const metadata: Metadata = {
   ...pageMetadata({
@@ -26,13 +26,13 @@ export const metadata: Metadata = {
   keywords: [
     "Kenya Buildcon 2027 exhibition profile",
     "Kenya Buildcon product categories",
-    "Construction exhibition sectors Kenya",
+    "Building & Construction exhibition sectors Kenya",
     "Building materials exhibition Nairobi",
-    "Construction machinery expo Kenya",
-    "Construction technology exhibition East Africa",
+    "Building & Construction machinery expo Kenya",
+    "Building & Construction technology exhibition East Africa",
     "MEP and HVAC exhibition Kenya",
     "Kenya Buildcon exhibitors",
-    "Construction products trade show Nairobi",
+    "Building & Construction products trade show Nairobi",
   ],
 };
 
@@ -133,10 +133,10 @@ export default function ExhibitionProfilePage() {
         title="Explore Our"
         highlightTitle="Exhibition Profile."
         badgeText={`PRODUCT CATEGORIES · ${event.editionLabel}`}
-        intro="Discover the building materials, construction machinery, engineering systems and innovative technologies represented across the Kenya Buildcon exhibition profile."
+        intro="Discover the building materials, building & construction machinery, engineering systems and innovative technologies represented across the Kenya Buildcon exhibition profile."
         image={{
           src: "/images/sectors/product-display.jpg",
-          alt: "Construction products and bathroom fittings showcased at a Kenya Buildcon exhibitor stand",
+          alt: "Building & Construction products and bathroom fittings showcased at a Kenya Buildcon exhibitor stand",
         }}
       />
 

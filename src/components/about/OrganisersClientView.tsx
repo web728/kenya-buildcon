@@ -156,25 +156,27 @@ function SectionPattern() {
    Preserved from original component
 ========================================== */
 
+
 const ORGANISERS = [
   {
     id: "futurex",
     name: "FUTUREX TRADE FAIR & EVENTS PVT. LTD.",
     shortName: "Futurex Group",
     location: "New Delhi, India",
-    credential: "Operating Since 2011",
+    credential: "Established in 2011",
     url: "https://www.futurextrade.com/",
     logo: "/logos/futurex-logo.png",
     accent: "red" as const,
     paragraphs: [
-      "FUTUREX TRADE FAIR AND EVENTS PVT. LTD. aims to provide an ideal business platform through exhibitions, seminars, corporate events and get-togethers. Its strength lies in understanding the industry's needs and interests, and in multidimensional activities that make it a viable business platform — recognised by industry professionals as a safe bet.",
-      "Futurex believes in making exhibitions the most sustainable and cost-effective mode of business activity, with the perfect blend of the best manufacturers and potential industry buyers from around the world.",
+      "Futurex Trade Fair & Events Pvt. Ltd. is an international trade exhibition organiser based in New Delhi, India. Established in 2011, the company organises B2B exhibitions, conferences and industry events across India, South Asia and East Africa. Its exhibition portfolio covers building and construction, woodworking, agriculture, energy, mining and other industrial sectors.",
+
+      "Futurex Group focuses on bringing manufacturers, suppliers, buyers and industry professionals together through trade exhibitions. The company manages exhibition planning, exhibitor participation, visitor promotion and event operations to support business connections across different markets.",
     ],
     stats: [
       { label: "Trade Exhibitions", value: "220+" },
       { label: "Exhibitors Hosted", value: "16,500+" },
       { label: "Brands on Display", value: "25,800+" },
-      { label: "Global Trade Visitors", value: "950K+" },
+      { label: "Trade Visitors", value: "950K+" },
     ],
   },
   {
@@ -187,17 +189,19 @@ const ORGANISERS = [
     logo: "/logos/etsipl-logo.png",
     accent: "green" as const,
     paragraphs: [
-      "EXHIBITIONS & TRADE SERVICES INDIA PRIVATE LIMITED (ETSIPL), based out of Navi Mumbai, India, is an ISO 9001:2015 Certified Organization with more than 12 years of experience in the promotion and organizing of trade exhibitions across the globe.",
-      "Through its global network, ETSIPL has a presence worldwide with local partners situated in most of the continents and is professionally committed to delivering the best trade services in the industry. Its goal through Kenya Buildcon is to provide opportunities to explore the potential of Kenya and the other countries in the East Africa region.",
+      "Exhibitions & Trade Services India Pvt. Ltd. (ETSIPL) is an exhibition organising and promoting company headquartered in Navi Mumbai, India. The ISO 9001:2015 certified company has over 12 years of experience in international trade exhibitions and has worked with more than 150 trade fairs across 35 countries.",
+
+      "Through its international network of partners, ETSIPL supports exhibition participation, event management and business networking across different industries. As a joint organiser of Kenya Buildcon, the company aims to help businesses explore trade opportunities in Kenya and the wider East African market.",
     ],
     stats: [
-      { label: "Global Track Record", value: "12+ Yrs" },
-      { label: "Quality Certification", value: "ISO 9001" },
-      { label: "Partner Network", value: "Worldwide" },
-      { label: "Regional Target", value: "East Africa" },
+      { label: "Industry Experience", value: "12+ Yrs" },
+      { label: "Trade Fairs", value: "150+" },
+      { label: "Countries Covered", value: "35+" },
+      { label: "Certification", value: "ISO 9001" },
     ],
   },
 ];
+
 
 /* ==========================================
    ORGANISER PROFILE CARD
@@ -358,29 +362,30 @@ function OrganisersOverview() {
             variants={itemVariants}
             className="max-w-[780px]"
           >
-            <SmallLabel>
-              Meet The Organisers
-            </SmallLabel>
+          
+<SmallLabel>
+  Official Organisers
+</SmallLabel>
 
-            <h2
-              id="organisers-heading"
-              className="mt-3 text-[clamp(1.8rem,3vw,2.75rem)] font-extrabold leading-[1.15] tracking-[-0.04em] text-[#111111]"
-            >
-              Experienced Teams.{" "}
-              <span className="text-[#BE202B]">
-                One Trade Platform.
-              </span>
-            </h2>
+<h2
+  id="organisers-heading"
+  className="mt-3 text-[clamp(1.8rem,3vw,2.75rem)] font-extrabold leading-[1.15] tracking-[-0.04em] text-[#111111]"
+>
+  Organised by{" "}
+  <span className="text-[#BE202B]">
+    Industry Professionals.
+  </span>
+</h2>
 
-            <p className="mt-3 max-w-[680px] text-[13px] leading-[1.8] text-[#666666] sm:text-[14px]">
-              {event.name} is organised by
-              Futurex Trade Fair &amp; Events and
-              Exhibitions &amp; Trade Services India
-              (ETSIPL), bringing exhibition
-              experience and international business
-              connections to the Buildcon platform.
-            </p>
-          </motion.div>
+<p className="mt-3 max-w-[680px] text-[13px] leading-[1.8] text-[#666666] sm:text-[14px]">
+  Kenya Buildcon International Expo is jointly
+  organised by Futurex Trade Fair & Events
+  Pvt. Ltd. and Exhibitions & Trade Services
+  India Pvt. Ltd. (ETSIPL), two companies
+  with experience in organising international
+  trade exhibitions across different industries.
+</p>
+</motion.div>
 
           <motion.div variants={itemVariants}>
             <Link
@@ -629,7 +634,7 @@ function OrganisersClosing() {
             <p className="mt-3 text-[13px] leading-[1.8] text-white/65">
               Join {event.name} at{" "}
               {event.venue.name},{" "}
-              {event.venue.city}. Meet construction
+              {event.venue.city}. Meet building & construction
               professionals and explore business
               opportunities across Kenya and East Africa.
             </p>
@@ -682,7 +687,6 @@ export function OrganisersClientView() {
     <div className="bg-white text-[#111111]">
       <OrganisersOverview />
       <OrganiserContacts />
-      <OrganisersClosing />
     </div>
   );
 }

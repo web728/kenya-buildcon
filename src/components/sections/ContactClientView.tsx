@@ -186,44 +186,28 @@ function ContactIntro() {
               Exhibition Enquiries
             </Eyebrow>
 
-            <h2
-              id="contact-intro-heading"
-              className="mt-3 text-[clamp(1.85rem,3vw,2.75rem)] font-extrabold leading-[1.16] tracking-[-0.04em] text-[#111111]"
-            >
-              Connect With Our{" "}
-              <span className="text-[#BE202B]">
-                Organising Team.
-              </span>
-            </h2>
+        
+<h2
+  id="contact-intro-heading"
+  className="mt-3 text-[clamp(1.85rem,3vw,2.75rem)] font-extrabold leading-[1.16] tracking-[-0.04em] text-[#111111]"
+>
+  How Can We{" "}
+  <span className="text-[#BE202B]">
+    Assist You?
+  </span>
+</h2>
 
-            <p className="mt-3 max-w-[670px] text-[13px] leading-[1.85] text-[#666666] sm:text-[14px]">
-              Enquire about exhibition space,
-              sponsorships, partnerships,
-              country participation, visitor
-              information or event arrangements
-              for Kenya Buildcon 2027.
-            </p>
+<p className="mt-3 max-w-[670px] text-[13px] leading-[1.85] text-[#666666] sm:text-[14px]">
+  For enquiries about exhibition space,
+  sponsorship, partnerships, international
+  participation or visitor registration,
+  contact the organising team of
+  Kenya Buildcon International Expo 2027.
+</p>
+
           </motion.div>
 
-          <motion.div
-            variants={itemVariants}
-            className="shrink-0 border-l-2 border-[#25B34B] pl-4"
-          >
-            <p className="text-[10px] font-extrabold uppercase tracking-[0.13em] text-[#BE202B]">
-              Event Details
-            </p>
-
-            <p className="mt-2 text-[15px] font-extrabold text-[#111111]">
-              {event.dates.display}
-            </p>
-
-            <p className="mt-1 text-[12px] leading-[1.7] text-[#777777]">
-              {event.venue.name}
-              <span className="block">
-                {event.venue.city}, Kenya
-              </span>
-            </p>
-          </motion.div>
+ 
         </Reveal>
       </Container>
     </section>
@@ -254,27 +238,28 @@ function EnquiryFormSection() {
             </div>
 
             <div className="p-5 sm:p-8 lg:p-10">
-              <Eyebrow>
-                Direct Enquiry
-              </Eyebrow>
 
-              <h2
-                id="contact-form-heading"
-                className="mt-3 text-[clamp(1.65rem,2.7vw,2.4rem)] font-extrabold leading-[1.2] tracking-[-0.04em] text-[#111111]"
-              >
-                Send Us a{" "}
-                <span className="text-[#BE202B]">
-                  Message.
-                </span>
-              </h2>
+<Eyebrow>
+  Contact Form
+</Eyebrow>
 
-              <p className="mt-3 max-w-[650px] text-[13px] leading-[1.8] text-[#666666]">
-                Complete the enquiry form with
-                your contact details and message.
-                The organising team can review
-                your request and respond using
-                the information you provide.
-              </p>
+<h2
+  id="contact-form-heading"
+  className="mt-3 text-[clamp(1.65rem,2.7vw,2.4rem)] font-extrabold leading-[1.2] tracking-[-0.04em] text-[#111111]"
+>
+  Send Us a{" "}
+  <span className="text-[#BE202B]">
+    Message.
+  </span>
+</h2>
+
+<p className="mt-3 max-w-[650px] text-[13px] leading-[1.8] text-[#666666]">
+  Have a question about Kenya Buildcon International
+  Expo 2027? Fill out the form below with your
+  enquiry, and our organising team will get
+  back to you.
+</p>
+
 
               <div className="mt-7 border-t border-[#111111]/10 pt-7">
                 <ContactForm />
@@ -408,104 +393,7 @@ function OrganiserContactSection() {
   );
 }
 
-/* ==========================================
-   BOOKING + VISITOR CTA
-========================================== */
-
-function ContactBookingSection() {
-  return (
-    <section
-      aria-labelledby="contact-booking-heading"
-      className="relative isolate overflow-hidden bg-[#111111] py-12 text-white sm:py-14"
-    >
-      <svg
-        aria-hidden="true"
-        viewBox="0 0 600 300"
-        fill="none"
-        className="pointer-events-none absolute bottom-0 right-0 h-full w-auto opacity-35"
-      >
-        <path
-          d="M110 300V110L310 25L510 110V300M180 300V150L310 95L440 150V300"
-          stroke="#BE202B"
-          strokeWidth="1.2"
-          strokeOpacity="0.65"
-        />
-
-        <path
-          d="M250 300V200H370V300M110 180H510"
-          stroke="#25B34B"
-          strokeWidth="1"
-          strokeOpacity="0.4"
-        />
-      </svg>
-
-      <Container className="relative z-10">
-        <Reveal className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-          <motion.div
-            variants={itemVariants}
-            className="max-w-[740px]"
-          >
-            <Eyebrow light>
-              Kenya Buildcon 2027
-            </Eyebrow>
-
-            <h2
-              id="contact-booking-heading"
-              className="mt-3 text-[clamp(1.85rem,2.9vw,2.7rem)] font-extrabold leading-[1.2] tracking-[-0.04em] text-white"
-            >
-              Be Part of{" "}
-              <span className="text-white/75">
-                the Exhibition.
-              </span>
-            </h2>
-
-            <p className="mt-3 text-[13px] leading-[1.85] text-white/65">
-              Connect with Kenya Buildcon
-              International Expo on{" "}
-              {event.dates.display} at{" "}
-              {event.venue.name},{" "}
-              {event.venue.city}.
-              Explore the opportunities to
-              exhibit or attend.
-            </p>
-          </motion.div>
-
-          <motion.div
-            variants={itemVariants}
-            className="flex flex-wrap gap-3"
-          >
-            <Link
-              href={event.cta.bookStand}
-              className="group inline-flex min-h-[44px] items-center justify-center gap-3 rounded-md bg-[#BE202B] px-5 py-3 text-[11px] font-extrabold uppercase tracking-[0.05em] text-white transition-colors hover:bg-[#A51B25]"
-            >
-              Book a Stand
-
-              <span className="transition-transform duration-300 group-hover:translate-x-1">
-                <ArrowIcon />
-              </span>
-            </Link>
-
-            <Link
-              href={event.cta.registerVisit}
-              className="inline-flex min-h-[44px] items-center justify-center rounded-md border border-white/25 px-5 py-3 text-[11px] font-extrabold uppercase tracking-[0.05em] text-white transition-colors hover:border-white hover:bg-white hover:text-[#111111]"
-            >
-              Register to Visit
-            </Link>
-          </motion.div>
-        </Reveal>
-      </Container>
-
-      <div
-        aria-hidden="true"
-        className="absolute inset-x-0 bottom-0 flex h-[3px]"
-      >
-        <span className="w-[82%] bg-[#BE202B]" />
-        <span className="w-[13%] bg-[#25B34B]" />
-        <span className="flex-1 bg-white" />
-      </div>
-    </section>
-  );
-}
+ 
 
 /* ==========================================
    MAIN COMPONENT
@@ -517,7 +405,6 @@ export function ContactClientView() {
       <ContactIntro />
       <EnquiryFormSection />
       <OrganiserContactSection />
-      <ContactBookingSection />
     </div>
   );
 }

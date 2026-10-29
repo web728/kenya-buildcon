@@ -274,23 +274,7 @@ export function ContactForm({
 
         {/* CONTACT DETAILS */}
         <div>
-          <div className="mb-5 flex items-center justify-between gap-3 border-b border-[#111111]/10 pb-4">
-            <div>
-              <h3 className="text-[14px] font-extrabold tracking-[-0.015em] text-[#111111]">
-                Your Contact Details
-              </h3>
-
-              <p className="mt-1 text-[11px] leading-[1.6] text-[#888888]">
-                Please provide accurate details
-                so our team can respond.
-              </p>
-            </div>
-
-            <span
-              aria-hidden="true"
-              className="h-[2px] w-8 shrink-0 bg-[#25B34B]"
-            />
-          </div>
+         
 
           <div className="grid gap-x-5 gap-y-5 sm:grid-cols-2">
             <FieldWrapper
@@ -431,23 +415,7 @@ export function ContactForm({
 
         {/* MESSAGE */}
         <div>
-          <div className="mb-5 flex items-center justify-between gap-3 border-b border-[#111111]/10 pb-4">
-            <div>
-              <h3 className="text-[14px] font-extrabold tracking-[-0.015em] text-[#111111]">
-                Your Enquiry
-              </h3>
-
-              <p className="mt-1 text-[11px] leading-[1.6] text-[#888888]">
-                Tell us what you would like
-                assistance with.
-              </p>
-            </div>
-
-            <span
-              aria-hidden="true"
-              className="h-[2px] w-8 shrink-0 bg-[#BE202B]"
-            />
-          </div>
+          
 
           <FieldWrapper
             label="Your Message"
@@ -482,7 +450,7 @@ export function ContactForm({
             <span className="text-[12px] leading-[1.8] text-[#666666]">
               I agree that{" "}
               <strong className="font-bold text-[#111111]">
-                Kenya Buildcon International Expo
+                Kenya Buildcon International Expo 2027
               </strong>{" "}
               may contact me regarding my
               enquiry, in accordance with the{" "}

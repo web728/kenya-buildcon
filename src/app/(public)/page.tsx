@@ -16,7 +16,7 @@ import { getFeaturedExhibitors } from "@/lib/data/exhibitors";
 
 export const dynamic = "force-dynamic";
 
-const pageTitle = `${event.shortName} ${event.edition} | Construction Expo, Nairobi`;
+const pageTitle = `${event.shortName} ${event.edition} | Building & Construction Expo, Nairobi`;
 const pageDescription = `${event.editionLabel} ${event.name}, ${event.dates.display} at ${event.venue.name}, ${event.venue.city} — Kenya's leading building & construction trade show.`;
 
 export const metadata: Metadata = {
@@ -25,12 +25,12 @@ export const metadata: Metadata = {
   keywords: [
     "Kenya Buildcon 2027",
     "Kenya Buildcon International Expo 2027",
-    "construction expo Kenya 2027",
+    "Building & construction expo Kenya 2027",
     "building materials exhibition Nairobi",
-    "construction exhibition Sarit Expo Centre",
-    "East Africa construction trade show",
-    "construction machinery exhibition Kenya",
-    "exhibit at Kenya construction expo",
+    "Building & construction exhibition Sarit Expo Centre",
+    "East Africa Building & construction trade show",
+    "Building & construction machinery exhibition Kenya",
+    "exhibit at Kenya Building & construction expo",
   ],
   alternates: { canonical: "/" },
   openGraph: {
@@ -72,10 +72,10 @@ export default async function HomePage() {
         <HeroStatsSection />
         <IntroSection />
         <WhyKenyaSection />
-        <ExhibitionProfileSection />
-        <WhyExhibitSection />
-        <WhoWillYouMeetSection />
-        <ExhibitorDirectoryPreviewSection
+        {/* <ExhibitionProfileSection /> */}
+        {/* <WhyExhibitSection />
+        <WhoWillYouMeetSection /> */}
+        {/* <ExhibitorDirectoryPreviewSection
           exhibitors={exhibitors.map((e) => ({
             _id: e._id,
             slug: e.slug,
@@ -84,11 +84,11 @@ export default async function HomePage() {
             country: e.country,
             tagline: e.shortDescription ?? undefined,
           }))}
-        />
-        <VenueSection />
-        <PartnersSection />
-        <NewsSection />
-        <FinalCtaSection />
+        /> */}
+        {/* <VenueSection /> */}
+        {/* <PartnersSection /> */}
+        {/* <NewsSection /> */}
+        {/* <FinalCtaSection /> */}
       </div>
     </>
   );

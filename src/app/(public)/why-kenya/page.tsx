@@ -13,10 +13,10 @@ import { WhyKenyaClientView } from "@/components/about/WhyKenyaClientView";
 const PAGE_PATH = "/why-kenya";
 
 const PAGE_TITLE =
-  "Why Kenya? Construction Market & Business Opportunities";
+  "Why Kenya? Building & Construction Market & Business Opportunities";
 
 const PAGE_DESCRIPTION =
-  "Explore Kenya's construction market, Vision 2030 infrastructure, urban development and East African trade opportunities. Discover why businesses exhibit at Kenya Buildcon International Expo 2027 in Nairobi.";
+  "Explore Kenya's building & construction market, Vision 2030 infrastructure, urban development and East African trade opportunities. Discover why businesses exhibit at Kenya Buildcon International Expo 2027 in Nairobi.";
 
 export const metadata: Metadata = {
   ...pageMetadata({
@@ -75,7 +75,7 @@ function getStructuredData() {
         about: [
           {
             "@type": "Thing",
-            name: "Construction industry in Kenya",
+            name: "Building & Construction industry in Kenya",
           },
           {
             "@type": "Thing",
@@ -83,7 +83,7 @@ function getStructuredData() {
           },
           {
             "@type": "Thing",
-            name: "East African construction market",
+            name: "East African building & construction market",
           },
         ],
         breadcrumb: {
@@ -135,10 +135,12 @@ export default function WhyKenyaPage() {
       {/* Shared PageHero */}
 
 <PageHero
-  title="Why Kenya?"
-  highlightTitle="The Gateway to East Africa."
-  badgeText={`KENYA BUILDCON · ${event.editionLabel}`}
-  intro="Discover Kenya's construction market, infrastructure investment, urban development and commercial opportunities across East Africa."
+
+title="Why Kenya?"
+highlightTitle="A Growing Market for Building & Construction."
+badgeText="KENYA & EAST AFRICA"
+intro="Kenya's ongoing building developments, infrastructure projects and growing demand for building materials, construction equipment and related services offer business opportunities across the wider East African market."
+
   image={{
     src: "/images/home/kenya-buildcon-exhibition-hall.jpg",
     alt: "Building and construction industry exhibition at Kenya Buildcon in Nairobi, Kenya",

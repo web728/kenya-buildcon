@@ -286,26 +286,25 @@ function AboutOverview() {
               id="about-overview-title"
               className="mt-4 max-w-[670px] text-[clamp(1.85rem,3vw,2.7rem)] font-extrabold leading-[1.18] tracking-[-0.04em] text-[#111111]"
             >
-              Where Construction Meets{" "}
+              Connecting the Building &{" "}
               <span className="text-[#BE202B]">
-                Opportunity.
+                Construction Industry.
               </span>
             </h2>
 
             <p className="mt-5 max-w-[700px] text-[13px] leading-[1.9] text-[#626262] sm:text-[14px]">
-              {event.name} is an international trade
-              exhibition for the building and construction
-              industry, connecting manufacturers,
-              suppliers, contractors, architects,
-              engineers and decision-makers with products,
-              technologies and commercial opportunities.
+              The 4th edition of Kenya Buildcon International
+              Expo 2027 brings together manufacturers,
+              suppliers, contractors, architects, engineers
+              and other professionals from the building and
+              construction industry.
             </p>
 
             <p className="mt-3 max-w-[700px] text-[13px] leading-[1.9] text-[#626262] sm:text-[14px]">
-              The exhibition supports knowledge exchange,
-              collaboration and long-term partnerships
-              contributing to construction-sector growth
-              in Kenya and the wider East African region.
+              The exhibition provides a platform to showcase
+              products and services, meet potential buyers,
+              share industry knowledge and develop business
+              connections across Kenya and East Africa.
             </p>
 
             <div className="mt-6 flex flex-wrap gap-x-7 gap-y-3 border-t border-[#111111]/10 pt-5">
@@ -360,43 +359,41 @@ function AboutOverview() {
 
             <div className="relative z-10">
               <Eyebrow light>
-                Strategic Gateway
+                Why Nairobi
               </Eyebrow>
 
               <h3 className="mt-5 text-[24px] font-extrabold leading-[1.2] tracking-[-0.035em] sm:text-[28px]">
-                Nairobi.
                 <span className="block text-[#F26B70]">
-                  Connected to East Africa.
+                  A Centre for Business in East Africa.
                 </span>
               </h3>
 
               <p className="mt-4 text-[13px] leading-[1.85] text-white/65">
-                Nairobi connects businesses with
-                Kenya&apos;s construction ecosystem
-                and provides opportunities to develop
-                relationships across regional markets
-                and supply chains.
+                As Kenya's capital and a major business
+                centre in East Africa, Nairobi brings
+                together companies, suppliers and
+                professionals involved in construction
+                and infrastructure development.
               </p>
 
               <div className="mt-6 grid grid-cols-2 gap-4 border-t border-white/15 pt-5">
                 <div>
                   <span className="block text-[10px] font-bold uppercase tracking-[0.1em] text-white/45">
-                    Venue
+                    Industry
                   </span>
 
                   <span className="mt-1.5 block text-[12px] font-semibold leading-[1.6]">
-                    {event.venue.name}
+                    Building & Construction
                   </span>
                 </div>
 
                 <div>
                   <span className="block text-[10px] font-bold uppercase tracking-[0.1em] text-white/45">
-                    Location
+                    Market
                   </span>
 
                   <span className="mt-1.5 block text-[12px] font-semibold leading-[1.6]">
-                    {event.venue.city},{" "}
-                    {event.venue.country}
+                    Kenya & East Africa
                   </span>
                 </div>
               </div>
@@ -419,6 +416,7 @@ function AboutOverview() {
   );
 }
 
+
 /* ==========================================
    SECTION 2 — FEATURES
 ========================================== */
@@ -434,29 +432,35 @@ function FeaturesSection() {
       <Container>
         <SectionReveal className="flex flex-col gap-4 border-b border-[#111111]/10 pb-5 sm:flex-row sm:items-end sm:justify-between">
           <motion.div variants={revealVariants}>
-            <Eyebrow>
-              {event.editionLabel} Experience
-            </Eyebrow>
+          
 
-            <h2
-              id="about-features-title"
-              className="mt-3 text-[clamp(1.8rem,2.8vw,2.55rem)] font-extrabold tracking-[-0.04em] text-[#111111]"
-            >
-              What Defines{" "}
-              <span className="text-[#BE202B]">
-                the Expo.
-              </span>
-            </h2>
+<Eyebrow>
+  Inside Kenya Buildcon International Expo
+</Eyebrow>
+
+<h2
+  id="about-features-title"
+  className="mt-3 text-[clamp(1.8rem,2.8vw,2.55rem)] font-extrabold tracking-[-0.04em] text-[#111111]"
+>
+  More Than{" "}
+  <span className="text-[#BE202B]">
+    an Exhibition.
+  </span>
+</h2>
+
+
           </motion.div>
 
-          <motion.p
-            variants={revealVariants}
-            className="max-w-[370px] text-[12px] leading-[1.8] text-[#777777] sm:text-[13px]"
-          >
-            A focused environment for product discovery,
-            industry connections and new commercial
-            opportunities.
-          </motion.p>
+
+<motion.p
+  variants={revealVariants}
+  className="max-w-[370px] text-[12px] leading-[1.8] text-[#777777] sm:text-[13px]"
+>
+  Explore the key activities and opportunities
+  available to exhibitors and visitors at
+  Kenya Buildcon International Expo.
+</motion.p>
+
         </SectionReveal>
 
         <SectionReveal className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
@@ -520,7 +524,7 @@ function FeaturesSection() {
 
         <div className="mt-6 flex justify-end">
           <Link
-            href="/who-should-visit"
+            href="/visitor-profile"
             className="group inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.05em] text-[#BE202B] hover:text-[#111111]"
           >
             Explore Visitor Profile
@@ -695,7 +699,7 @@ export function AboutClientView() {
     <div className="bg-white">
       <AboutOverview />
       <FeaturesSection />
-      <EventFactsSection />
+    
     </div>
   );
 }

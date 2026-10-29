@@ -74,76 +74,116 @@ function Reveal({
    Official 2027 brochure: Why Visit, page 7
 ========================================== */
 
+
 const VISIT_BENEFITS = [
   {
     number: "01",
-    title: "Gain Insights",
+    title: "Gain Industry Insights",
     tag: "Industry Knowledge",
     description:
-      "Explore developments in construction technology, eco-friendly materials and infrastructure through industry-focused sessions and discussions.",
+      "Learn about current trends, industry developments and practical approaches through discussions with exhibitors and industry professionals.",
   },
   {
     number: "02",
-    title: "Discover Innovations",
-    tag: "Ideas & Best Practices",
+    title: "Discover New Products & Technologies",
+    tag: "Product Innovation",
     description:
-      "Learn about emerging trends and best practices through workshops, seminars and knowledge-sharing opportunities.",
+      "Explore building materials, construction equipment, architectural products and technologies available across different industry sectors.",
   },
   {
     number: "03",
-    title: "Network with Industry Leaders",
-    tag: "Professional Connections",
+    title: "Meet Industry Professionals",
+    tag: "Professional Networking",
     description:
-      "Meet industry professionals and decision-makers to discuss opportunities, challenges and developments in construction.",
+      "Connect with manufacturers, suppliers, contractors, architects, engineers and other professionals involved in building and construction projects.",
   },
   {
     number: "04",
-    title: "Explore Solutions",
-    tag: "Product Discovery",
+    title: "Compare Products & Solutions",
+    tag: "Product Sourcing",
     description:
-      "Explore a wide range of building and construction products, technologies and services presented across the exhibition profile.",
+      "Meet different suppliers, compare product options and find materials, equipment and services suited to your project or business needs.",
   },
   {
     number: "05",
-    title: "Open Doors to Opportunities",
-    tag: "Business Development",
+    title: "Explore Business Opportunities",
+    tag: "Business Connections",
     description:
-      "Connect with potential clients, suppliers and business partners while exploring opportunities across the East African market.",
+      "Meet potential suppliers and business partners while exploring trade opportunities in Kenya and the wider East African market.",
   },
 ];
+
+
 
 const VISITOR_SEGMENTS = [
   {
     number: "01",
     title: "Architects, Engineers & Consultants",
     roles:
-      "Architects and Planners, Structural & Civil Engineers, Consulting Engineers, Project Managers, Interior Designers",
+      "Architects, Urban Planners, Structural & Civil Engineers, Engineering Consultants, Project Managers, Interior Designers",
   },
   {
     number: "02",
-    title: "Importers, Distributors & Suppliers",
+    title: "Importers, Distributors & Retailers",
     roles:
-      "Importers, Dealers and Distributors, Building Material Suppliers, Retailers",
+      "Importers, Dealers, Distributors, Building Material Suppliers, Hardware Retailers, Procurement Professionals",
   },
   {
     number: "03",
     title: "Developers & Investors",
     roles:
-      "Builders and Developers, Homeowners and Property Investors, Investors and Financiers, Hoteliers",
+      "Real Estate Developers, Property Developers, Property Investors, Investors & Financiers, Hotel Developers",
   },
   {
     number: "04",
-    title: "Contractors",
+    title: "Contractors & Builders",
     roles:
-      "Building Contractors, Contractors and Subcontractors, Construction Industry Professionals",
+      "Building Contractors, Civil Contractors, General Contractors, Subcontractors, Builders, Construction Professionals",
   },
   {
     number: "05",
     title: "Government & Institutions",
     roles:
-      "Government Agencies and Building Authorities, Universities, Technical and Research Institutes, Facility Managers",
+      "Government Departments, Building Authorities, Public Sector Organisations, Universities, Technical Institutes, Facility Managers",
   },
 ];
+
+
+
+
+const VISITOR_OBJECTIVES = [
+  {
+    number: "01",
+    title: "Explore Products & Solutions",
+    description:
+      "Discover building materials, construction equipment, architectural products, engineering services and other industry solutions.",
+  },
+  {
+    number: "02",
+    title: "Gain Industry Knowledge",
+    description:
+      "Learn about developments in building and construction, including new materials, technologies and industry practices.",
+  },
+  {
+    number: "03",
+    title: "Discover New Technologies",
+    description:
+      "Explore modern building systems, construction methods, sustainable products and technologies presented at the exhibition.",
+  },
+  {
+    number: "04",
+    title: "Connect with Industry Professionals",
+    description:
+      "Meet manufacturers, suppliers, architects, engineers, contractors and other professionals to exchange ideas and discuss industry needs.",
+  },
+  {
+    number: "05",
+    title: "Explore Business Opportunities",
+    description:
+      "Connect with potential suppliers, customers and business partners while exploring opportunities in Kenya and East Africa.",
+  },
+];
+
 
 /* ==========================================
    SHARED UI
@@ -239,18 +279,7 @@ function BenefitItem({
         </p>
       </div>
 
-      <div className="mt-auto pt-5">
-        <Link
-          href={event.cta.registerVisit}
-          className="group/link inline-flex items-center gap-2 border-t border-[#111111]/10 pt-4 text-[11px] font-extrabold text-[#BE202B] transition-colors hover:text-[#111111]"
-        >
-          Register to Visit
-
-          <span className="transition-transform duration-300 group-hover/link:translate-x-1">
-            <ArrowIcon />
-          </span>
-        </Link>
-      </div>
+    
 
       <span
         aria-hidden="true"
@@ -287,27 +316,31 @@ function WhyVisitSection() {
             variants={itemVariants}
             className="max-w-[760px]"
           >
-            <Eyebrow>
-              The Visitor Experience
-            </Eyebrow>
+          
+<Eyebrow>
+  Visitor Benefits
+</Eyebrow>
 
-            <h2
-              id="why-visit-heading"
-              className="mt-3 text-[clamp(1.85rem,3vw,2.75rem)] font-extrabold leading-[1.16] tracking-[-0.04em] text-[#111111]"
-            >
-              Why Visit{" "}
-              <span className="text-[#BE202B]">
-                Kenya Buildcon?
-              </span>
-            </h2>
 
-            <p className="mt-3 max-w-[700px] text-[13px] leading-[1.85] text-[#666666] sm:text-[14px]">
-              Kenya Buildcon offers a platform to
-              explore products and services in
-              architecture, building, construction,
-              design and engineering, while connecting
-              with professionals across the industry.
-            </p>
+<h2
+  id="why-visit-heading"
+  className="mt-3 text-[clamp(1.85rem,3vw,2.75rem)] font-extrabold leading-[1.16] tracking-[-0.04em] text-[#111111]"
+>
+  Why Visit{" "}
+  <span className="text-[#BE202B]">
+    Kenya Buildcon International Expo 2027?
+  </span>
+</h2>
+
+<p className="mt-3 max-w-[700px] text-[13px] leading-[1.85] text-[#666666] sm:text-[14px]">
+  Explore a wide range of building and construction
+  products, discover new technologies and connect
+  with manufacturers, suppliers and industry
+  professionals to find solutions for your
+  projects and business needs.
+</p>
+
+
           </motion.div>
 
           <motion.div
@@ -357,32 +390,33 @@ function VisitorProfileSection() {
             variants={itemVariants}
             className="max-w-[760px]"
           >
-            <Eyebrow>
-              Professional Visitor Profile
-            </Eyebrow>
+          
+<Eyebrow>
+  Professional Visitor Profile
+</Eyebrow>
 
-            <h2
-              id="visitor-profile-heading"
-              className="mt-3 text-[clamp(1.8rem,2.8vw,2.6rem)] font-extrabold leading-[1.18] tracking-[-0.04em] text-[#111111]"
-            >
-              Meet the People Who{" "}
-              <span className="text-[#BE202B]">
-                Buy, Build & Specify.
-              </span>
-            </h2>
+<h2
+  id="visitor-profile-heading"
+  className="mt-3 text-[clamp(1.8rem,2.8vw,2.6rem)] font-extrabold leading-[1.18] tracking-[-0.04em] text-[#111111]"
+>
+  Who Should{" "}
+  <span className="text-[#BE202B]">
+    Visit the Exhibition?
+  </span>
+</h2>
 
-            <p className="mt-3 text-[13px] leading-[1.85] text-[#666666]">
-              The exhibition is designed for
-              construction professionals involved
-              in planning, specification, sourcing,
-              development, distribution and project
-              delivery across the built environment.
-            </p>
+<p className="mt-3 text-[13px] leading-[1.85] text-[#666666]">
+  Kenya Buildcon International Expo 2027 welcomes
+  professionals involved in building and construction
+  projects, including planning, design, procurement,
+  development, engineering and project management.
+</p>
+
           </motion.div>
 
           <motion.div variants={itemVariants}>
             <Link
-              href="/who-should-visit"
+              href="/visitor-profile"
               className="group inline-flex items-center gap-2 text-[12px] font-extrabold text-[#BE202B]"
             >
               Detailed Visitor Profile
@@ -410,16 +444,7 @@ function VisitorProfileSection() {
                 {segment.roles}
               </p>
 
-              <Link
-                href="/who-should-visit"
-                className="group/link mt-5 flex items-center justify-between gap-3 border-t border-[#111111]/10 pt-4 text-[11px] font-extrabold text-[#BE202B]"
-              >
-                Explore Visitor Profile
-
-                <span className="transition-transform duration-300 group-hover/link:translate-x-1">
-                  <ArrowIcon />
-                </span>
-              </Link>
+            
             </motion.article>
           ))}
         </Reveal>
@@ -427,6 +452,87 @@ function VisitorProfileSection() {
     </section>
   );
 }
+
+
+/* ==========================================
+   WHY VISIT OBJECTIVES
+========================================== */
+
+function VisitorObjectivesSection() {
+  return (
+    <section
+      aria-labelledby="visitor-objectives-heading"
+      className="border-y border-[#111111]/10 bg-[#F8F8F8] py-12 sm:py-14 lg:py-16"
+    >
+      <Container>
+        <Reveal className="flex flex-col gap-5 border-b border-[#111111]/10 pb-6 md:flex-row md:items-end md:justify-between">
+          <motion.div
+            variants={itemVariants}
+            className="max-w-[750px]"
+          >
+         
+<Eyebrow>
+  Exhibition Experience
+</Eyebrow>
+
+<h2
+  id="visitor-objectives-heading"
+  className="mt-3 text-[clamp(1.8rem,2.8vw,2.6rem)] font-extrabold leading-[1.18] tracking-[-0.04em] text-[#111111]"
+>
+  What to Expect{" "}
+  <span className="text-[#BE202B]">
+    at the Exhibition.
+  </span>
+</h2>
+
+<p className="mt-3 max-w-[690px] text-[13px] leading-[1.85] text-[#666666]">
+  Kenya Buildcon International Expo 2027
+  brings together building and construction
+  products, industry professionals and
+  opportunities to learn, connect and explore
+  business possibilities in East Africa.
+</p>
+
+          </motion.div>
+
+          <motion.div variants={itemVariants}>
+            <Link
+              href="/exhibition-profile"
+              className="group inline-flex items-center gap-2 text-[12px] font-extrabold text-[#BE202B]"
+            >
+              Explore Exhibition Profile
+
+              <span className="transition-transform duration-300 group-hover:translate-x-1">
+                <ArrowIcon />
+              </span>
+            </Link>
+          </motion.div>
+        </Reveal>
+
+        <Reveal className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {VISITOR_OBJECTIVES.map((item) => (
+            <motion.article
+              key={item.number}
+              variants={itemVariants}
+              className="group relative flex flex-col rounded-lg border border-[#111111]/10 bg-white p-5 transition-[border-color,box-shadow] duration-300 hover:border-[#BE202B]/25 hover:shadow-[0_10px_28px_rgba(17,17,17,0.04)] sm:p-6"
+            >
+            
+
+              <h3 className="mt-5 text-[16px] font-extrabold leading-[1.4] text-[#111111]">
+                {item.title}
+              </h3>
+
+              <p className="mt-3 text-[12px] leading-[1.85] text-[#666666] sm:text-[13px]">
+                {item.description}
+              </p>
+            </motion.article>
+          ))}
+        </Reveal>
+      </Container>
+    </section>
+  );
+}
+
 
 /* ==========================================
    VISITOR REGISTRATION CTA
@@ -536,6 +642,7 @@ export function VisitClientView() {
     <div className="bg-white text-[#111111]">
       <WhyVisitSection />
       <VisitorProfileSection />
+      <VisitorObjectivesSection />
       <RegistrationSection />
     </div>
   );

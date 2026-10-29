@@ -223,9 +223,11 @@ export default async function GalleryPage() {
 
       {/* EXISTING PREMIUM PAGE HERO */}
       <PageHero
-        title="Exhibition"
-        highlightTitle="Gallery."
-        intro="Explore moments from Kenya Buildcon International Expo in Nairobi through photographs of exhibition stands, products and industry participation."
+      
+title="Exhibition"
+highlightTitle="Photo Gallery."
+intro="Explore photographs from previous editions of Kenya Buildcon International Expo, featuring exhibition stands, product displays and industry interactions."
+
         image={{
           src: "/images/sectors/trade-visitors.jpg",
           alt: "Trade visitors exploring exhibition stands at Kenya Buildcon in Nairobi",
@@ -254,43 +256,46 @@ export default async function GalleryPage() {
             <div className="flex items-center gap-2.5">
               <span className="h-[2px] w-7 bg-[#BE202B]" />
 
-              <span className="text-[10px] font-extrabold uppercase tracking-[0.15em] text-[#BE202B]">
-                Kenya Buildcon Photo Gallery
-              </span>
-            </div>
 
-            <h2
-              id="gallery-heading"
-              className="mt-3 text-[clamp(1.85rem,3vw,2.75rem)] font-extrabold leading-[1.15] tracking-[-0.04em] text-[#111111]"
-            >
-              Moments From{" "}
-              <span className="text-[#BE202B]">
-                the Exhibition.
-              </span>
-            </h2>
+<span className="text-[10px] font-extrabold uppercase tracking-[0.15em] text-[#BE202B]">
+  Previous Editions
+</span>
+</div>
 
-            <p className="mt-3 max-w-[650px] text-[13px] leading-[1.8] text-[#666666] sm:text-[14px]">
-              Browse photographs from the
-              exhibition. Select any photo
-              to view it in a larger format.
-            </p>
+<h2
+  id="gallery-heading"
+  className="mt-3 text-[clamp(1.85rem,3vw,2.75rem)] font-extrabold leading-[1.15] tracking-[-0.04em] text-[#111111]"
+>
+  A Look Back at{" "}
+  <span className="text-[#BE202B]">
+    Kenya Buildcon.
+  </span>
+</h2>
+
+<p className="mt-3 max-w-[650px] text-[13px] leading-[1.8] text-[#666666] sm:text-[14px]">
+  View highlights from previous editions,
+  including exhibitor stands, product showcases
+  and interactions between industry professionals.
+</p>
+
           </div>
 
-          {/* PHOTO GRID OR EMPTY STATE */}
-          {items.length > 0 ? (
-            <GalleryGrid items={items} />
-          ) : (
-            <div className="rounded-lg border border-[#111111]/10 bg-[#F8F8F8] px-6 py-12 text-center">
-              <p className="text-[15px] font-bold text-[#111111]">
-                No gallery photos are currently available.
-              </p>
+       
+{items.length > 0 ? (
+  <GalleryGrid items={items} />
+) : (
+  <div className="rounded-lg border border-[#111111]/10 bg-[#F8F8F8] px-6 py-12 text-center">
+    <p className="text-[15px] font-bold text-[#111111]">
+      No Photos Available
+    </p>
 
-              <p className="mx-auto mt-2 max-w-md text-[12px] leading-[1.8] text-[#777777]">
-                Photos added to the exhibition
-                gallery will appear here automatically.
-              </p>
-            </div>
-          )}
+    <p className="mx-auto mt-2 max-w-md text-[12px] leading-[1.8] text-[#777777]">
+      Exhibition photographs will be displayed
+      here once they are available.
+    </p>
+  </div>
+)}
+
         </Container>
       </section>
     </main>

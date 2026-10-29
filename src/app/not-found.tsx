@@ -67,30 +67,7 @@ export default function NotFound() {
             The resource you are looking for may have been restructured, removed, or is temporarily offline. Explore the core event gateways below.
           </p>
 
-          {/* Action Pills */}
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-3.5">
-            <Link
-              href="/"
-              className="inline-flex items-center justify-center rounded-full bg-brand-red px-7 py-3 text-xs font-bold uppercase tracking-wider text-white shadow-[0_0_25px_rgba(200,38,45,0.4)] transition-all duration-300 hover:bg-brand-red-dark hover:shadow-[0_0_30px_rgba(200,38,45,0.6)] active:scale-95"
-            >
-              Back to Home
-            </Link>
-
-            <Link
-              href={event.cta.bookStand}
-              className="inline-flex items-center justify-center rounded-full border border-white/20 bg-white/[0.06] px-6 py-3 text-xs font-bold uppercase tracking-wider text-white backdrop-blur-xl transition-all duration-300 hover:border-brand-red/60 hover:bg-white/[0.12] active:scale-95"
-            >
-              Book a Stand
-            </Link>
-
-            <Link
-              href={event.cta.registerVisit}
-              className="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/[0.03] px-6 py-3 text-xs font-bold uppercase tracking-wider text-slate-300 transition-all duration-300 hover:border-white/30 hover:text-white active:scale-95"
-            >
-              Register to Visit
-            </Link>
-          </div>
-
+       
         {/* Direct Organizer Assistance Desk Card */}
 <div className="mt-10 rounded-3xl border border-white/10 bg-white/[0.04] p-6 text-left backdrop-blur-2xl shadow-2xl">
   <div className="flex items-center justify-between pb-4 border-b border-white/10">

@@ -137,10 +137,12 @@ export default function OrganisersPage() {
       )}
 
       <PageHero
-        title="The People Behind"
-        highlightTitle="Kenya Buildcon."
-        badgeText={`OFFICIAL ORGANISERS · ${event.editionLabel}`}
-        intro={`${event.name} is jointly organised by Futurex Trade Fair & Events and Exhibitions & Trade Services India (ETSIPL), connecting international businesses with opportunities in Kenya and East Africa.`}
+        
+title="Meet the Organisers"
+highlightTitle="Behind Kenya Buildcon."
+badgeText="OFFICIAL ORGANISERS"
+intro="Kenya Buildcon International Expo is jointly organised by Futurex Trade Fair & Events Pvt. Ltd. and Exhibitions & Trade Services India Pvt. Ltd. (ETSIPL), bringing their experience in organising trade exhibitions to Kenya's building and construction industry."
+
         image={{
           src: "/images/home/kenya-buildcon-inauguration.jpg",
           alt: "Organisers and invited dignitaries at a previous Kenya Buildcon International Expo inaugural ceremony in Nairobi",

@@ -332,20 +332,7 @@ export function IntroSection() {
             </span>
           </motion.div>
 
-          <motion.div
-            variants={revealVariants}
-            className="flex items-center gap-3"
-          >
-            <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#777777]">
-              Kenya Buildcon
-            </span>
-
-            <span className="h-px w-8 bg-[#111111]/20" />
-
-            <span className="text-[10px] font-bold tracking-[0.12em] text-[#BE202B]">
-              2027 
-            </span>
-          </motion.div>
+         
         </motion.div>
 
         {/* MAIN EDITORIAL GRID */} 
@@ -415,10 +402,7 @@ export function IntroSection() {
                 and the industry as a whole.
               </p>
 
-              <span className="mt-4 block text-[10px] font-bold uppercase tracking-[0.15em] text-[#777777]">
-                {event.venue.city},{" "}
-                {event.venue.country}
-              </span>
+            
             </motion.div>
           </motion.div>
 
@@ -429,20 +413,13 @@ export function IntroSection() {
           >
             <div className="border-l border-[#111111]/10 lg:pl-9 xl:pl-12">
 
-              {/* EDITION LABEL */}
-              <div className="flex items-center gap-3">
-           
-
-                <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#111111]">
-                  4th International Edition
-                </span>
-              </div>
+              
 
               {/* INTRO COPY */}
               <div className="mt-6 space-y-5">
                 <p className="text-[14px] leading-[1.85] tracking-[-0.005em] text-[#555555] sm:text-[15px]">
                   <strong className="font-bold text-[#111111]">
-                    {event.name}
+                   4th {event.name}
                   </strong>{" "}
                   is the premier international trade
                   exhibition for the building and
@@ -534,7 +511,7 @@ export function IntroSection() {
 
             <div className="min-w-0">
               <span className="mb-1 block text-[10px] font-bold uppercase tracking-[0.14em] text-[#BE202B]">
-                01 / Connections
+                Connections
               </span>
 
               <h3 className="text-[16px] font-extrabold tracking-[-0.025em] text-[#111111]">
@@ -544,7 +521,7 @@ export function IntroSection() {
               <p className="mt-2 text-[13px] leading-[1.7] text-[#666666]">
                 Connect with trade visitors,
                 industry leaders and decision-makers
-                across the construction sector.
+                across the building & construction sector.
               </p>
             </div>
           </motion.div>
@@ -571,7 +548,7 @@ export function IntroSection() {
 
             <div className="min-w-0">
               <span className="mb-1 block text-[10px] font-bold uppercase tracking-[0.14em] text-[#1D9440]">
-                02 / Opportunities
+                Opportunities
               </span>
 
               <h3 className="text-[16px] font-extrabold tracking-[-0.025em] text-[#111111]">
@@ -580,7 +557,7 @@ export function IntroSection() {
 
               <p className="mt-2 text-[13px] leading-[1.7] text-[#666666]">
                 Explore Kenya&apos;s growing
-                construction market and build
+                building & construction market and build
                 partnerships across the wider
                 East African region.
               </p>

@@ -1,7 +1,12 @@
+
 export type NavItem = {
   label: string;
   href: string;
-  children?: { label: string; href: string; description?: string }[];
+  children?: {
+    label: string;
+    href: string;
+    description?: string;
+  }[];
 };
 
 export const mainNav: NavItem[] = [
@@ -9,93 +14,142 @@ export const mainNav: NavItem[] = [
     label: "About",
     href: "/about",
     children: [
-      { label: "About the Expo", href: "/about", description: "Purpose, vision, and key facts." },
-      { label: "Why Kenya", href: "/why-kenya", description: "Market growth and trade opportunities." },
-      { label: "Venue & Location", href: "/venue", description: "The Sarit Expo Centre, Nairobi." },
-      { label: "Organisers", href: "/organisers", description: "Organized by Futurex & ETSIPL." },
-      { label: "Partners & Sponsors", href: "/partners", description: "Supporting industry partners." },
+      {
+        label: "About the Expo",
+        href: "/about",
+        description: "Overview of the exhibition.",
+      },
+      {
+        label: "Why Kenya",
+        href: "/why-kenya",
+        description: "Building, construction and market opportunities.",
+      },
+      {
+        label: "Venue & Location",
+        href: "/venue",
+        description: "The Sarit Expo Centre, Nairobi.",
+      },
+      {
+        label: "Organisers",
+        href: "/organisers",
+        description: "Meet the official organisers.",
+      },
+      // {
+      //   label: "Partners & Sponsors",
+      //   href: "/partners",
+      //   description: "Exhibition partners and sponsors.",
+      // },
     ],
   },
   {
     label: "Exhibit",
     href: "/exhibit",
     children: [
-      { label: "Why Exhibit", href: "/exhibit", description: "Key benefits for exhibitors." },
-      { label: "Who Should Exhibit", href: "/who-should-exhibit", description: "Target profile for manufacturers & suppliers." },
-      { label: "Exhibition Profile", href: "/exhibition-profile", description: "Sectors and product directory." },
-      { label: "Exhibitor Directory", href: "/exhibitors", description: "Current list of participating brands." },
-      { label: "Exhibitor Services", href: "/exhibitor-services", description: "Logistics, travel, and stand construction." },
-      { label: "Book a Stand", href: "/book-a-stand", description: "Reserve your expo booth space." },
+      {
+        label: "Why Exhibit",
+        href: "/exhibit",
+        description: "Exhibitor benefits, participation and support.",
+      },
+      {
+        label: "Exhibition Profile",
+        href: "/exhibition-profile",
+        description: "Industry sectors and product categories.",
+      },
+      {
+        label: "Book a Stand",
+        href: "/book-a-stand",
+        description: "Exhibition space and stand enquiries.",
+      },
     ],
   },
   {
     label: "Visit",
     href: "/visit",
     children: [
-      { label: "Why Visit", href: "/visit", description: "Source products and meet suppliers." },
-      { label: "Who Should Visit", href: "/who-should-visit", description: "Trade visitor qualifications." },
-      { label: "Register to Visit", href: "/register-to-visit", description: "Get your free trade pass." },
-      // { label: "Plan Your Visit", href: "/plan-your-visit", description: "Hotel, travel, and local guide." },
+      {
+        label: "Why Visit",
+        href: "/visit",
+        description: "Products, suppliers and visitor benefits.",
+      },
+      {
+        label: "Visitor Profile",
+        href: "/visitor-profile",
+        description: "Professional visitor categories.",
+      },
+      {
+        label: "Register to Visit",
+        href: "/register-to-visit",
+        description: "Visitor registration information.",
+      },
     ],
   },
   {
-  label: "Downloads",
-  href: "/downloads/brochure",
-  children: [
-    {
-      label: "Exhibition Brochure",
-      href: "/downloads",
-      description:
-        "Download the official India Battery International Show brochure.",
-    },
-    {
-      label: "Post Show Report",
-      href: "/downloads/3rd-Kenya-Buildcon-International-Expo-2026-Post-Show-Report.pdf",
-      description:
-        "View the official post show report from the previous edition.",
-    },
-  ],
-},
+    label: "Downloads",
+    href: "/downloads",
+    children: [
+      {
+        label: "Exhibition Brochure",
+        href: "/downloads",
+        description: "Kenya Buildcon International Expo 2027 brochure.",
+      },
+      {
+        label: "Post Show Report 2027",
+        href: "/downloads/3rd-Kenya-Buildcon-International-Expo-2026-Post-Show-Report.pdf",
+        description: "Report from the 3rd edition.",
+      },
+    ],
+  },
   {
     label: "Media & Resources",
-    href: "/news",
+    href: "/gallery",
     children: [
-      { label: "Latest News", href: "/news", description: "Press releases and updates." },
-      { label: "Gallery", href: "/gallery", description: "Event photos and video highlights." },
-      // { label: "Downloads", href: "/downloads", description: "Brochures, floor plan, and forms." },
+      // {
+      //   label: "Latest News",
+      //   href: "/news",
+      //   description: "Exhibition news and announcements.",
+      // },
+      {
+        label: "Photo Gallery",
+        href: "/gallery",
+        description: "Photographs from previous editions.",
+      },
     ],
   },
-  { label: "Contact", href: "/contact" },
+  {
+    label: "Contact",
+    href: "/contact",
+  },
 ];
 
 export const footerNav = {
   event: [
-    { label: "About Expo", href: "/about" },
+    { label: "About the Expo", href: "/about" },
     { label: "Why Kenya", href: "/why-kenya" },
-    { label: "Exhibition Profile", href: "/exhibition-profile" },
-    { label: "Venue Info", href: "/venue" },
+    { label: "Venue & Location", href: "/venue" },
     { label: "Organisers", href: "/organisers" },
+    // { label: "Partners & Sponsors", href: "/partners" },
   ],
+
   exhibit: [
     { label: "Why Exhibit", href: "/exhibit" },
-    { label: "Who Should Exhibit", href: "/who-should-exhibit" },
-    { label: "Exhibitor Directory", href: "/exhibitors" },
-    { label: "Exhibitor Services", href: "/exhibitor-services" },
+    { label: "Exhibition Profile", href: "/exhibition-profile" },
     { label: "Book a Stand", href: "/book-a-stand" },
   ],
+
   visit: [
     { label: "Why Visit", href: "/visit" },
-    { label: "Who Should Visit", href: "/who-should-visit" },
-    { label: "Free Registration", href: "/register-to-visit" },
-    { label: "Plan Your Visit", href: "/plan-your-visit" },
+    { label: "Visitor Profile", href: "/visitor-profile" },
+    { label: "Register to Visit", href: "/register-to-visit" },
   ],
+
   information: [
-    { label: "Partners", href: "/partners" },
-    { label: "News & Media", href: "/news" },
-    { label: "Gallery", href: "/gallery" },
-    { label: "Downloads", href: "/downloads" },
+    // { label: "Latest News", href: "/news" },
+    { label: "Photo Gallery", href: "/gallery" },
+    { label: "Exhibition Brochure", href: "/downloads" },
+    { label: "Post Show Report 2027", href: "/downloads/3rd-Kenya-Buildcon-International-Expo-2026-Post-Show-Report.pdf" },
     { label: "Contact Us", href: "/contact" },
   ],
+
   legal: [
     { label: "Privacy Policy", href: "/privacy-policy" },
     { label: "Terms & Conditions", href: "/terms-and-conditions" },

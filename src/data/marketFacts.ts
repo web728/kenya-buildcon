@@ -15,54 +15,59 @@ export type MarketFact = {
   lastVerified: string; // YYYY-MM-DD
 };
 
+
 export const marketFacts: MarketFact[] = [
   {
     id: "construction-growth",
     value: "6.7%",
-    label: "Construction sector growth",
+    label: "Construction Sector Growth",
     detail:
-      "Kenya's construction sector grew 6.7% in the third quarter of 2025, rebounding from a 2.6% contraction in the same quarter of 2024, supported by higher cement consumption and resumed public works.",
+      "Kenya's construction sector grew by 6.7% in Q3 2025, compared to a 2.6% decline in the same period of 2024, showing an improvement in construction activity.",
     period: "Q3 2025",
     sourceName: "Kenya National Bureau of Statistics",
-    sourceUrl: "https://www.knbs.or.ke/",
-    lastVerified: "2026-10-08",
+    sourceUrl:
+      "https://www.knbs.or.ke/wp-content/uploads/2025/12/Kenya-Quarterly-Gross-Domestic-Product-Third-Quarter-2025.pdf",
+    lastVerified: "2026-10-29",
   },
   {
     id: "vision-2030",
     value: "2030",
-    label: "Kenya Vision 2030 development blueprint",
+    label: "Kenya Vision 2030",
     detail:
-      "Kenya's long-term development blueprint includes flagship infrastructure such as the Nairobi Expressway and Konza Technopolis, sustaining demand for building materials, machinery and construction technology.",
+      "Kenya Vision 2030 is the country's long-term development plan, with infrastructure development among its key priorities.",
     sourceName: "Kenya Vision 2030 Delivery Board",
-    sourceUrl: "https://vision2030.go.ke/",
-    lastVerified: "2026-10-08",
+    sourceUrl: "https://vision2030.go.ke/about-vision-2030/",
+    lastVerified: "2026-10-29",
   },
   {
     id: "eac-partner-states",
     value: "8",
-    label: "East African Community partner states",
+    label: "East African Community Partner States",
     detail:
-      "Kenya sits within the East African Community, giving exhibitors in Nairobi a gateway to a regional market of eight partner states across East and Central Africa.",
+      "Kenya is one of the eight East African Community partner states, supporting regional trade and business connections across East Africa.",
     sourceName: "East African Community",
-    sourceUrl: "https://www.eac.int/",
-    lastVerified: "2026-10-08",
+    sourceUrl: "https://www.eac.int/eac-partner-states/",
+    lastVerified: "2026-10-29",
   },
 ];
 
+
+
 export const opportunityCategories: string[] = [
   "Residential Development",
-  "Commercial Construction",
+  "Commercial Development",
   "Roads & Infrastructure",
   "Affordable Housing",
-  "Industrial Projects",
+  "Industrial Development",
   "Hotels & Hospitality",
-  "Green & Sustainable Building",
+  "Sustainable Building",
   "Public Infrastructure",
   "Interiors & Fit-Out",
 ];
 
+
 export const marketSources = [
   { name: "Kenya National Bureau of Statistics", url: "https://www.knbs.or.ke/" },
   { name: "Kenya Vision 2030", url: "https://vision2030.go.ke/" },
-  { name: "East African Community", url: "https://www.eac.int/" },
+  { name: "East African Community", url: "https://www.eac.int/eac-partner-states/" },
 ];

@@ -220,44 +220,46 @@ function MarketBackground({
    Existing market context preserved.
 ================================================== */
 
+
 const STRATEGIC_PILLARS = [
   {
     number: "01",
-    category: "Construction Growth",
-    title: "Construction Sector Rebound",
+    category: "Industry Growth",
+    title: "Building & Construction Opportunities",
     description:
-      "Kenya's construction sector recorded 6.7% growth in Q3 2025, according to KNBS. Infrastructure activity, housing investment and renewed project execution contribute to opportunities across construction supply chains.",
-    highlight: "6.7% · Q3 2025",
+      "Kenya's building and construction industry offers opportunities across building materials, construction equipment, engineering services and related sectors. Ongoing development activity supports demand for products and services across the industry.",
+    highlight: "Building Materials · Construction",
     icon: "M3 17l6-6 4 4 8-9M15 6h6v6",
   },
   {
     number: "02",
     category: "Regional Connectivity",
-    title: "Gateway to East Africa",
+    title: "Access to East African Markets",
     description:
-      "Kenya's position within the East African Community supports regional business connections. Nairobi provides a strategic meeting point for manufacturers, distributors, contractors and buyers exploring nearby markets.",
+      "As a member of the East African Community, Kenya has trade links with neighbouring markets. Nairobi is an important business centre for manufacturers, suppliers, distributors and buyers looking to develop regional connections.",
     highlight: "East African Community",
     icon: "M12 22s8-4 8-11a8 8 0 10-16 0c0 7 8 11 8 11zM4 11h16M12 3c-3 4-3 12 0 16M12 3c3 4 3 12 0 16",
   },
   {
     number: "03",
-    category: "Infrastructure Investment",
-    title: "Vision 2030 & Development",
+    category: "National Development",
+    title: "Vision 2030 & Infrastructure Development",
     description:
-      "Kenya's Vision 2030 development agenda provides long-term context for transport, infrastructure and urban development. Projects associated with this agenda illustrate demand for construction expertise and technology.",
-    highlight: "Vision 2030",
+      "Kenya Vision 2030 includes plans for infrastructure, housing and urban development. These priorities are relevant to businesses supplying building materials, construction machinery, architectural products and engineering services.",
+    highlight: "Kenya Vision 2030",
     icon: "M3 21h18M5 21V7l7-4 7 4v14M9 10h.01M15 10h.01M9 14h.01M15 14h.01M10 21v-4h4v4",
   },
   {
     number: "04",
     category: "Urban Development",
-    title: "Growing Demand for Space",
+    title: "Residential, Commercial & Industrial Development",
     description:
-      "Urbanisation and changing business needs create opportunities in residential, commercial and industrial construction. These segments connect developers, designers, engineers and building-material suppliers.",
-    highlight: "Residential · Commercial",
+      "Kenya's urban development and changing space requirements create demand for housing, commercial buildings and industrial facilities. These developments are relevant to architects, developers, contractors and building product suppliers.",
+    highlight: "Residential · Commercial · Industrial",
     icon: "M3 21h18M5 21V9l7-5 7 5v12M9 12h.01M15 12h.01M9 16h.01M15 16h.01M10 21v-3h4v3",
   },
 ];
+
 
 /* ==================================================
    SECTION 1 — MARKET DATA
@@ -273,31 +275,33 @@ function MarketOverview() {
 
       <Container className="relative z-10">
         <RevealGroup className="flex flex-col gap-5 border-b border-[#111111]/10 pb-6 md:flex-row md:items-end md:justify-between">
-          <motion.div
-            variants={revealVariants}
-            className="max-w-[740px]"
-          >
-            <Eyebrow>
-              Kenya Construction Market
-            </Eyebrow>
+       
+<motion.div
+  variants={revealVariants}
+  className="max-w-[740px]"
+>
+  <Eyebrow>
+    Kenya's Building & Construction Market
+  </Eyebrow>
 
-            <h2
-              id="kenya-market-heading"
-              className="mt-3 text-[clamp(1.85rem,3vw,2.8rem)] font-extrabold leading-[1.15] tracking-[-0.04em] text-[#111111]"
-            >
-              A Market Driven by{" "}
-              <span className="text-[#BE202B]">
-                Development.
-              </span>
-            </h2>
+  <h2
+    id="kenya-market-heading"
+    className="mt-3 text-[clamp(1.85rem,3vw,2.8rem)] font-extrabold leading-[1.15] tracking-[-0.04em] text-[#111111]"
+  >
+    Understanding Kenya's{" "}
+    <span className="text-[#BE202B]">
+      Market Potential.
+    </span>
+  </h2>
 
-            <p className="mt-3 max-w-[650px] text-[13px] leading-[1.8] text-[#666666] sm:text-[14px]">
-              Explore economic indicators and market
-              information relevant to construction,
-              infrastructure investment and building
-              materials in Kenya.
-            </p>
-          </motion.div>
+  <p className="mt-3 max-w-[650px] text-[13px] leading-[1.8] text-[#666666] sm:text-[14px]">
+    Explore key market facts, development plans
+    and regional trade connections that are
+    relevant to Kenya's building and
+    construction industry.
+  </p>
+</motion.div>
+
 
           <motion.div variants={revealVariants}>
             <Link
@@ -361,14 +365,16 @@ function StrategicAdvantages() {
             </h2>
           </motion.div>
 
-          <motion.p
-            variants={revealVariants}
-            className="max-w-[355px] text-[12px] leading-[1.75] text-[#777777] sm:text-[13px]"
-          >
-            Four factors shaping Kenya&apos;s
-            construction landscape and its
-            relevance to regional suppliers.
-          </motion.p>
+       
+<motion.p
+  variants={revealVariants}
+  className="max-w-[355px] text-[12px] leading-[1.75] text-[#777777] sm:text-[13px]"
+>
+  Key factors that make Kenya an important market
+  for building and construction businesses
+  across East Africa.
+</motion.p>
+
         </RevealGroup>
 
         {/* 4 premium editorial cards */}
@@ -422,14 +428,7 @@ function StrategicAdvantages() {
               <p className="mt-2 max-w-[590px] text-[12px] leading-[1.85] text-[#666666] sm:text-[13px]">
                 {pillar.description}
               </p>
-
-              <div className="mt-5 flex items-center gap-2.5 border-t border-[#111111]/10 pt-4">
-                <span className="h-1.5 w-1.5 bg-[#25B34B]" />
-
-                <span className="text-[11px] font-bold text-[#333333]">
-                  {pillar.highlight}
-                </span>
-              </div>
+ 
 
               <span
                 aria-hidden="true"
@@ -457,30 +456,24 @@ function OpportunitySectors() {
     >
       <Container>
         <RevealGroup className="flex flex-col gap-4 border-b border-[#111111]/10 pb-5 sm:flex-row sm:items-end sm:justify-between">
-          <motion.div variants={revealVariants}>
-            <Eyebrow>
-              Commercial Opportunities
-            </Eyebrow>
+      
+<motion.div variants={revealVariants}>
+  <Eyebrow>
+    Industry Opportunities
+  </Eyebrow>
 
-            <h2
-              id="kenya-opportunities-heading"
-              className="mt-3 text-[clamp(1.8rem,2.8vw,2.6rem)] font-extrabold tracking-[-0.04em] text-[#111111]"
-            >
-              Opportunities Across{" "}
-              <span className="text-[#BE202B]">
-                Key Sectors.
-              </span>
-            </h2>
-          </motion.div>
+  <h2
+    id="kenya-opportunities-heading"
+    className="mt-3 text-[clamp(1.8rem,2.8vw,2.6rem)] font-extrabold tracking-[-0.04em] text-[#111111]"
+  >
+    Opportunities Across{" "}
+    <span className="text-[#BE202B]">
+      Key Sectors.
+    </span>
+  </h2>
+</motion.div>
 
-          <motion.p
-            variants={revealVariants}
-            className="max-w-[350px] text-[12px] leading-[1.75] text-[#777777] sm:text-[13px]"
-          >
-            Sectors relevant to construction
-            investment, development and the
-            building-material supply chain.
-          </motion.p>
+ 
         </RevealGroup>
 
         {/* Sector grid */}
@@ -508,7 +501,6 @@ function OpportunitySectors() {
                 {category}
               </h3>
 
-              <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#25B34B]" />
             </motion.div>
           ))}
         </RevealGroup>
@@ -654,7 +646,6 @@ export function WhyKenyaClientView() {
       <MarketOverview />
       <StrategicAdvantages />
       <OpportunitySectors />
-      <MarketCta />
     </div>
   );
 }

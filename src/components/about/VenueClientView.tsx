@@ -278,13 +278,14 @@ function VenueBackground({
    VENUE INFORMATION
 ================================================== */
 
+
 const VENUE_ADVANTAGES = [
   {
     number: "01",
     tag: "Previous Editions",
-    title: "Established Exhibition Venue",
+    title: "A Familiar Exhibition Venue",
     description:
-      "The Sarit Expo Centre has hosted previous editions of Kenya Buildcon, providing a familiar setting for exhibitors, industry visitors and professional networking.",
+      "The Sarit Expo Centre has hosted previous editions of Kenya Buildcon, offering a familiar venue for returning exhibitors and visitors.",
     icon: "M3 21h18M5 21V7l7-4 7 4v14M9 10h.01M15 10h.01M9 14h.01M15 14h.01M10 21v-4h4v4",
   },
   {
@@ -292,26 +293,27 @@ const VENUE_ADVANTAGES = [
     tag: "Business District",
     title: "Located in Westlands",
     description:
-      "Situated in Westlands, Nairobi, the venue offers a convenient base for trade visitors meeting manufacturers, suppliers, contractors and construction professionals.",
+      "Situated in one of Nairobi's main business districts, the venue is close to hotels, restaurants and other services useful for exhibitors and visitors.",
     icon: "M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1116 0ZM12 10h.01",
   },
   {
     number: "03",
     tag: "Exhibition Facilities",
-    title: "Dedicated Trade Show Space",
+    title: "Purpose-Built Exhibition Space",
     description:
-      "The venue supports exhibition stands, product displays and professional event activities, helping businesses present their products and connect with prospective partners.",
+      "The Sarit Expo Centre offers indoor exhibition halls suitable for trade show stands, product displays and other exhibition activities.",
     icon: "M3 21h18M5 21V5h14v16M9 9h2m2 0h2M9 13h2m2 0h2M10 21v-4h4v4",
   },
   {
     number: "04",
-    tag: "City Connectivity",
-    title: "Accessible Across Nairobi",
+    tag: "Accessibility",
+    title: "Convenient City Access",
     description:
-      "Visitors can plan journeys by taxi or ride-hailing services, while the wider Westlands area provides access to business accommodation and amenities.",
+      "Located in Westlands, the venue can be reached by road, with taxi and ride-hailing services available for visitors travelling across Nairobi.",
     icon: "M3 17l2-7h14l2 7M5 17v3m14-3v3M5 10l2-5h10l2 5M3 17h18M7 14h.01M17 14h.01",
   },
 ];
+
 
 /* ==================================================
    SECTION 1 — VENUE & INTERACTIVE MAP
@@ -333,19 +335,21 @@ function VenueOverview() {
             className="flex min-w-0 flex-col justify-between rounded-xl border border-[#111111]/10 bg-white p-6 shadow-[0_12px_36px_rgba(17,17,17,0.035)] sm:p-8 lg:col-span-6"
           >
             <div>
-              <Eyebrow>
-                Official Exhibition Destination
-              </Eyebrow>
+            
+<Eyebrow>
+  Exhibition Venue
+</Eyebrow>
 
-              <h2
-                id="venue-overview-heading"
-                className="mt-4 text-[clamp(1.9rem,3vw,2.8rem)] font-extrabold leading-[1.16] tracking-[-0.045em] text-[#111111]"
-              >
-                The Sarit{" "}
-                <span className="text-[#BE202B]">
-                  Expo Centre.
-                </span>
-              </h2>
+<h2
+  id="venue-overview-heading"
+  className="mt-4 text-[clamp(1.9rem,3vw,2.8rem)] font-extrabold leading-[1.16] tracking-[-0.045em] text-[#111111]"
+>
+  The Sarit{" "}
+  <span className="text-[#BE202B]">
+    Expo Centre.
+  </span>
+</h2>
+
 
               <div className="mt-3 flex items-center gap-2 text-[13px] font-semibold text-[#555555]">
                 <span className="text-[#BE202B]">
@@ -357,17 +361,19 @@ function VenueOverview() {
                 {event.venue.country}
               </div>
 
-              <p className="mt-5 max-w-[600px] text-[13px] leading-[1.85] text-[#666666] sm:text-[14px]">
-                {event.name} takes place at{" "}
-                <strong className="font-semibold text-[#111111]">
-                  {event.venue.name}
-                </strong>
-                , located in Nairobi&apos;s Westlands
-                district. The venue brings construction
-                businesses, suppliers, industry
-                professionals and trade visitors together
-                in a dedicated exhibition environment.
-              </p>
+           
+<p className="mt-5 max-w-[600px] text-[13px] leading-[1.85] text-[#666666] sm:text-[14px]">
+  Located in Westlands, Nairobi,{" "}
+  <strong className="font-semibold text-[#111111]">
+    {event.venue.name}
+  </strong>{" "}
+  is the official venue for {event.name}.
+  The exhibition centre provides a dedicated
+  space for trade exhibitions, with access
+  to nearby hotels, restaurants and other
+  visitor facilities.
+</p>
+
 
               {/* QUICK EVENT INFORMATION */}
               <div className="mt-6 grid gap-3 min-[420px]:grid-cols-2">
@@ -404,7 +410,7 @@ function VenueOverview() {
             {/* ACTIONS */}
             <div className="mt-7 flex flex-wrap gap-3 border-t border-[#111111]/10 pt-5">
               <Link
-                href="/plan-your-visit"
+                href="/register-to-visit"
                 className="group inline-flex min-h-[44px] items-center justify-center gap-2.5 rounded-md bg-[#BE202B] px-5 py-3 text-[11px] font-extrabold uppercase tracking-[0.05em] text-white transition-colors duration-300 hover:bg-[#A61B25] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#BE202B] focus-visible:ring-offset-2"
               >
                 Plan Your Visit
@@ -463,22 +469,7 @@ function VenueOverview() {
               </div>
             </div>
 
-            {/* MAP CAPTION */}
-            <div className="flex items-center justify-between gap-3 px-2 pb-1 pt-3">
-              <span className="text-[10px] font-semibold text-[#777777]">
-                Official Venue Location
-              </span>
-
-              <a
-                href={event.venue.mapLinkUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group inline-flex items-center gap-1.5 text-[10px] font-bold text-[#BE202B] transition-colors hover:text-[#111111]"
-              >
-                View Larger Map
-                <ArrowIcon diagonal />
-              </a>
-            </div>
+           
           </motion.div>
         </RevealGroup>
       </Container>
@@ -501,29 +492,22 @@ function VenueAdvantages() {
       <Container>
         <RevealGroup className="flex flex-col gap-4 border-b border-[#111111]/10 pb-6 sm:flex-row sm:items-end sm:justify-between">
           <motion.div variants={revealVariants}>
-            <Eyebrow>
-              Infrastructure &amp; Accessibility
-            </Eyebrow>
+          <Eyebrow>
+  Venue & Accessibility
+</Eyebrow>
 
-            <h2
-              id="venue-advantages-heading"
-              className="mt-3 text-[clamp(1.8rem,2.8vw,2.65rem)] font-extrabold leading-tight tracking-[-0.04em] text-[#111111]"
-            >
-              Why This{" "}
-              <span className="text-[#BE202B]">
-                Venue Works.
-              </span>
-            </h2>
+<h2
+  id="venue-advantages-heading"
+  className="mt-3 text-[clamp(1.8rem,2.8vw,2.65rem)] font-extrabold leading-tight tracking-[-0.04em] text-[#111111]"
+>
+  A Venue Designed for{" "}
+  <span className="text-[#BE202B]">
+    Trade Exhibitions.
+  </span>
+</h2>
           </motion.div>
 
-          <motion.p
-            variants={revealVariants}
-            className="max-w-[350px] text-[12px] leading-[1.75] text-[#777777] sm:text-[13px]"
-          >
-            A professional exhibition setting in
-            Nairobi&apos;s commercial district,
-            serving exhibitors and visitors alike.
-          </motion.p>
+      
         </RevealGroup>
 
         {/* ADVANTAGE CARDS */}
@@ -688,33 +672,7 @@ function VenueEventDetails() {
           ))}
         </RevealGroup>
 
-        {/* BOTTOM CTA */}
-        <RevealGroup className="mt-7 flex flex-col gap-5 border-t border-white/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
-          <motion.div variants={revealVariants}>
-            <p className="text-[14px] font-extrabold text-white">
-              Exhibit at {event.venue.name}
-            </p>
-
-            <p className="mt-1 text-[12px] leading-[1.75] text-white/60">
-              Connect with Kenya&apos;s building and
-              construction industry at{" "}
-              {event.name}.
-            </p>
-          </motion.div>
-
-          <motion.div variants={revealVariants}>
-            <Link
-              href={event.cta.bookStand}
-              className="group inline-flex min-h-[44px] items-center justify-center gap-3 rounded-md bg-[#BE202B] px-5 py-3 text-[11px] font-extrabold uppercase tracking-[0.06em] text-white transition-colors duration-300 hover:bg-[#A61B25]"
-            >
-              Book a Stand
-
-              <span className="transition-transform duration-300 group-hover:translate-x-1">
-                <ArrowIcon diagonal />
-              </span>
-            </Link>
-          </motion.div>
-        </RevealGroup>
+      
       </Container>
 
       {/* BRAND SIGNATURE */}

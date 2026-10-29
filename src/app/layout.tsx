@@ -94,13 +94,13 @@ export const metadata: Metadata = {
     "Kenya Buildcon",
     "Kenya Buildcon International Expo",
     "Kenya Buildcon 2027",
-    "Kenya construction exhibition",
-    "construction expo Kenya",
+    "Kenya building & construction exhibition",
+    "Building & construction expo Kenya",
     "building materials exhibition Kenya",
     "building exhibition Nairobi",
-    "construction technology Kenya",
+    "building & construction technology Kenya",
     "Sarit Expo Centre exhibition",
-    "East Africa construction trade show",
+    "East Africa building & construction trade show",
   ],
 
   /* Open Graph */

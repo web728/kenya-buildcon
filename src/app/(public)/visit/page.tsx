@@ -12,7 +12,7 @@ const PAGE_TITLE =
   "Why Visit Kenya Buildcon 2027 | Visitor Guide";
 
 const PAGE_DESCRIPTION =
-  "Discover why trade professionals visit Kenya Buildcon 2027. Explore construction products, industry networking and seminars in Nairobi, 9–11 June.";
+  "Discover why trade professionals visit Kenya Buildcon 2027. Explore building & construction products, industry networking and seminars in Nairobi, 9–11 June.";
 
 export const metadata: Metadata = {
   ...pageMetadata({
@@ -110,10 +110,12 @@ export default function VisitPage() {
 
       {/* Existing dark cinematic PageHero */}
       <PageHero
-        title="Gain Insights."
-        highlightTitle="Discover Innovations."
-        badgeText={`WHY VISIT · ${event.editionLabel}`}
-        intro="Explore building and construction products, discover new solutions, connect with industry professionals and engage with the East African construction market."
+        
+title="Explore Products."
+highlightTitle="Connect with the Industry."
+badgeText="WHY VISIT"
+intro="Discover building and construction products, explore new technologies and meet manufacturers, suppliers and industry professionals from Kenya and beyond."
+
         image={{
           src: "/images/sectors/trade-visitors.jpg",
           alt: "Trade visitors exploring building and construction exhibition stands at Kenya Buildcon in Nairobi",

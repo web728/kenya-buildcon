@@ -348,35 +348,7 @@ export function PageHero({
             )}
           </div>
 
-          {/* RIGHT EVENT INFO */}
-          <motion.div
-            variants={revealVariants}
-            className="hidden self-end lg:block"
-          >
-            <div className="border-l-2 border-[#BE202B] pl-5">
-              <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#D7D7D7]">
-                Kenya Buildcon
-              </span>
-
-              <span className="mt-2 block text-[16px] font-extrabold leading-[1.4] text-white">
-                {event.dates.display}
-              </span>
-
-              <div className="mt-3 flex items-start gap-2 text-[#D4D4D4]">
-                <span className="mt-0.5 text-[#25B34B]">
-                  <LocationIcon />
-                </span>
-
-                <span className="text-[12px] leading-[1.7]">
-                  {event.venue.name}
-                  <span className="block">
-                    {event.venue.city},{" "}
-                    {event.venue.country}
-                  </span>
-                </span>
-              </div>
-            </div>
-          </motion.div>
+         
         </motion.div>
       </Container>
 

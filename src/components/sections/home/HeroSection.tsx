@@ -292,11 +292,7 @@ export function HeroSection() {
                 {event.editionLabel}
               </span>
 
-              <span className="h-1 w-1 rounded-full bg-[#111111]/25" />
-
-              <span className="text-[10px] font-bold uppercase tracking-[0.09em] text-[#777777]">
-                {event.venue.city}, {event.venue.country}
-              </span>
+             
             </motion.div>
 
             {/* SEO-friendly heading */}
@@ -390,24 +386,20 @@ export function HeroSection() {
             </motion.p>
 
             {/* Event date and venue */}
-            <motion.div
-              variants={itemVariants}
-              className="mt-3.5 grid w-full max-w-[520px] grid-cols-1 gap-3 rounded-xl border border-[#111111]/[0.08] bg-white/95 px-4 py-3.5 shadow-[0_8px_30px_rgba(17,17,17,0.04)] min-[420px]:grid-cols-2"
-            >
-              <DetailItem
-                type="date"
-                label="Event Dates"
-                title={event.dates.display}
-                subtitle={event.dates.openingHours}
-              />
+      
+{/* Event date and venue */}
+<motion.div
+  variants={itemVariants}
+  className="mt-3.5 w-full max-w-[340px] rounded-xl border border-[#111111]/[0.08] bg-white/95 px-4 py-3.5 shadow-[0_8px_30px_rgba(17,17,17,0.04)]"
+>
+  <DetailItem
+    type="venue"
+    label="Event Venue"
+    title={event.venue.name}
+    subtitle={`${event.venue.city}, ${event.venue.country}`}
+  />
+</motion.div>
 
-              <DetailItem
-                type="venue"
-                label="Event Venue"
-                title={event.venue.name}
-                subtitle={`${event.venue.district}, ${event.venue.city}`}
-              />
-            </motion.div>
 
             {/* CTA buttons */}
             <motion.div
