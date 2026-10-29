@@ -93,8 +93,8 @@ export const mainNav: NavItem[] = [
         description: "Kenya Buildcon International Expo 2027 brochure.",
       },
       {
-        label: "Post Show Report 2027",
-        href: "/downloads/4th-Kenya-Buildcon-International-Expo-2027-Post-Show-Report.pdf",
+        label: "Post Show Report 2026",
+        href: "/downloads/3rd-Kenya-Buildcon-International-Expo-2026-Post-Show-Report.pdf",
         description: "Report from the 3rd edition.",
       },
     ],
@@ -146,7 +146,7 @@ export const footerNav = {
     // { label: "Latest News", href: "/news" },
     { label: "Photo Gallery", href: "/gallery" },
     { label: "Exhibition Brochure", href: "/downloads" },
-    { label: "Post Show Report 2027", href: "/downloads/4th-Kenya-Buildcon-International-Expo-2027-Post-Show-Report.pdf" },
+    { label: "Post Show Report 2027", href: "/downloads/3rd-Kenya-Buildcon-International-Expo-2026-Post-Show-Report.pdf" },
     { label: "Contact Us", href: "/contact" },
   ],
 
