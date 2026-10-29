@@ -641,7 +641,7 @@ export function VisitClientView() {
   return (
     <div className="bg-white text-[#111111]">
       <WhyVisitSection />
-      <VisitorProfileSection />
+      {/* <VisitorProfileSection /> */}
       <VisitorObjectivesSection />
       <RegistrationSection />
     </div>
